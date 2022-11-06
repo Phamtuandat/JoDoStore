@@ -37,7 +37,7 @@ namespace Backend.Repositories
                 .Where(predicate).ToList();
         }
 
-        public virtual T Get(int id)
+        public virtual T? Get(int id)
         {
             return _context.Find<T>(id);
         }

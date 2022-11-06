@@ -13,14 +13,14 @@ namespace Backend.Repositories
             _context = context;
         }
 
-        private IRepository<Author> authorRepository;
-        public IRepository<Author> AuthorRepository
+        private IRepository<BrandModel> authorRepository;
+        public IRepository<BrandModel> AuthorRepository
         {
             get
             {
                 if(authorRepository == null)
                 {
-                    authorRepository = new AuthorRepository(_context);
+                    authorRepository = new BrandRepository(_context);
                 }
                 return authorRepository;
             }
@@ -37,14 +37,14 @@ namespace Backend.Repositories
                 return categoryRepository;
             }
         }
-        private IRepository<Book> bookRepository;
-        public IRepository<Book> BookRepository
+        private IRepository<Models.Products.ProductModel> bookRepository;
+        public IRepository<Models.Products.ProductModel> BookRepository
         {
             get
             {
                 if(bookRepository == null)
                 {
-                    bookRepository = new BookRepository(_context);
+                    bookRepository = new ProductRepository(_context);
                 }
                 return bookRepository;
             }

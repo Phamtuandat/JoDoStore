@@ -10,7 +10,7 @@ namespace Backend
     public class CreateCategoryCommand : IRequest<CategoryRes>
     {
 
-        public SaveCategoryResource SaveCategoryResource { get; set; }
+        public SaveCategoryResource SaveCategoryResource { get; set; } = new();
 
         public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, CategoryRes>
         {

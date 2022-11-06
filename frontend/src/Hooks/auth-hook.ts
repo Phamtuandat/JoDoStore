@@ -1,13 +1,13 @@
-import { userInfor } from "models"
+import { UserInfor } from "models"
 import { useCallback, useEffect, useState } from "react"
 
 let logoutTimer: any
 export const useAuth = () => {
     const [token, setToken] = useState<string | null>()
     const [tokenExpirationDate, setTokenExpirationDate] = useState<Date | null>()
-    const [currentUser, setCurrentUser] = useState<userInfor | null>()
+    const [currentUser, setCurrentUser] = useState<UserInfor | null>()
 
-    const login = useCallback((currentUser: userInfor, token: string, ExpirationDate: Date) => {
+    const login = useCallback((currentUser: UserInfor, token: string, ExpirationDate: Date) => {
         setToken(token)
         setCurrentUser(currentUser)
         const tokenExpirationDate =

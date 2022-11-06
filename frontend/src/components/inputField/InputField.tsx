@@ -7,8 +7,9 @@ export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     control: Control<any>
     label?: string
     disabled: boolean
+    variant?: "standard" | "filled" | "outlined" | undefined
 }
-export const InputField = ({ name, control, label, ...inputProps }: InputFieldProps) => {
+export const InputField = ({ name, control, variant, label, ...inputProps }: InputFieldProps) => {
     const {
         field: { value, onChange, onBlur, ref },
         fieldState: { error },
@@ -22,7 +23,7 @@ export const InputField = ({ name, control, label, ...inputProps }: InputFieldPr
             margin="normal"
             fullWidth
             label={label}
-            variant="outlined"
+            variant={variant || "outlined"}
             onChange={onChange}
             onBlur={onBlur}
             inputRef={ref}
@@ -30,6 +31,7 @@ export const InputField = ({ name, control, label, ...inputProps }: InputFieldPr
             error={!!error}
             helperText={error?.message}
             inputProps={inputProps}
+            type="text"
         />
     )
 }

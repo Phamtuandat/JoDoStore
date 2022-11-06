@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { authResponse, loginRequest, registerRequest } from "models"
+import { AuthResponse, LoginRequest, RegisterRequest } from "models"
 import handleNotify from "utils/Toast-notify"
 
 export interface AuthState {
     isLoggedIn: boolean
     processing: boolean
     // current user logged
-    currentUser?: authResponse
+    currentUser?: AuthResponse
     error: string
 }
 
@@ -21,13 +21,13 @@ const AuthSlice = createSlice({
     name: "authSlice",
     initialState,
     reducers: {
-        login(state, action: PayloadAction<loginRequest>) {
+        login(state, action: PayloadAction<LoginRequest>) {
             state.processing = true
         },
-        register(state, action: PayloadAction<registerRequest>) {
+        register(state, action: PayloadAction<RegisterRequest>) {
             state.processing = true
         },
-        success(state, action: PayloadAction<authResponse>) {
+        success(state, action: PayloadAction<AuthResponse>) {
             state.processing = false
             state.currentUser = action.payload
             state.isLoggedIn = true

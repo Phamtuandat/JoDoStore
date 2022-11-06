@@ -1,16 +1,16 @@
 import { call, fork, put, race, take } from "@redux-saga/core/effects"
 import { PayloadAction } from "@reduxjs/toolkit"
 import authApi from "ApiClients/AuthApi"
-import { authResponse, loginRequest, registerRequest } from "models"
+import { AuthResponse, LoginRequest, RegisterRequest } from "models"
 import handleNotify from "utils/Toast-notify"
 import { AuthSliceAction } from "./authSlice"
 
 interface IRace {
-    response: authResponse
+    response: AuthResponse
     cancel: any
 }
 
-function* handleLogin(action: PayloadAction<loginRequest>): any {
+function* handleLogin(action: PayloadAction<LoginRequest>): any {
     try {
         const { response }: IRace = yield race({
             response: call(authApi.login, action.payload),
@@ -26,7 +26,7 @@ function* handleLogin(action: PayloadAction<loginRequest>): any {
 function* handleRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken") as string
     try {
-        const result: authResponse = yield call(authApi.refreshToken, refreshToken)
+        const result: AuthResponse = yield call(authApi.refreshToken, refreshToken)
         yield call(handleStorage, result)
         yield put(AuthSliceAction.success(result))
     } catch (error) {
@@ -34,16 +34,16 @@ function* handleRefreshToken() {
         yield call(handleLogout)
     }
 }
-function* handleRegister(action: PayloadAction<registerRequest>) {
+function* handleRegister(action: PayloadAction<RegisterRequest>) {
     try {
-        const result: authResponse = yield call(authApi.register, action.payload)
+        const result: AuthResponse = yield call(authApi.register, action.payload)
         yield call(handleStorage, result)
         yield put(AuthSliceAction.success(result))
     } catch (error) {
         yield put(AuthSliceAction.failed)
     }
 }
-function* handleStorage(result: authResponse) {
+function* handleStorage(result: AuthResponse) {
     const tokenExpirationDate = new Date(new Date().getTime() + 1000 * 60 * 60)
     yield localStorage.setItem(
         "currentUser",
@@ -69,7 +69,7 @@ function* watchLogingFlow() {
     while (true) {
         const isLoggedIn = Boolean(localStorage.getItem("token"))
         if (!isLoggedIn) {
-            const loginAction: PayloadAction<loginRequest> = yield take(AuthSliceAction.login.type)
+            const loginAction: PayloadAction<LoginRequest> = yield take(AuthSliceAction.login.type)
             yield call(handleLogin, loginAction)
         } else {
             yield take(AuthSliceAction.logout.type)
@@ -93,7 +93,7 @@ function* watchRegisterFlow() {
     while (true) {
         const isLoggedIn = Boolean(localStorage.getItem("refreshToken"))
         if (isLoggedIn) {
-            const registerAction: PayloadAction<registerRequest> = yield take(
+            const registerAction: PayloadAction<RegisterRequest> = yield take(
                 AuthSliceAction.register.type
             )
             yield fork(handleRegister, registerAction)

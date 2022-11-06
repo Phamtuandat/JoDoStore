@@ -3,7 +3,7 @@ import { Box, Paper } from "@mui/material"
 import CssBaseline from "@mui/material/CssBaseline"
 import Grid from "@mui/material/Grid"
 import { useAppDispatch, useAppSelector } from "app/hooks"
-import { loginRequest, registerRequest } from "models"
+import { LoginRequest, RegisterRequest } from "models"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { AuthSliceAction } from "../authSlice"
@@ -31,10 +31,10 @@ export default function AuthenticatePage() {
         }
     }, [])
 
-    const onLoginSubmit = (formValue: loginRequest) => {
+    const onLoginSubmit = (formValue: LoginRequest) => {
         dispatch(AuthSliceAction.login(formValue))
     }
-    const onRegisterSubmit = (formValue: registerRequest) => {
+    const onRegisterSubmit = (formValue: RegisterRequest) => {
         dispatch(AuthSliceAction.register(formValue))
     }
     const handleLogout = () => {

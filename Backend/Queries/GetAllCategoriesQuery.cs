@@ -19,11 +19,11 @@ namespace Backend.Queries
                 _categoryService = categoryService;
             }
 
-            public async Task<IEnumerable<CategoryResource>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
+            public Task<IEnumerable<CategoryResource>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
             {
-                var categories = _categoryService.GetAll().ToList();
+                var categories =  _categoryService.GetAll().ToList();
                 var result = _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryResource>>(categories);
-                return result;
+                return Task.FromResult(result);
             }
         }
     }

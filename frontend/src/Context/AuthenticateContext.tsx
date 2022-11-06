@@ -1,11 +1,11 @@
-import { userInfor } from "models"
+import { UserInfor } from "models"
 import { createContext } from "react"
 
 type IAuthContext = {
     isLoggedIn: boolean
-    userInfor: null | userInfor
+    userInfor: null | UserInfor
     token: null | string
-    login: (currentUser: userInfor, token: string, ExpirationDate: Date) => void
+    login: (currentUser: UserInfor, token: string, ExpirationDate: Date) => void
     logout: () => void
 }
 export const AuthContext = createContext<IAuthContext>({

@@ -1,11 +1,11 @@
 import { PaletteMode } from "@mui/material"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
+import { createTheme, responsiveFontSizes, ThemeProvider } from "@mui/material/styles"
 import React, { createContext, useEffect, useMemo, useState } from "react"
-import { getDesignTokens } from "utils/CustomPaletteMode"
+import { getDesignTokens } from "utils/CustomThemeMode"
 type IAppProps = {
     children: React.ReactNode
 }
-export const ColorMode = createContext({ toggleColorMode: () => {} })
+export const ThemeContext = createContext({ toggleColorMode: () => {} })
 const ColorModeContext = (props: IAppProps) => {
     const currentMode = JSON.parse(localStorage.getItem("uiMode") as PaletteMode)
 
@@ -23,11 +23,12 @@ const ColorModeContext = (props: IAppProps) => {
         }),
         []
     )
-    const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode])
+    let theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode])
+    theme = responsiveFontSizes(theme)
     return (
-        <ColorMode.Provider value={colorMode}>
+        <ThemeContext.Provider value={colorMode}>
             <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
-        </ColorMode.Provider>
+        </ThemeContext.Provider>
     )
 }
 

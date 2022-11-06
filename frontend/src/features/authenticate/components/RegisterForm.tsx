@@ -6,18 +6,18 @@ import FormControlLabel from "@mui/material/FormControlLabel"
 import Grid from "@mui/material/Grid"
 import Typography from "@mui/material/Typography"
 import { InputField, PasswordField } from "components/inputField"
-import { registerRequest } from "models"
+import { RegisterRequest } from "models"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as Yup from "yup"
 type Props = {
-    onSubmit: (formValue: registerRequest) => void
+    onSubmit: (formValue: RegisterRequest) => void
     handleLogout: () => void
     toggleMode: () => void
 }
 
 export const RegisterForm = ({ onSubmit, toggleMode }: Props) => {
-    const initialValue: registerRequest = {
+    const initialValue: RegisterRequest = {
         email: "",
         password: "",
         confirmPassword: "",
@@ -42,11 +42,11 @@ export const RegisterForm = ({ onSubmit, toggleMode }: Props) => {
         control,
         handleSubmit,
         formState: { isSubmitting },
-    } = useForm<registerRequest>({
+    } = useForm<RegisterRequest>({
         defaultValues: initialValue,
         resolver: yupResolver(schema),
     })
-    const handleFormSubmit = (formValue: registerRequest) => {
+    const handleFormSubmit = (formValue: RegisterRequest) => {
         if (formValue !== null) {
             onSubmit(formValue)
         }

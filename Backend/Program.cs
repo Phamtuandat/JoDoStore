@@ -1,7 +1,7 @@
 using Backend.Data;
 using Backend.Repositories;
 using Backend.Repositories.Identity;
-using Backend.Services.AuthorService;
+using Backend.Services.Brand;
 using Backend.Services.Identity;
 using Backend.Services.Product;
 using MediatR;
@@ -44,8 +44,8 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IIdentitySevice, IdentitySevice>();
-builder.Services.AddScoped<IAuthorService, AuthorService>();
-builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IBrandService, BrandService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

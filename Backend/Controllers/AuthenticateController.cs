@@ -44,19 +44,20 @@ namespace Backend.Controllers
         [HttpPost("refreshToken")]
         public async Task<IActionResult> GetUerByToken()
         {
-            var user = GetCurrentUser();
+            var user = _GetCurrentUser();
             var result = await _identityService.GetUserByToken(user.Email);
             var resource = _mapper.Map<User, UserResource>(result.User);
             var response = new AuthenticatResponse(resource, result.Token, result.RefreshToken);
             return Ok(response);
         }
-        private User? GetCurrentUser()
+        private User? _GetCurrentUser()
         {
             ClaimsIdentity? idenity = HttpContext.User.Identity as ClaimsIdentity;
 
             if (idenity != null)
             {
                 var userClaims = idenity.Claims;
+#pragma warning disable CS8601 // Possible null reference assignment.
                 return new User
                 {
                     Email = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
@@ -64,6 +65,7 @@ namespace Backend.Controllers
                     LastName = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value,
                     Role = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value
                 };
+#pragma warning restore CS8601 // Possible null reference assignment.
             }
             return null;
         }

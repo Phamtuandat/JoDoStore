@@ -12,9 +12,9 @@ namespace Backend.Mapping
             CreateMap<User, UserResource>();
             CreateMap<Category, CategoryResource>();
             CreateMap<SaveCategoryResource, Category>();
-            CreateMap<Author, AuthorResource>();
-            CreateMap<SaveAuthorResourceModel, Author>();
-            CreateMap<Book, BookResource>();
+            CreateMap<BrandModel, BrandResource>();
+            CreateMap<SaveAuthorResourceModel, BrandModel>();
+            CreateMap<ProductModel, ProductResource>();
         }
     }
 }

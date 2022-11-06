@@ -1,10 +1,12 @@
 import createSagaMiddleware from "@redux-saga/core"
 import { Action, combineReducers, configureStore, ThunkAction } from "@reduxjs/toolkit"
 import AuthReducer from "features/authenticate/authSlice"
+import productReducer from "features/ListProduct/listProductSlice"
 import rootSaga from "./rootSaga"
 
 const rootReducer = combineReducers({
     auth: AuthReducer,
+    product: productReducer,
 })
 const sagaMiddleware = createSagaMiddleware()
 export const store = configureStore({

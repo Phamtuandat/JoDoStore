@@ -11,11 +11,11 @@ namespace Backend.Data
         {
             base.OnConfiguring(optionsBuilder);
             optionsBuilder
-                .UseSqlServer("Server=.;Database=BookStore;Trusted_Connection=true");
+                .UseSqlServer("Server=.;Database=TechStore;Trusted_Connection=true");
         }
 
-        public DbSet<Book> Books { get; set; }
-        public DbSet<Author> Authors { get; set; }
+        public DbSet<ProductModel> Products { get; set; }
+        public DbSet<BrandModel> Brands { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Adress> Adresses { get; set; }

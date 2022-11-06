@@ -22,21 +22,6 @@ namespace Backend.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("AuthorBook", b =>
-                {
-                    b.Property<int>("AuthorsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BooksId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AuthorsId", "BooksId");
-
-                    b.HasIndex("BooksId");
-
-                    b.ToTable("AuthorBook");
-                });
-
             modelBuilder.Entity("Backend.Models.Identity.Adress", b =>
                 {
                     b.Property<int>("Id")
@@ -114,7 +99,7 @@ namespace Backend.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Backend.Models.Products.Author", b =>
+            modelBuilder.Entity("Backend.Models.Products.BrandModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -133,10 +118,32 @@ namespace Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Brands");
                 });
 
-            modelBuilder.Entity("Backend.Models.Products.Book", b =>
+            modelBuilder.Entity("Backend.Models.Products.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CategoryThumb")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(225)
+                        .HasColumnType("nvarchar(225)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Backend.Models.Products.ProductModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -155,9 +162,6 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PageCount")
-                        .HasColumnType("int");
-
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
@@ -174,55 +178,37 @@ namespace Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Books");
+                    b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Backend.Models.Products.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(225)
-                        .HasColumnType("nvarchar(225)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("BookCategory", b =>
+            modelBuilder.Entity("BrandModelProductModel", b =>
                 {
                     b.Property<int>("BooksId")
                         .HasColumnType("int");
 
+                    b.Property<int>("BrandsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BooksId", "BrandsId");
+
+                    b.HasIndex("BrandsId");
+
+                    b.ToTable("BrandModelProductModel");
+                });
+
+            modelBuilder.Entity("CategoryProductModel", b =>
+                {
                     b.Property<int>("CategoriesId")
                         .HasColumnType("int");
 
-                    b.HasKey("BooksId", "CategoriesId");
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("CategoriesId");
+                    b.HasKey("CategoriesId", "ProductsId");
 
-                    b.ToTable("BookCategory");
-                });
+                    b.HasIndex("ProductsId");
 
-            modelBuilder.Entity("AuthorBook", b =>
-                {
-                    b.HasOne("Backend.Models.Products.Author", null)
-                        .WithMany()
-                        .HasForeignKey("AuthorsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend.Models.Products.Book", null)
-                        .WithMany()
-                        .HasForeignKey("BooksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.ToTable("CategoryProductModel");
                 });
 
             modelBuilder.Entity("Backend.Models.Identity.Adress", b =>
@@ -232,17 +218,32 @@ namespace Backend.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("BookCategory", b =>
+            modelBuilder.Entity("BrandModelProductModel", b =>
                 {
-                    b.HasOne("Backend.Models.Products.Book", null)
+                    b.HasOne("Backend.Models.Products.ProductModel", null)
                         .WithMany()
                         .HasForeignKey("BooksId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Backend.Models.Products.BrandModel", null)
+                        .WithMany()
+                        .HasForeignKey("BrandsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CategoryProductModel", b =>
+                {
                     b.HasOne("Backend.Models.Products.Category", null)
                         .WithMany()
                         .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Backend.Models.Products.ProductModel", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

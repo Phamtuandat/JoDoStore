@@ -6,14 +6,15 @@ namespace Backend.Models.Products
     {
         public Category()
         {
-            this.Books = new HashSet<Book>();
+            this.Products = new HashSet<ProductModel>();
         }
         public int Id { get; set; }
 
         [Required]
         [MaxLength(225)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public virtual ICollection<Book> Books { get; set; }
+        public virtual ICollection<ProductModel> Products { get; set; }
+        public string CategoryThumb { get; set; } =  string.Empty;
     }
 }

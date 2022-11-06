@@ -1,4 +1,4 @@
-export interface authResponse {
+export interface AuthResponse {
     id: number | string
     firstName: string
     lastName: string
@@ -7,18 +7,18 @@ export interface authResponse {
     refreshToken: string
 }
 
-export interface userInfor {
+export interface UserInfor {
     id: number | string
     firstName: string
     lastName: string
     email: string
 }
-export interface loginRequest {
+export interface LoginRequest {
     email: string
     password: string
 }
 
-export interface registerRequest {
+export interface RegisterRequest {
     email: string
     password: string
     confirmPassword: string

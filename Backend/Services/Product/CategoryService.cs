@@ -31,19 +31,21 @@ namespace Backend.Services.Product
             }
         }
 
-        public   IQueryable<Category> GetAll()
+        public  IQueryable<Category> GetAll()
         {
             return  _uniOfWork.CategoryRepository.All();
         }
 
-        public Category GetById(int id)
+        public CategoryRes GetById(int id)
         {
-            return  _uniOfWork.CategoryRepository.Get(id);
+            var category =  _uniOfWork.CategoryRepository?.Get(id);
+            if (category == null) return new CategoryRes("Cant't find category");
+            return new CategoryRes(category);
         }
 
         public async Task<CategoryRes> SaveCategoryAsync(Category category)
         {
-            var existtingCategory = _uniOfWork.CategoryRepository.Find(c => c.Name == category.Name).FirstOrDefault();
+            var existtingCategory = _uniOfWork.CategoryRepository.Find(c => c.Name == category.Name)?.FirstOrDefault();
             if (existtingCategory != null) return new CategoryRes("This category is existed!");
             try
             {

@@ -9,6 +9,6 @@ namespace Backend.Services.Product
         Task<CategoryRes> SaveCategoryAsync(Category category);
         Task<CategoryRes> UpdateCategoryAsync(Category category, int id);
         Task<CategoryRes> DeleteAsync(int id);
-        Category GetById(int id);
+        CategoryRes GetById(int id);
     }
 }

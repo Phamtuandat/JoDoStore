@@ -5,12 +5,12 @@ import AppBar from "@mui/material/AppBar"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import IconButton from "@mui/material/IconButton"
-import Paper from "@mui/material/Paper"
 import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
 import { useTheme } from "@mui/system"
 import { useAppDispatch, useAppSelector } from "app/hooks"
-import { ColorMode } from "Context/ColorModeContext"
+import Footer from "components/Footer"
+import { ThemeContext } from "Context/ColorModeContext"
 import { AuthSliceAction } from "features/authenticate/authSlice"
 import { useContext, useEffect } from "react"
 import { NavLink } from "react-router-dom"
@@ -22,7 +22,7 @@ export const MainLayout = (props: IProps) => {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
     const dispatch = useAppDispatch()
     const theme = useTheme()
-    const colorMode = useContext(ColorMode)
+    const colorMode = useContext(ThemeContext)
     useEffect(() => {
         if (!!localStorage.getItem("tokenExpirationDate")) {
             const tokenExpirationDate = localStorage.getItem("tokenExpirationDate")
@@ -39,7 +39,7 @@ export const MainLayout = (props: IProps) => {
     }
     return (
         <>
-            <Box sx={{ flexGrow: 1 }}>
+            <Box sx={{ flexGrow: 1 }} bgcolor="background.default">
                 <AppBar position="static">
                     <Toolbar>
                         <IconButton
@@ -86,9 +86,17 @@ export const MainLayout = (props: IProps) => {
                     </Toolbar>
                 </AppBar>
             </Box>
-            <Paper sx={{ height: "100vh" }} square>
+            <Box
+                flexDirection="column"
+                display="flex"
+                bgcolor="background.default"
+                color="text.primary"
+            >
                 {props.children}
-            </Paper>
+                <Box mt="auto" justifyContent="center" display="flex">
+                    <Footer />
+                </Box>
+            </Box>
         </>
     )
 }

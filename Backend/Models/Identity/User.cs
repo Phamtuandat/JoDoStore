@@ -10,12 +10,12 @@ public class User
 
     [Required]
     [MaxLength(255)]
-    public string Email { get; set; } 
+    public string Email { get; set; } = string.Empty;
 
     [MaxLength(15)]
     public int? Phone { get; set; }
 
-    public byte[] PasswordHash { get; set; }
+    public byte[] PasswordHash { get; set; } 
 
     public byte[] PasswordSalt { get; set; }
 
