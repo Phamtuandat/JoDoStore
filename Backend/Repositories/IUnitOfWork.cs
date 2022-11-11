@@ -5,9 +5,10 @@ namespace Backend.Repositories
 {
     public interface IUnitOfWork
     {
-        IRepository<BrandModel> AuthorRepository { get; }
+        IRepository<BrandModel> BrandRepository { get; }
         IRepository<Category> CategoryRepository { get; }
-        IRepository<Models.Products.ProductModel> BookRepository { get; }
+        IRepository<ProductModel> ProductRepository { get; }
+        IRepository<Media> MediaRepository { get; }
         Task CompleteAsync();
         
     }

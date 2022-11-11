@@ -12,9 +12,9 @@ namespace Backend.Repositories.Product
         {
         }
 
-        public override BrandModel Delete(BrandModel existtingAuthor)
+        public override BrandModel Delete(BrandModel existtingBrand)
         {
-            return base.Delete(existtingAuthor);
+            return base.Delete(existtingBrand);
         }
         public override BrandModel? Get(int id)
         {

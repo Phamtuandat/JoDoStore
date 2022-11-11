@@ -39,7 +39,7 @@ namespace Backend.Repositories
 
         public virtual T? Get(int id)
         {
-            return _context.Find<T>(id);
+            return _context.Set<T>().Find(id);
         }
 
         public async Task SaveChangesAsync()

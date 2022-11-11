@@ -9,27 +9,27 @@ namespace Backend.Repositories.Product
     {
         public ProductRepository(DataContext context) : base(context){}
 
-        public override IQueryable<Models.Products.ProductModel> All()
+        public override IQueryable<ProductModel> All()
         {
-            return base.All().Include(x => x.Brands).Include(x => x.Categories);
+            return base.All().Include(x => x.Brand).Include(x => x.Categories).Include(x => x.Media);
         }
-        public override IEnumerable<Models.Products.ProductModel> Find(Expression<Func<Models.Products.ProductModel, bool>> predicate)
+        public override IEnumerable<ProductModel> Find(Expression<Func<ProductModel, bool>> predicate)
         {
             return base.Find(predicate);
         }
-        public override Models.Products.ProductModel Add(Models.Products.ProductModel entity)
+        public override ProductModel Add(ProductModel entity)
         {
             return base.Add(entity);
         }
-        public override Models.Products.ProductModel? Get(int id)
+        public override ProductModel? Get(int id)
         {
             return base.Get(id);
         }
-        public override Models.Products.ProductModel Delete(Models.Products.ProductModel entity)
+        public override ProductModel Delete(ProductModel entity)
         {
             return base.Delete(entity);
         }
-        public override Models.Products.ProductModel Update(Models.Products.ProductModel entity)
+        public override ProductModel Update(ProductModel entity)
         {
             return base.Update(entity);
         }

@@ -6,7 +6,7 @@ namespace Backend
 {
     public class ProductRes : BaseResponse
     {
-        public ProductResource BookResource { get; private set; }
+        public ProductResource ProductResource { get; private set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public ProductRes(bool success, string message, ProductModel product) : base(success, message)
@@ -14,27 +14,30 @@ namespace Backend
         {
             if(product != null)
             {
+                var brand = new BrandResource() { Name = product.Brand.Name, Id = product.Brand.Id };
                 var categories = new List<CategoryResource>();
                 foreach (var item in product.Categories)
                 {
-                    categories.Add(new CategoryResource() { Id = item.Id, Name = item.Name }) ;
+                    categories.Add(new CategoryResource() { Id = item.Id, Name = item.Name });
                 }
-                var brands = new List<BrandResource>();
-                foreach (var item in product.Brands)
+                var thumbnailList = new List<MediaResource>();
+                foreach (var item in product.Media)
                 {
-                    brands.Add(new BrandResource() { Id = item.Id, Name = item.Name });
+                    thumbnailList.Add(new MediaResource(item));
                 }
-                BookResource = new ProductResource()
+
+
+                ProductResource = new ProductResource()
                 {
                     Name = product.Name,
                     Id = product.Id,
                     Categories = categories,
-                    Brands = brands,
+                    Brand = brand,
                     Description = product.Descriptions,
                     Price = product.Price,
                     PriceSale = product.PriceSale,
                     SmallImageLink = product.SmallImageLink,
-                    Thumbnail   = product.Thumbnail
+                    MediaResources = thumbnailList 
 
                 };
 

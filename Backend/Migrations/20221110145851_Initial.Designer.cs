@@ -4,6 +4,7 @@ using Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221110145851_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -151,7 +153,7 @@ namespace Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductModelId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -164,7 +166,7 @@ namespace Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductModelId");
 
                     b.ToTable("Media");
                 });
@@ -232,13 +234,9 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.Products.Media", b =>
                 {
-                    b.HasOne("Backend.Models.Products.ProductModel", "Product")
-                        .WithMany("Media")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
+                    b.HasOne("Backend.Models.Products.ProductModel", null)
+                        .WithMany("Thumbnail")
+                        .HasForeignKey("ProductModelId");
                 });
 
             modelBuilder.Entity("Backend.Models.Products.ProductModel", b =>
@@ -279,7 +277,7 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.Products.ProductModel", b =>
                 {
-                    b.Navigation("Media");
+                    b.Navigation("Thumbnail");
                 });
 #pragma warning restore 612, 618
         }

@@ -4,6 +4,7 @@ using Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221110140710_MediaTable")]
+    partial class MediaTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,7 +235,7 @@ namespace Backend.Migrations
             modelBuilder.Entity("Backend.Models.Products.Media", b =>
                 {
                     b.HasOne("Backend.Models.Products.ProductModel", "Product")
-                        .WithMany("Media")
+                        .WithMany("Thumbnail")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -279,7 +281,7 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.Products.ProductModel", b =>
                 {
-                    b.Navigation("Media");
+                    b.Navigation("Thumbnail");
                 });
 #pragma warning restore 612, 618
         }

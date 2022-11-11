@@ -4,6 +4,7 @@ using Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221110031421_Tags")]
+    partial class Tags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,7 +51,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Address");
+                    b.ToTable("Adresses");
                 });
 
             modelBuilder.Entity("Backend.Models.Identity.User", b =>
@@ -143,32 +145,6 @@ namespace Backend.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Backend.Models.Products.Media", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("thumbnailPath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("Media");
-                });
-
             modelBuilder.Entity("Backend.Models.Products.ProductModel", b =>
                 {
                     b.Property<int>("Id")
@@ -201,6 +177,10 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Thumbnail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BrandId");
@@ -230,21 +210,10 @@ namespace Backend.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("Backend.Models.Products.Media", b =>
-                {
-                    b.HasOne("Backend.Models.Products.ProductModel", "Product")
-                        .WithMany("Media")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("Backend.Models.Products.ProductModel", b =>
                 {
                     b.HasOne("Backend.Models.Products.BrandModel", "Brand")
-                        .WithMany("Products")
+                        .WithMany("Books")
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -274,12 +243,7 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.Products.BrandModel", b =>
                 {
-                    b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("Backend.Models.Products.ProductModel", b =>
-                {
-                    b.Navigation("Media");
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }

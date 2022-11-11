@@ -15,11 +15,11 @@ namespace Backend.Services.Brand
 
         public async Task<BrandRes> DeleteAsync(int id)
         {
-            var existtingAuthor = _unitOfWork.AuthorRepository.Get(id);
+            var existtingAuthor = _unitOfWork.BrandRepository.Get(id);
             if (existtingAuthor == null) return new BrandRes("Author id is not already existed!");
             try
             {
-                _unitOfWork.AuthorRepository.Delete(existtingAuthor);
+                _unitOfWork.BrandRepository.Delete(existtingAuthor);
                 await _unitOfWork.CompleteAsync();
                 return new BrandRes(true);
             }catch(Exception ex)
@@ -30,31 +30,31 @@ namespace Backend.Services.Brand
 
         public  IEnumerable<BrandModel>? FindAuthor(string name)
         {
-            var brand = _unitOfWork.AuthorRepository.Find(a => a.Name == name)?.ToList();
+            var brand = _unitOfWork.BrandRepository.Find(a => a.Name == name)?.ToList();
             return  brand;
 
         }
 
         public BrandRes GetById(int id)
         {
-            var existedAuthor =  _unitOfWork.AuthorRepository.Get(id);
+            var existedAuthor =  _unitOfWork.BrandRepository.Get(id);
             if (existedAuthor == null) return new BrandRes("can't find author id");
             return new BrandRes(existedAuthor);
         }
 
         public IEnumerable<Models.Products.BrandModel> GetAll()
         {
-            return  _unitOfWork.AuthorRepository.All();
+            return  _unitOfWork.BrandRepository.All();
         }
 
         public async Task<BrandRes> SaveAsync(Models.Products.BrandModel brand)
         {
             
-            var existedAuthor =  _unitOfWork.AuthorRepository.Find(a => a.Name == brand.Name)?.FirstOrDefault();
+            var existedAuthor =  _unitOfWork.BrandRepository.Find(a => a.Name == brand.Name)?.FirstOrDefault();
             if (existedAuthor != null) return new BrandRes("This author is already existed!");
             try
             {
-                _unitOfWork.AuthorRepository.Add(brand);
+                _unitOfWork.BrandRepository.Add(brand);
                 await _unitOfWork.CompleteAsync();
                 return new BrandRes(brand);
             }catch(Exception ex)
@@ -67,13 +67,13 @@ namespace Backend.Services.Brand
 
         public async Task<BrandRes> UpdateAsync(Models.Products.BrandModel author, int id)
         {
-            var existtingAuthor =  _unitOfWork.AuthorRepository.Get(id);
+            var existtingAuthor =  _unitOfWork.BrandRepository.Get(id);
             if (existtingAuthor == null) return new BrandRes("The author is not already existed!");
             existtingAuthor.Name = author.Name;
             existtingAuthor.Description = author.Description;
             try
             {
-                var updatedAuthor = _unitOfWork.AuthorRepository.Update(existtingAuthor);
+                var updatedAuthor = _unitOfWork.BrandRepository.Update(existtingAuthor);
                 await _unitOfWork.CompleteAsync();
                 return new BrandRes(updatedAuthor);
             }catch(Exception ex)

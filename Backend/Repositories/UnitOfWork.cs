@@ -14,7 +14,7 @@ namespace Backend.Repositories
         }
 
         private IRepository<BrandModel> authorRepository;
-        public IRepository<BrandModel> AuthorRepository
+        public IRepository<BrandModel> BrandRepository
         {
             get
             {
@@ -37,8 +37,8 @@ namespace Backend.Repositories
                 return categoryRepository;
             }
         }
-        private IRepository<Models.Products.ProductModel> bookRepository;
-        public IRepository<Models.Products.ProductModel> BookRepository
+        private IRepository<ProductModel> bookRepository;
+        public IRepository<ProductModel> ProductRepository
         {
             get
             {
@@ -49,7 +49,18 @@ namespace Backend.Repositories
                 return bookRepository;
             }
         }
-
+        private IRepository<Media> mediaRepository;
+        public IRepository<Media> MediaRepository
+        {
+            get
+            {
+                if (mediaRepository == null)
+                {
+                    mediaRepository = new MediaRepository(_context);
+                }
+                return mediaRepository;
+            }
+        }
         public async Task CompleteAsync()
         {
             await _context.SaveChangesAsync();

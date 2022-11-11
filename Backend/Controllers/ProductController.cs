@@ -36,11 +36,11 @@ namespace Backend.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var result = await _mediator.Send(new GetProductByIdQuery() { Id = id });
-            if (result.Success) return Ok(result.BookResource);
+            if (result.Success) return Ok(result.ProductResource);
             return StatusCode(404, result.Message);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(SaveProductResource model)
+        public async Task<IActionResult> CreateAsync([FromForm] SaveProductResource model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState.GetErrorMessages());
             var result = await _mediator.Send(new CreateProductCommand() { SaveBookResource = model });
@@ -49,14 +49,14 @@ namespace Backend.Controllers
                 return StatusCode(400, result.Message);
             };
 
-            return Ok(result.BookResource);
+            return Ok(result.ProductResource);
         }
         [HttpPatch("{id:int}")]
 
-        public async Task<IActionResult> UpdateAsync([FromBody] SaveProductResource model, int id)
+        public async Task<IActionResult> UpdateAsync([FromForm] SaveProductResource model, int id)
         {
             var result = await _mediator.Send(new UpdateProductCommand() { SaveBookResource = model, Id = id });
-            if (result.Success) return Ok(result.BookResource);
+            if (result.Success) return Ok(result.ProductResource);
             return StatusCode(400, result.Message);
         }
         [HttpDelete("{id:int}")]

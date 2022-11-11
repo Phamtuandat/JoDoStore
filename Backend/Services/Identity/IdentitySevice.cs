@@ -55,6 +55,7 @@ namespace Backend.Services.Identity
         {
             var userList = await _identityRespository.GetListAsync();
             var user = userList.FirstOrDefault(u => u.Email == email);
+            if (user == null) return new AuthenticateBaseRes("token is invalid");
             CreateToken(user, out string accessToken, out string refreshToken);
             return new AuthenticateBaseRes(user, accessToken, refreshToken);
         }

@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Backend.Models.Identity
 {
+    [Table("Address")]
     public class Adress
     {
         public int Id { get; set; }

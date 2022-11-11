@@ -19,5 +19,6 @@ namespace Backend.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Adress> Adresses { get; set; }
+        public DbSet<Media> Media { get; set; }
     }
 }
