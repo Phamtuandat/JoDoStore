@@ -20,14 +20,13 @@ interface LinkRouterProps extends LinkProps {
 }
 
 function LinkRouter(props: LinkRouterProps) {
-    return <Link {...props} component={RouterLink as any} />
+    return <Link underline="hover" {...props} component={RouterLink as any} />
 }
 const DashHeader = ({ toggleDrawer }: Props) => {
     const location = useLocation()
     const pathnames = location.pathname.split("/").filter((x) => x)
     function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         event.preventDefault()
-        console.log(location.pathname.split("/").slice(1))
     }
     return (
         <Box sx={{ flexGrow: 1 }}>

@@ -1,17 +1,19 @@
 import HeadsetMicOutlinedIcon from "@mui/icons-material/HeadsetMicOutlined"
 import { Box, Container, Paper, Typography } from "@mui/material"
 import Button from "@mui/material/Button"
+import { useTheme } from "@mui/material/styles"
 import Grid from "@mui/material/Unstable_Grid2"
 import { motion } from "framer-motion"
 import { useWidth } from "Hooks/width-hook"
 type Props = {}
 
 const FlashDeal = (props: Props) => {
+    const theme = useTheme()
     const width = useWidth()
     return (
         <Container maxWidth="lg">
             <Paper
-                elevation={1}
+                elevation={3}
                 sx={{
                     mt: width === "xs" ? 5 : 20,
                     p: 4,
@@ -34,13 +36,13 @@ const FlashDeal = (props: Props) => {
                                 sx={{
                                     p: "4px",
                                     borderRadius: "50%",
-                                    backgroundColor: "#ff497c",
+                                    backgroundColor: theme.palette.secondary.light,
                                     lineHeight: 0,
                                 }}
                             >
                                 <HeadsetMicOutlinedIcon />
                             </Box>
-                            <Box component="span" color="#ff497c" ml={2}>
+                            <Box component="span" color="secondary" ml={2}>
                                 Don’t Miss!!
                             </Box>
                         </Box>
@@ -97,7 +99,7 @@ const FlashDeal = (props: Props) => {
                             </Box>
                         </Box>
                         <Box width="100%">
-                            <Button variant="contained" color="info" size="large">
+                            <Button variant="contained" size="large" color="secondary">
                                 Check It Out!
                             </Button>
                         </Box>

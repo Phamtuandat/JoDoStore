@@ -1,16 +1,16 @@
-import { AuthResponse, LoginRequest, RegisterRequest } from "models"
+import { AuthenticateInfo, AuthResponse, LoginRequest, RegisterRequest } from "models"
 import axiosClient from "./AxiosClient"
 
 const authApi = {
-    login(params: LoginRequest): Promise<AuthResponse> {
+    login(params: LoginRequest): Promise<AuthResponse<AuthenticateInfo>> {
         const url = "Authenticate/Login"
         return axiosClient.post(url, params)
     },
-    register(params: RegisterRequest): Promise<AuthResponse> {
+    register(params: RegisterRequest): Promise<AuthResponse<AuthenticateInfo>> {
         const url = "Authenticate/Register"
         return axiosClient.post(url, params)
     },
-    refreshToken(refreshToken: string): Promise<AuthResponse> {
+    refreshToken(refreshToken: string): Promise<AuthResponse<AuthenticateInfo>> {
         const url = "Authenticate/refreshToken"
 
         return axiosClient.post(url, undefined, {

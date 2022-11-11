@@ -1,12 +1,12 @@
 import { call, fork, put, race, take } from "@redux-saga/core/effects"
 import { PayloadAction } from "@reduxjs/toolkit"
 import authApi from "ApiClients/AuthApi"
-import { AuthResponse, LoginRequest, RegisterRequest } from "models"
+import { AuthenticateInfo, AuthResponse, LoginRequest, RegisterRequest } from "models"
 import handleNotify from "utils/Toast-notify"
 import { AuthSliceAction } from "./authSlice"
 
 interface IRace {
-    response: AuthResponse
+    response: AuthResponse<AuthenticateInfo>
     cancel: any
 }
 
@@ -16,8 +16,7 @@ function* handleLogin(action: PayloadAction<LoginRequest>): any {
             response: call(authApi.login, action.payload),
             cancel: take(AuthSliceAction.failed.type),
         })
-        yield fork(handleStorage, response)
-        yield put(AuthSliceAction.success(response))
+        yield put(AuthSliceAction.success(response.data))
         yield call(handleNotify.success, "Login is successfully!")
     } catch (error) {
         yield put(AuthSliceAction.failed(error as string))
@@ -26,9 +25,11 @@ function* handleLogin(action: PayloadAction<LoginRequest>): any {
 function* handleRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken") as string
     try {
-        const result: AuthResponse = yield call(authApi.refreshToken, refreshToken)
-        yield call(handleStorage, result)
-        yield put(AuthSliceAction.success(result))
+        const result: AuthResponse<AuthenticateInfo> = yield call(
+            authApi.refreshToken,
+            refreshToken
+        )
+        yield put(AuthSliceAction.success(result.data))
     } catch (error) {
         yield put(AuthSliceAction.failed)
         yield call(handleLogout)
@@ -36,28 +37,13 @@ function* handleRefreshToken() {
 }
 function* handleRegister(action: PayloadAction<RegisterRequest>) {
     try {
-        const result: AuthResponse = yield call(authApi.register, action.payload)
-        yield call(handleStorage, result)
-        yield put(AuthSliceAction.success(result))
+        const result: AuthResponse<AuthenticateInfo> = yield call(authApi.register, action.payload)
+        yield put(AuthSliceAction.success(result.data))
     } catch (error) {
         yield put(AuthSliceAction.failed)
     }
 }
-function* handleStorage(result: AuthResponse) {
-    const tokenExpirationDate = new Date(new Date().getTime() + 1000 * 60 * 60)
-    yield localStorage.setItem(
-        "currentUser",
-        JSON.stringify({
-            firstName: result.firstName,
-            lastName: result.lastName,
-            email: result.email,
-            id: result.id,
-        })
-    )
-    yield localStorage.setItem("token", JSON.stringify(result.token))
-    yield localStorage.setItem("refreshToken", JSON.stringify(result.refreshToken))
-    yield localStorage.setItem("tokenExpirationDate", JSON.stringify(tokenExpirationDate))
-}
+
 function* handleLogout() {
     const itemList: Array<string> = ["currentUser", "token", "refreshToken", "tokenExpirationDate"]
     yield itemList.forEach((e) => {

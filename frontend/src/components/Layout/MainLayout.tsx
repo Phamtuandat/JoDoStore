@@ -72,14 +72,13 @@ export const MainLayout = (props: IProps) => {
                                 component={NavLink}
                                 to="/auth"
                                 sx={{
-                                    color: "inherit",
                                     textDecoration: "none",
                                 }}
                             >
-                                <Button color="inherit">Login</Button>
+                                <Button color="secondary">Login</Button>
                             </Box>
                         ) : (
-                            <Button variant="contained" color="warning" onClick={handleLogout}>
+                            <Button color="secondary" onClick={handleLogout}>
                                 Logout
                             </Button>
                         )}

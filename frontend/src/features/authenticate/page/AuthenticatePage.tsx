@@ -15,8 +15,8 @@ export default function AuthenticatePage() {
 
     const [mode, setMode] = useState<"Signin" | "Signup">("Signin")
     const dispatch = useAppDispatch()
-    const isLogging = useAppSelector((state) => state.auth.processing)
-    const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
+    const isLogging = !!useAppSelector((state) => state.auth.processing)
+    const isLoggedIn = !!useAppSelector((state) => state.auth.isLoggedIn)
     const currentUser = localStorage.getItem("token")
 
     useEffect(() => {

@@ -40,7 +40,7 @@ const product: Product = {
     price: 100,
     priceSale: 15,
     smallImageLink: "",
-    thumbnail: "",
+    thumbnail: undefined,
 }
 const ListProductSale = (props: Props) => {
     const theme = useTheme()
@@ -75,22 +75,16 @@ const ListProductSale = (props: Props) => {
                         <Box
                             sx={{
                                 p: 0.3,
-                                bgcolor: theme.palette.primary.main,
                                 borderRadius: "50%",
                                 width: "fit-content",
                                 lineHeight: 0,
                                 mr: 1,
-                                color: "text.secondary",
+                                bgcolor: theme.palette.secondary.main,
                             }}
                         >
                             <ShoppingBasketOutlinedIcon />
                         </Box>
-                        <Typography
-                            component="span"
-                            color="text.secondary"
-                            lineHeight={0}
-                            fontWeight={700}
-                        >
+                        <Typography component="span" lineHeight={0} fontWeight={700}>
                             Our Products
                         </Typography>
                     </Box>
@@ -167,8 +161,8 @@ const ListProductSale = (props: Props) => {
             </Box>
             <Box maxWidth="250px" mx="auto">
                 <Button
-                    variant="contained"
-                    color="info"
+                    variant="outlined"
+                    color="secondary"
                     sx={{
                         transition: "transform 200ms",
                         "&:hover": {

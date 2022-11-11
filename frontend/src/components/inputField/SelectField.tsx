@@ -8,7 +8,7 @@ export interface PasswordFieldProps extends React.InputHTMLAttributes<HTMLInputE
     label?: string
     disabled: boolean
     options: Category[]
-    isMutiple?: boolean
+    isMutiple: boolean
 }
 export default function SelectTextFields({
     name,
@@ -25,7 +25,6 @@ export default function SelectTextFields({
         name,
         control,
     })
-
     return (
         <Box
             sx={{
@@ -34,19 +33,19 @@ export default function SelectTextFields({
             }}
         >
             <Autocomplete
+                value={value}
                 multiple={isMutiple}
                 disablePortal
                 id="combo-box-demo"
-                options={options}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newOptions) => {
-                    onChange(newOptions)
+                options={options.map((o) => o.id)}
+                getOptionLabel={(option) => options.filter((o) => o.id === option)[0].name}
+                onChange={(event, value) => {
+                    onChange(value)
                 }}
                 fullWidth
                 renderInput={(params) => (
                     <TextField
                         {...params}
-                        value={value || ""}
                         onBlur={onBlur}
                         name={name}
                         inputRef={ref}

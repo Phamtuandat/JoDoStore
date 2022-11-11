@@ -31,7 +31,7 @@ export const ProductItem = ({ product }: Props) => {
             padding: 4px;
             font-size: 10px;
             cursor: pointer;
-            background-color: ${theme.palette.background.paper};
+            background-color: ${theme.palette.secondary.main};
             transition: ${theme.transitions.create(["transform"], {
                 duration: theme.transitions.duration.short,
             })};
@@ -84,9 +84,9 @@ export const ProductItem = ({ product }: Props) => {
                         <FavoriteIcon />
                     </StyledButton>
                     <Button
+                        color="secondary"
                         variant="contained"
                         size="medium"
-                        color="secondary"
                         sx={{
                             mx: 1,
                             transition: ` transform ${theme.transitions.duration.complex}ms `,
@@ -112,7 +112,7 @@ export const ProductItem = ({ product }: Props) => {
                         {product.name} {"-"}
                     </Typography>
                     <Box>
-                        <Typography variant="h6">{product.brand?.name}</Typography>
+                        <Typography variant="h6">{"brands"}</Typography>
                     </Box>
                 </Box>
                 <Box>

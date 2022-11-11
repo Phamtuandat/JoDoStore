@@ -60,7 +60,13 @@ export const LoginForm = ({ onSubmit, isLoggedIn, isLogging, toggleMode }: Props
                 sx={{ mt: 1 }}
                 onSubmit={handleSubmit(handleFormSubmit)}
             >
-                <InputField control={control} name="email" label="Email" disabled={isLogging} />
+                <InputField
+                    control={control}
+                    name="email"
+                    label="Email"
+                    disabled={isLogging}
+                    fullWidth={true}
+                />
                 <PasswordField
                     control={control}
                     name="password"

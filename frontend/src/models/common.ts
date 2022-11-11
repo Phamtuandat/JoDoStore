@@ -17,3 +17,7 @@ export interface ListParams {
 
     [key: string]: any
 }
+
+export interface AuthResponse<T> {
+    data: T
+}

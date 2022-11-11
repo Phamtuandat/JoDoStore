@@ -1,13 +1,35 @@
-import { Box, Paper, Step, StepLabel, Stepper, Typography } from "@mui/material"
+import { Box, Paper, Typography } from "@mui/material"
+import { productApi } from "ApiClients/ProductApi"
+import { useAppSelector } from "app/hooks"
 import "draft-js/dist/Draft.css"
-import { Product } from "models"
+import { SaveProductReq } from "models"
+import handleNotify from "utils/Toast-notify"
 import ProductForm from "./ProductComponent/ProductForm"
-const steps = ["Select master blaster campaign settings", "Create an ad group", "Create an ad"]
 type Props = {}
 
 const AddProductPage = (props: Props) => {
-    const handleFormSubmit = (value: Product) => {
-        console.log(value)
+    const token = useAppSelector((state) => state.auth.currentUser?.token)
+    const handleFormSubmit = async (value: SaveProductReq) => {
+        const formData = new FormData()
+        formData.append("name", value.name)
+        formData.append("descriptions", value.descriptions)
+        formData.append("categories", `${value.categories}`)
+        formData.append("price", `${value.price}`)
+        formData.append("brand", `${value.brand}`)
+        if (value.thumbnail) {
+            value.thumbnail.forEach((th) => {
+                formData.append("media", th)
+            })
+        }
+        if (token) {
+            try {
+                const result = await productApi.create(formData, token)
+                console.log(result)
+                handleNotify.success("Add Product Successfully")
+            } catch (error) {
+                handleNotify.error(error as string)
+            }
+        }
     }
     return (
         <Box display="flex" justifyContent="center" mt={2} flexDirection="column">
@@ -31,15 +53,6 @@ const AddProductPage = (props: Props) => {
                         p: 3,
                     }}
                 >
-                    <Box sx={{ width: "100%" }}>
-                        <Stepper activeStep={1} alternativeLabel>
-                            {steps.map((label) => (
-                                <Step key={label}>
-                                    <StepLabel>{label}</StepLabel>
-                                </Step>
-                            ))}
-                        </Stepper>
-                    </Box>
                     <ProductForm handleSubmitForm={handleFormSubmit} />
                 </Paper>
             </Box>

@@ -1,110 +1,112 @@
-import { Box, Button } from "@mui/material"
-import { InputField } from "components/inputField"
-import SelectTextFields from "components/inputField/SelectField"
-import { EditorState, convertToRaw } from "draft-js"
-import "draft-js/dist/Draft.css"
-import { Category, Product } from "models"
-import { useEffect, useState } from "react"
+import { Box } from "@mui/material"
+import { brandApi } from "ApiClients/BrandApi"
+import categoryApi from "ApiClients/CategoryApi"
+import AdminStepper from "components/AdminStepper"
+import { Brand, Category, SaveProductReq } from "models"
+import { ReactNode, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import TextEditTor from "../../components/TextEditTor"
+import Pricing from "./Pricing"
+import ProductInfo from "./ProductInfo"
+import ProductMedia from "./ProductMedia"
+
 type Props = {
-    handleSubmitForm: (value: Product) => void
+    handleSubmitForm: (value: SaveProductReq) => void
+}
+interface TabPanelProps {
+    children?: ReactNode
+    index: number
+    value: number
+}
+function TabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+        </div>
+    )
 }
 
-const ProductForm = ({ handleSubmitForm }: Props) => {
-    const [editorState, setEditorState] = useState<EditorState>()
-    const { control, handleSubmit, setValue } = useForm<Product>({
+function ProductForm({ handleSubmitForm }: Props) {
+    const [categories, setCategories] = useState<Category[]>([])
+    const [brands, setBrands] = useState<Brand[]>([])
+    const [step, setActiveStep] = useState(0)
+
+    const { control, handleSubmit, setValue, getValues } = useForm<SaveProductReq>({
         defaultValues: {
             name: "",
             brand: null,
             categories: [],
             descriptions: "",
-            id: "",
-            price: null,
-            priceSale: null,
+            price: 0,
+            priceSale: 0,
             smallImageLink: "",
-            thumbnail: "",
+            thumbnail: undefined,
+            tags: [],
         },
     })
-    const handleFormSubmit = (value: Product) => {
+    useEffect(() => {
+        ;(async () => {
+            const result = await categoryApi.getAll()
+            const categoryList = result.data
+            const BrandList = await brandApi.getAll()
+            setBrands(BrandList.data)
+            setCategories(categoryList)
+        })()
+    }, [])
+    const handleFormSubmit = (value: SaveProductReq) => {
         handleSubmitForm(value)
     }
-    useEffect(() => {
-        if (editorState) {
-            setValue("descriptions", JSON.stringify(convertToRaw(editorState.getCurrentContent())))
-        }
-    }, [editorState, setValue])
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     return (
-        <Box component="form" onSubmit={handleSubmit(handleFormSubmit)}>
-            <Box
-                sx={{
-                    mt: 5,
-                    minHeight: "350px",
-                }}
-                display="flex"
+        <>
+            <AdminStepper
+                handleNextStep={(step) => setActiveStep(step)}
+                handleFormSubmit={handleSubmit(handleFormSubmit)}
             >
-                <Box
-                    sx={{
-                        width: "50%",
-                        p: 2,
-                    }}
-                >
-                    <InputField
-                        control={control}
-                        name="name"
-                        label="Name"
-                        disabled={false}
-                        variant="standard"
-                        autoComplete="new-password"
-                    />
-                    <TextEditTor handleChange={(value) => setEditorState(value)} />
+                <Box sx={{ width: "100%" }}>
+                    <Box component={TabPanel} value={step} index={0}>
+                        <ProductInfo
+                            control={control}
+                            setValue={(value) => setValue("descriptions", value)}
+                            brands={brands}
+                            categories={categories}
+                        />
+                    </Box>
+                    <Box
+                        component={TabPanel}
+                        value={step}
+                        index={1}
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="center"
+                    >
+                        <ProductMedia
+                            control={control}
+                            setValue={(value) => setValue("thumbnail", value)}
+                            value={getValues("thumbnail")}
+                        />
+                    </Box>
+                    <Box
+                        component={TabPanel}
+                        value={step}
+                        index={2}
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="center"
+                    >
+                        <Pricing control={control} />
+                    </Box>
                 </Box>
-                <Box
-                    sx={{
-                        width: "50%",
-                        p: 2,
-                    }}
-                >
-                    <InputField
-                        control={control}
-                        name="brand"
-                        label="Brand"
-                        disabled={false}
-                        variant="standard"
-                        autoComplete="new-password"
-                    />
-                    <SelectTextFields
-                        control={control}
-                        name="categories"
-                        label="Categories"
-                        disabled={false}
-                        options={categories}
-                        isMutiple={true}
-                    />
-                </Box>
-            </Box>
-            <Box textAlign="right">
-                <Button type="submit" variant="contained">
-                    NEXT
-                </Button>
-            </Box>
-        </Box>
+            </AdminStepper>
+        </>
     )
 }
 
 export default ProductForm
-const categories: Category[] = [
-    {
-        name: "Clothing",
-    },
-    {
-        name: "Electronics",
-    },
-    {
-        name: "Furniture",
-    },
-    {
-        name: "Orders",
-    },
-]

@@ -1,7 +1,16 @@
 import { ListParams, Product } from "models"
 import axiosClient from "./AxiosClient"
 
-const productApi = {
+export const productApi = {
+    create(data: FormData, token: string) {
+        const url = "/Product"
+        return axiosClient.post(url, data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: "Bearer " + token,
+            },
+        })
+    },
     getList(params: ListParams) {
         const url = "/Product"
         return axiosClient.get(url, {

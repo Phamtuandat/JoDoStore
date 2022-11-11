@@ -1,4 +1,4 @@
-export interface AuthResponse {
+export interface AuthenticateInfo {
     id: number | string
     firstName: string
     lastName: string

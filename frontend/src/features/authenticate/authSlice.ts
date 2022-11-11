@@ -1,19 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { AuthResponse, LoginRequest, RegisterRequest } from "models"
+import { AuthenticateInfo, LoginRequest, RegisterRequest } from "models"
 import handleNotify from "utils/Toast-notify"
 
 export interface AuthState {
-    isLoggedIn: boolean
+    isLoggedIn: boolean | null
     processing: boolean
     // current user logged
-    currentUser?: AuthResponse
+    currentUser?: AuthenticateInfo | null
     error: string
 }
 
 const initialState: AuthState = {
-    isLoggedIn: Boolean(localStorage.getItem("token")),
+    isLoggedIn: null,
     processing: false,
-    currentUser: JSON.parse(localStorage.getItem("currentUser") as string),
+    currentUser: null,
     error: "",
 }
 
@@ -27,7 +27,7 @@ const AuthSlice = createSlice({
         register(state, action: PayloadAction<RegisterRequest>) {
             state.processing = true
         },
-        success(state, action: PayloadAction<AuthResponse>) {
+        success(state, action: PayloadAction<AuthenticateInfo>) {
             state.processing = false
             state.currentUser = action.payload
             state.isLoggedIn = true
@@ -40,7 +40,7 @@ const AuthSlice = createSlice({
         },
         logout(state) {
             state.isLoggedIn = false
-            state.currentUser = undefined
+            state.currentUser = null
         },
         refreshToken(state) {
             state.processing = true

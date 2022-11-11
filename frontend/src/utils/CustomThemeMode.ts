@@ -1,4 +1,6 @@
 import { PaletteMode } from "@mui/material"
+import { blueGrey, orange } from "@mui/material/colors"
+import purple from "@mui/material/colors/purple"
 
 export const getDesignTokens = (mode: PaletteMode) => ({
     transitions: {
@@ -49,37 +51,39 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             ? {
                   // palette values for light mode
                   primary: {
-                      main: "#e1f5fe",
-                  },
-                  divider: "#7D9D9C",
-                  background: {
-                      default: "#fff",
-                      paper: "#f6f7fb",
+                      main: blueGrey[700],
+                      light: blueGrey[600],
+                      Dark: blueGrey[800],
                   },
                   text: {
-                      primary: "#292930",
-                      secondary: "#ff497c",
+                      primary: "#000",
+                      secondary: "#ffffff",
                   },
                   secondary: {
-                      main: "#ff497c",
+                      main: orange[500],
+                      light: orange[200],
+                      dark: orange[900],
                   },
               }
             : {
                   // palette values for dark mode
                   primary: {
-                      main: "#bbb",
+                      main: purple[200],
+                      light: purple[50],
                   },
                   divider: "#A5C9CA",
                   background: {
-                      default: "#292930",
-                      paper: "#1B2430cc",
+                      default: "#121212",
+                      paper: "#ffffff0d",
                   },
                   text: {
                       primary: "#fff",
                       secondary: "#ccc",
                   },
                   secondary: {
-                      main: "#ff497c",
+                      main: purple[200],
+                      light: purple[50],
+                      dark: purple[300],
                   },
                   info: {
                       main: "#1B2430cc",

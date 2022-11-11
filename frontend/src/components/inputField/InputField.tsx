@@ -8,8 +8,16 @@ export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     label?: string
     disabled: boolean
     variant?: "standard" | "filled" | "outlined" | undefined
+    fullWidth?: boolean
 }
-export const InputField = ({ name, control, variant, label, ...inputProps }: InputFieldProps) => {
+export const InputField = ({
+    name,
+    control,
+    variant,
+    label,
+    fullWidth,
+    ...inputProps
+}: InputFieldProps) => {
     const {
         field: { value, onChange, onBlur, ref },
         fieldState: { error },
@@ -21,7 +29,7 @@ export const InputField = ({ name, control, variant, label, ...inputProps }: Inp
         <TextField
             size="small"
             margin="normal"
-            fullWidth
+            fullWidth={fullWidth}
             label={label}
             variant={variant || "outlined"}
             onChange={onChange}
