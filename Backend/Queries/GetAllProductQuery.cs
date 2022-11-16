@@ -27,8 +27,10 @@ namespace Backend.Queries
             {
                 var bookList =  _bookService
                     .GetAll().ToList();
-                var resource = _mapper.Map<IEnumerable<ProductModel>, IEnumerable<ProductResource>>(bookList);
+                var resource = _mapper.Map<List<ProductModel>, List<ProductResource>>(bookList);
+               
                 return resource;
+
                 
             }
 

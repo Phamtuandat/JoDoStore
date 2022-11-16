@@ -1,17 +1,9 @@
-﻿using Backend.Models.Products;
-
-namespace Backend
+﻿namespace Backend.Resources
 {
     public class MediaResource
     {
         public int Id { get; set; }
-        public string ThumbnailPath { get; set; }
-
-        public MediaResource(Media media )
-        {
-            Id = media.Id;
-            ThumbnailPath = media.thumbnailPath;
-        }
-
+        public string Title { get; set; } = string.Empty;
+        public string ThumbnailPath { get; set; } = string.Empty;
     }
 }

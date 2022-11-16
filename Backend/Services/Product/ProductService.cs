@@ -25,7 +25,7 @@ namespace Backend.Services.Product
                 
                 if(brandExisted != null) brand = brandExisted;
                 var categoryList = new List<Category>();
-                foreach (var item in model.CategoryList)
+                foreach (var item in model.Categories)
                 {
                     var category = _unitOfWork.CategoryRepository.All().FirstOrDefault(a => a.Id == item);
                     if(category != null) categoryList.Add(category);
@@ -49,7 +49,7 @@ namespace Backend.Services.Product
                         {
                             item.CopyTo(filesStream);
                         }
-                        Media newMedia = new Media() { thumbnailPath = dynamicFileName, Title = model.Name };
+                        Media newMedia = new() { ThumbnailPath = dynamicFileName, Title = model.Name };
                         _unitOfWork.MediaRepository.Add(newMedia);
                         //add product Image for new product
                         media.Add(newMedia);
@@ -88,7 +88,7 @@ namespace Backend.Services.Product
             }
             catch (Exception ex)
             {
-                return new ProductRes($"Something went wrong when deleting the book, please try again later!, {ex.Message}");
+                return new ProductRes($"Something went wrong when deleting the product, please try again later!, {ex.Message}");
             }
         }
 
@@ -112,9 +112,10 @@ namespace Backend.Services.Product
             var existedProduct = _unitOfWork.ProductRepository.All().FirstOrDefault(p => p.Id == id);
             if (existedProduct == null) return new ProductRes("The book is not already exist!");
             var categoryList = new List<Category>();
-            if(model.CategoryList.Count > 0 && model.CategoryList != null)
+
+            if(model.Categories.Count > 0 && model.Categories != null)
             {
-                foreach (var item in model.CategoryList)
+                foreach (var item in model.Categories)
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
                     categoryList.Add(_unitOfWork.CategoryRepository.Find(c => c.Id == item).FirstOrDefault());

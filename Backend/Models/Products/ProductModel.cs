@@ -22,7 +22,7 @@ namespace Backend.Models.Products
         public int PriceSale { get; set; }
         public DateTime CreatedTimestamp { get; set; }
         public string SmallImageLink { get; set; } = string.Empty;
-        public ICollection<Media> Media { get; set; }
+        public virtual ICollection<Media> Media { get; set; }
 
     }
 

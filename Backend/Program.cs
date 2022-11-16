@@ -45,6 +45,8 @@ builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IIdentitySevice, IdentitySevice>();
 builder.Services.AddScoped<IBrandService, BrandService>();
+builder.Services.AddScoped<IMediaService, MediaService >();
+
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

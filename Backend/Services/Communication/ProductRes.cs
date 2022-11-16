@@ -23,9 +23,8 @@ namespace Backend
                 var thumbnailList = new List<MediaResource>();
                 foreach (var item in product.Media)
                 {
-                    thumbnailList.Add(new MediaResource(item));
+                    thumbnailList.Add(new MediaResource() { Id = item.Id, ThumbnailPath= item.ThumbnailPath, Title= item.Title });
                 }
-
 
                 ProductResource = new ProductResource()
                 {
@@ -37,8 +36,7 @@ namespace Backend
                     Price = product.Price,
                     PriceSale = product.PriceSale,
                     SmallImageLink = product.SmallImageLink,
-                    MediaResources = thumbnailList 
-
+                    MediaResource = thumbnailList
                 };
 
             }

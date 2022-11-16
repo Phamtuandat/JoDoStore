@@ -14,7 +14,7 @@ namespace Backend.Resources
 
         public string SmallImageLink { get; set; } = string.Empty;
 
-        public ICollection<MediaResource> MediaResources { get; set; } = new List<MediaResource>();
+        public ICollection<MediaResource> MediaResource { get; set; } = new List<MediaResource>();
         
     }
 }
