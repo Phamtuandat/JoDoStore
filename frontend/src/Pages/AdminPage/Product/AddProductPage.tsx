@@ -13,7 +13,7 @@ const AddProductPage = (props: Props) => {
         const formData = new FormData()
         formData.append("name", value.name)
         formData.append("descriptions", value.descriptions)
-        formData.append("categories", `${value.categories}`)
+        formData.append("categories", JSON.stringify(value.categories))
         formData.append("price", `${value.price}`)
         formData.append("brand", `${value.brand}`)
         if (value.thumbnail) {

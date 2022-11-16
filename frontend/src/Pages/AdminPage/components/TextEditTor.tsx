@@ -31,7 +31,7 @@ const TextEditTor = ({ handleChange }: Props) => {
                     borderRadius: 1,
                     border: "solid 1px #ccc",
                     "&>div.DraftEditor-root": {
-                        borderTop: " solid 1px #fff",
+                        borderTop: " solid 1px",
                         py: 2,
                         px: 1,
                     },

@@ -21,12 +21,12 @@ const productMenu = [
     {
         icon: <ListItemIconCustom>E</ListItemIconCustom>,
         title: "Edit Product",
-        nestedLink: "",
+        nestedLink: "product/edit",
     },
     {
         icon: <ListItemIconCustom>P</ListItemIconCustom>,
         title: "Product Page",
-        nestedLink: "",
+        nestedLink: "product/list",
     },
 ]
 const NavBarMenu = (props: Props) => {
@@ -48,8 +48,12 @@ const NavBarMenu = (props: Props) => {
                 subheader={
                     <ListSubheader
                         component="div"
-                        id="nested-list-subheader"
-                        sx={{ fontSize: 16, borderRadius: 5 }}
+                        sx={{
+                            fontSize: 16,
+                            borderRadius: 5,
+                            color: "text.primary",
+                            position: "static",
+                        }}
                     >
                         TechStore Dashboard
                     </ListSubheader>

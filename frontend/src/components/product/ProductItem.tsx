@@ -5,6 +5,7 @@ import Button from "@mui/material/Button/Button"
 import { styled, useTheme } from "@mui/material/styles"
 import { motion } from "framer-motion"
 import { Product } from "models"
+
 import { useState } from "react"
 type Props = {
     product: Product
@@ -20,7 +21,6 @@ export const ProductItem = ({ product }: Props) => {
             y: 0,
         },
     }
-
     const theme = useTheme()
     const StyledButton = styled(Box)`
         ${({ theme }) => `
@@ -56,10 +56,11 @@ export const ProductItem = ({ product }: Props) => {
                     component={motion.div}
                     sx={{
                         p: "125px",
-                        backgroundImage:
-                            "url( https://media.istockphoto.com/photos/old-victorian-book-cover-in-gold-and-black-leather-the-chefsdoeuvre-picture-id1367848168?b=1&k=20&m=1367848168&s=170667a&w=0&h=JFcW7yy7rqiYxDtE3gLfnskg7G_9NgSOHHKN1zzdtSQ=)",
+                        backgroundImage: ` url(${process.env.REACT_APP_BASE_URL}Images/${
+                            product.mediaResource ? product.mediaResource[0].thumbnailPath : ""
+                        })`,
                         backgroundPosition: "center",
-                        backgroundSize: "contain",
+                        backgroundSize: "cover",
                         backgroundRepeat: "no-repeat",
                     }}
                     animate={checked ? { scale: 1.1 } : { scale: 1 }}
@@ -112,7 +113,7 @@ export const ProductItem = ({ product }: Props) => {
                         {product.name} {"-"}
                     </Typography>
                     <Box>
-                        <Typography variant="h6">{"brands"}</Typography>
+                        <Typography variant="h6">{product.brand?.name}</Typography>
                     </Box>
                 </Box>
                 <Box>

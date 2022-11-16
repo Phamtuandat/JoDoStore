@@ -28,7 +28,7 @@ export const InputField = ({
     return (
         <TextField
             size="small"
-            margin="normal"
+            margin="none"
             fullWidth={fullWidth}
             label={label}
             variant={variant || "outlined"}

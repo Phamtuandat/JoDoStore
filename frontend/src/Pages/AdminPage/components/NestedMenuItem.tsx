@@ -29,12 +29,10 @@ export const NestedMenuItem = ({ icon, menu, nestedItemList, to }: Props) => {
     }
     return (
         <Box>
-            <ListItem button component={RouterLink as any} to={to}>
+            <ListItem button component={RouterLink as any} to={to} onClick={handleClick}>
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText primary={menu} />
-                <ListItemButton onClick={handleClick}>
-                    {open ? <ExpandLess /> : <ExpandMore />}
-                </ListItemButton>
+                {open ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>

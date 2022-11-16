@@ -36,9 +36,8 @@ export default function SelectTextFields({
                 value={value}
                 multiple={isMutiple}
                 disablePortal
-                id="combo-box-demo"
                 options={options.map((o) => o.id)}
-                getOptionLabel={(option) => options.filter((o) => o.id === option)[0].name}
+                getOptionLabel={(option) => options.filter((o) => o.id === option)[0]?.name}
                 onChange={(event, value) => {
                     onChange(value)
                 }}

@@ -42,7 +42,7 @@ function ProductForm({ handleSubmitForm }: Props) {
         defaultValues: {
             name: "",
             brand: null,
-            categories: [],
+            categories: null,
             descriptions: "",
             price: 0,
             priceSale: 0,

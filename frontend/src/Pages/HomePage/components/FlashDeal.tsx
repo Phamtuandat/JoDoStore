@@ -15,7 +15,7 @@ const FlashDeal = (props: Props) => {
             <Paper
                 elevation={3}
                 sx={{
-                    mt: width === "xs" ? 5 : 20,
+                    mt: width === "xs" ? 5 : 30,
                     p: 4,
                 }}
             >

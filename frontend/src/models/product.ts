@@ -1,23 +1,28 @@
 import { Brand } from "./brand"
-import { Category } from "./category"
 import { Tags } from "./tags"
+
+export interface Media {
+    Id: number | string
+    Title: string
+    thumbnailPath: string
+}
 
 export interface Product {
     id: string | number | null
     name: string
-    categories: Category[] | []
+    categories: number
     brand: Brand | null
     descriptions: string
     price: number | null
     priceSale?: number | null
     smallImageLink?: string
-    thumbnail?: string
+    mediaResource: Media[]
     tags?: Tags[] | []
 }
 
 export interface SaveProductReq {
     name: string | ""
-    categories: number[]
+    categories: number | null
     brand: number | null
     descriptions: string
     price: number | 0

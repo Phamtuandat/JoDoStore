@@ -4,6 +4,7 @@ import ColorModeContext from "Context/ColorModeContext"
 import AuthenticatePage from "features/authenticate/page/AuthenticatePage"
 import AdminPage from "Pages/AdminPage/AdminPage"
 import AddProductPage from "Pages/AdminPage/Product/AddProductPage"
+import ProductListPage from "Pages/AdminPage/Product/ProductListPage"
 import ProductPage from "Pages/AdminPage/Product/ProductPage"
 import HomePage from "Pages/HomePage/HomePage"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
@@ -34,6 +35,14 @@ function App() {
                         {
                             path: "/admin/product/new",
                             element: <AddProductPage />,
+                        },
+                        {
+                            path: "/admin/product/edit",
+                            element: <AddProductPage />,
+                        },
+                        {
+                            path: "/admin/product/list",
+                            element: <ProductListPage />,
                         },
                     ],
                 },

@@ -65,7 +65,8 @@ function* watchLogingFlow() {
 }
 function* watchRefeshTokenFlow() {
     while (true) {
-        const isLoggedIn = Boolean(localStorage.getItem("refreshToken"))
+        const isLoggedIn = JSON.parse(localStorage.getItem("persist:root") as string).auth
+            .refreshToken
         if (isLoggedIn) {
             yield take(AuthSliceAction.refreshToken.type)
             yield fork(handleRefreshToken)
@@ -77,8 +78,9 @@ function* watchRefeshTokenFlow() {
 }
 function* watchRegisterFlow() {
     while (true) {
-        const isLoggedIn = Boolean(localStorage.getItem("refreshToken"))
-        if (isLoggedIn) {
+        const isLoggedIn = JSON.parse(localStorage.getItem("persist:root") as string).auth
+            .isLoggedIn
+        if (!!!isLoggedIn) {
             const registerAction: PayloadAction<RegisterRequest> = yield take(
                 AuthSliceAction.register.type
             )

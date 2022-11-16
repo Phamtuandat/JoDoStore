@@ -11,13 +11,10 @@ export const productApi = {
             },
         })
     },
-    getList(params: ListParams) {
+    getList(params?: ListParams) {
         const url = "/Product"
         return axiosClient.get(url, {
-            params: {
-                _limit: 50,
-                _page: 1,
-            },
+            params: params,
         })
     },
     getById(id: number) {

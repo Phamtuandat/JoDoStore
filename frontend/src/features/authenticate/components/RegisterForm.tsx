@@ -29,7 +29,7 @@ export const RegisterForm = ({ onSubmit, toggleMode }: Props) => {
         email: Yup.string().required("Email is required").email("Email is invalid"),
         firstName: Yup.string().min(3).required(),
         lastName: Yup.string().required(),
-        phone: Yup.number().min(9).required(),
+        phoneNumber: Yup.number().min(9).required(),
         password: Yup.string()
             .min(
                 8,
@@ -73,24 +73,33 @@ export const RegisterForm = ({ onSubmit, toggleMode }: Props) => {
                 sx={{ mt: 1 }}
                 onSubmit={handleSubmit(handleFormSubmit)}
             >
-                <InputField control={control} name="email" label="Email" disabled={isSubmitting} />
+                <InputField
+                    control={control}
+                    name="email"
+                    label="Email"
+                    disabled={isSubmitting}
+                    fullWidth={true}
+                />
                 <InputField
                     control={control}
                     name="firstName"
                     label="First Name"
                     disabled={isSubmitting}
+                    fullWidth={true}
                 />
                 <InputField
                     control={control}
                     name="lastName"
                     label="Last Name"
                     disabled={isSubmitting}
+                    fullWidth={true}
                 />
                 <InputField
                     control={control}
-                    name="phone"
+                    name="phoneNumber"
                     label="Phone Number"
                     disabled={isSubmitting}
+                    fullWidth={true}
                 />
 
                 <PasswordField

@@ -3,10 +3,12 @@ import { Container, Typography } from "@mui/material"
 import Button from "@mui/material/Button"
 import { styled, useTheme } from "@mui/material/styles"
 import { Box } from "@mui/system"
+import { productApi } from "ApiClients/ProductApi"
 import { ProductItem } from "components/product"
 import { motion, Variants } from "framer-motion"
 import { useWidth } from "Hooks/width-hook"
 import { Product } from "models"
+import { useEffect, useState } from "react"
 import { Grid, Navigation, Pagination } from "swiper"
 import "swiper/css"
 import "swiper/css/grid"
@@ -31,19 +33,11 @@ const CustomizedSlider = styled(SwiperSlide)(({ theme }) => ({
     height: "calc((100% - 30px) / 2) !important",
 }))
 
-const product: Product = {
-    id: 1,
-    brand: { name: "Dat", id: 1 },
-    categories: [{ name: "novel", id: 1 }],
-    descriptions: "",
-    name: "suoi nguon",
-    price: 100,
-    priceSale: 15,
-    smallImageLink: "",
-    thumbnail: undefined,
-}
 const ListProductSale = (props: Props) => {
     const theme = useTheme()
+
+    const [productList, setProductList] = useState<Product[]>([])
+
     const width = useWidth()
     const slidesPerView = (): number => {
         switch (width) {
@@ -57,6 +51,13 @@ const ListProductSale = (props: Props) => {
                 return 4
         }
     }
+    useEffect(() => {
+        ;(async () => {
+            const result = await productApi.getList()
+            setProductList(result.data)
+        })()
+    }, [])
+
     return (
         <Container
             maxWidth="lg"
@@ -101,60 +102,14 @@ const ListProductSale = (props: Props) => {
                             grid={{
                                 rows: 2,
                             }}
-                            spaceBetween={30}
+                            spaceBetween={20}
                             modules={[Navigation, Grid, Pagination]}
                         >
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
-                            <CustomizedSlider>
-                                <ProductItem product={product} />
-                            </CustomizedSlider>
+                            {productList.map((product) => (
+                                <CustomizedSlider key={product.id}>
+                                    <ProductItem product={product} />
+                                </CustomizedSlider>
+                            ))}
                         </Swiper>
                     </Box>
                 </motion.div>
