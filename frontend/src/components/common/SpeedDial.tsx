@@ -17,7 +17,11 @@ export default function BasicSpeedDial({ label }: IProp) {
     return (
         <SpeedDial
             ariaLabel={label}
-            sx={{ position: "absolute", bottom: 16, right: 16 }}
+            sx={{
+                position: "absolute",
+                bottom: 16,
+                right: 16,
+            }}
             icon={<SpeedDialIcon />}
         >
             <SpeedDialAction

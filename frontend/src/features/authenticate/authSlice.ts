@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { RootState } from "app/store"
 import { AuthenticateInfo, LoginRequest, RegisterRequest } from "models"
 import handleNotify from "utils/Toast-notify"
 
@@ -31,6 +32,7 @@ const AuthSlice = createSlice({
             state.processing = false
             state.currentUser = action.payload
             state.isLoggedIn = true
+            state.error = ""
         },
         failed(state, action: PayloadAction<string>) {
             state.processing = false
@@ -41,9 +43,7 @@ const AuthSlice = createSlice({
         logout(state) {
             state.isLoggedIn = false
             state.currentUser = null
-        },
-        refreshToken(state) {
-            state.processing = true
+            state.processing = false
         },
     },
 })
@@ -52,8 +52,9 @@ const AuthSlice = createSlice({
 export const AuthSliceAction = AuthSlice.actions
 
 //export selector
-export const selectIsLogin = (state: any) => state.isLoggedIn
-export const selectIsLogging = (state: any) => state.logging
+export const selectIsLogin = (state: RootState) => state.auth.isLoggedIn
+export const selectIsLogging = (state: RootState) => state.auth.processing
+export const selectCurrentUser = (state: RootState) => state.auth.currentUser
 
 //export reducer
 const AuthReducer = AuthSlice.reducer

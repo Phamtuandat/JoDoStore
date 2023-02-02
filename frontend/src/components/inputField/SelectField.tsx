@@ -1,5 +1,5 @@
 import { Autocomplete, Box, TextField } from "@mui/material"
-import { Category } from "models"
+import { Category, Tag } from "models"
 import { Control, useController } from "react-hook-form"
 
 export interface PasswordFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -7,10 +7,12 @@ export interface PasswordFieldProps extends React.InputHTMLAttributes<HTMLInputE
     control: Control<any>
     label?: string
     disabled: boolean
-    options: Category[]
+    options: Category[] | Tag[]
     isMutiple: boolean
+    setValue: (value: string) => void
 }
 export default function SelectTextFields({
+    setValue,
     name,
     control,
     options,
@@ -25,6 +27,7 @@ export default function SelectTextFields({
         name,
         control,
     })
+
     return (
         <Box
             sx={{
@@ -33,15 +36,18 @@ export default function SelectTextFields({
             }}
         >
             <Autocomplete
+                disableClearable
+                freeSolo
+                isOptionEqualToValue={(option, value) => option === value.name}
                 value={value}
                 multiple={isMutiple}
                 disablePortal
-                options={options.map((o) => o.id)}
-                getOptionLabel={(option) => options.filter((o) => o.id === option)[0]?.name}
+                options={options.map((opt) => opt.name)}
+                getOptionLabel={(option) => option}
+                fullWidth
                 onChange={(event, value) => {
                     onChange(value)
                 }}
-                fullWidth
                 renderInput={(params) => (
                     <TextField
                         {...params}
@@ -53,6 +59,9 @@ export default function SelectTextFields({
                         variant="standard"
                         fullWidth
                         placeholder={`Please choose ${label}`}
+                        onChange={(event) => {
+                            setValue(event.target.value)
+                        }}
                     />
                 )}
             />

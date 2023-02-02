@@ -3,27 +3,19 @@ import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined"
 import { Box, CardContent, Paper, Typography } from "@mui/material"
 import Button from "@mui/material/Button/Button"
 import { styled, useTheme } from "@mui/material/styles"
+import { cartAction } from "features/cart/cartSlice"
 import { motion } from "framer-motion"
+import { useWidth } from "Hooks/width-hook"
 import { Product } from "models"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
 type Props = {
     product: Product
 }
-
-export const ProductItem = ({ product }: Props) => {
-    const [checked, setCheck] = useState(false)
-
-    const variants = {
-        open: { opacity: 1, y: -100 },
-        closed: {
-            opacity: 0,
-            y: 0,
-        },
-    }
-    const theme = useTheme()
-    const StyledButton = styled(Box)`
-        ${({ theme }) => `
+const StyledButton = styled(Box)`
+    ${({ theme }) => `
             border-radius: 50%;
             line-height: 0;
             align-self: center;
@@ -31,37 +23,72 @@ export const ProductItem = ({ product }: Props) => {
             padding: 4px;
             font-size: 10px;
             cursor: pointer;
-            background-color: ${theme.palette.secondary.main};
+            background-color: ${theme.palette.primary.dark};
             transition: ${theme.transitions.create(["transform"], {
                 duration: theme.transitions.duration.short,
             })};
             &:hover {
                 transform: scale(1.2);
             }
+            
         `}
-    `
+`
+
+const variants = {
+    open: { opacity: 1, y: -80 },
+    closed: {
+        opacity: 0,
+        y: 0,
+    },
+}
+export const ProductItem = ({ product }: Props) => {
+    const theme = useTheme()
+    const [imgIndex, setIndex] = useState<number>(0)
+    const [checked, setCheck] = useState(false)
+    const width = useWidth()
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const handleClick = (id: string | number | null) => {
+        if (id) navigate(`/product/${id}`)
+    }
+
+    useEffect(() => {
+        if (checked === true) {
+            setIndex((prev) => {
+                if (prev < product.thumbnails.length - 1) {
+                    return prev + 1
+                } else {
+                    return 0
+                }
+            })
+        } else {
+            setIndex(0)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [checked])
 
     return (
         <Paper
-            elevation={2}
+            elevation={0}
             sx={{
                 color: "text.default",
                 width: "auto",
+                cursor: "pointer",
             }}
             onMouseEnter={() => setCheck((prv) => !prv)}
             onMouseLeave={() => setCheck((prv) => !prv)}
         >
-            <Box height="250px" overflow="hidden">
+            <Box height="250px" overflow="hidden" onClick={() => handleClick(product.id)}>
                 <Box
                     component={motion.div}
                     sx={{
                         p: "125px",
-                        backgroundImage: ` url(${process.env.REACT_APP_BASE_URL}Images/${
-                            product.mediaResource ? product.mediaResource[0].thumbnailPath : ""
-                        })`,
+                        backgroundImage: ` url(${product.thumbnails[imgIndex]?.imageUrl})`,
                         backgroundPosition: "center",
                         backgroundSize: "cover",
                         backgroundRepeat: "no-repeat",
+                        bgcolor: theme.palette.background.paper,
                     }}
                     animate={checked ? { scale: 1.1 } : { scale: 1 }}
                     transition={{ duration: 0.9 }}
@@ -73,7 +100,7 @@ export const ProductItem = ({ product }: Props) => {
                     }}
                     component={motion.div}
                     initial={{ opacity: 0 }}
-                    animate={checked ? "open" : "closed"}
+                    animate={checked && width !== "xs" ? "open" : "closed"}
                     variants={variants}
                     transition={{ duration: 0.3 }}
                 >
@@ -82,10 +109,9 @@ export const ProductItem = ({ product }: Props) => {
                             color: "text.primary",
                         }}
                     >
-                        <FavoriteIcon />
+                        <FavoriteIcon color="action" />
                     </StyledButton>
                     <Button
-                        color="secondary"
                         variant="contained"
                         size="medium"
                         sx={{
@@ -95,28 +121,46 @@ export const ProductItem = ({ product }: Props) => {
                                 transform: "scale(1.05)",
                             },
                         }}
+                        onClick={() =>
+                            dispatch(
+                                cartAction.addToCart({
+                                    product,
+                                    quantity: 1,
+                                })
+                            )
+                        }
                     >
                         Add to cart
                     </Button>
                     <StyledButton aria-label="watch more">
-                        <RemoveRedEyeOutlinedIcon />
+                        <RemoveRedEyeOutlinedIcon color="action" />
                     </StyledButton>
                 </Box>
             </Box>
-            <CardContent
-                sx={{
-                    backgroundColor: "background.default",
-                }}
-            >
-                <Box display="flex">
-                    <Typography variant="h6">
-                        {product.name} {"-"}
+            <CardContent>
+                <Box display="flex" flexDirection="column" pt={2}>
+                    <Typography
+                        sx={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            WebkitLineClamp: 1,
+                            width: "100%",
+                            display: "inline-block",
+                            whiteSpace: "nowrap",
+                        }}
+                        variant="h6"
+                    >
+                        {product.name}
                     </Typography>
-                    <Box>
-                        <Typography variant="h6">{product.brand?.name}</Typography>
-                    </Box>
+                    <Typography
+                        textAlign="center"
+                        variant="body1"
+                        color={theme.palette.text.secondary}
+                    >
+                        {product.brand?.name}
+                    </Typography>
                 </Box>
-                <Box>
+                <Box textAlign="center">
                     <Typography
                         fontSize="22px"
                         sx={{
@@ -129,9 +173,8 @@ export const ProductItem = ({ product }: Props) => {
                     >
                         ${product.price}
                     </Typography>
-
                     <Typography fontSize="22px" sx={{ fontWeight: "900" }} component="span">
-                        ${product.priceSale}
+                        ${product.salePrice}
                     </Typography>
                 </Box>
             </CardContent>

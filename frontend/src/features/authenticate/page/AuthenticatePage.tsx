@@ -17,7 +17,6 @@ export default function AuthenticatePage() {
     const dispatch = useAppDispatch()
     const isLogging = !!useAppSelector((state) => state.auth.processing)
     const isLoggedIn = !!useAppSelector((state) => state.auth.isLoggedIn)
-    const currentUser = localStorage.getItem("token")
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -26,7 +25,7 @@ export default function AuthenticatePage() {
     }, [isLoggedIn, navigate])
 
     useEffect(() => {
-        if (currentUser) {
+        if (isLoggedIn) {
             navigate("/")
         }
     }, [])

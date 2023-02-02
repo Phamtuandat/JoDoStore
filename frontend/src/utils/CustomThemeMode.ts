@@ -1,5 +1,5 @@
 import { PaletteMode } from "@mui/material"
-import { blueGrey, orange } from "@mui/material/colors"
+import { blue, blueGrey, orange } from "@mui/material/colors"
 import purple from "@mui/material/colors/purple"
 
 export const getDesignTokens = (mode: PaletteMode) => ({
@@ -51,44 +51,56 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             ? {
                   // palette values for light mode
                   primary: {
-                      main: blueGrey[700],
-                      light: blueGrey[600],
-                      Dark: blueGrey[800],
+                      main: orange[500],
+                      light: orange[200],
+                      dark: orange[900],
                   },
                   text: {
                       primary: "#000",
                       secondary: "#ccc",
                   },
+
                   secondary: {
-                      main: orange[500],
-                      light: orange[200],
-                      dark: orange[900],
+                      main: blueGrey[700],
+                      light: blueGrey[600],
+                      Dark: blueGrey[800],
+                  },
+                  background: {
+                      default: "#f4f4f4",
+                      paper: "#fff",
+                  },
+                  action: {
+                      selected: orange[500],
                   },
               }
             : {
                   // palette values for dark mode
                   primary: {
-                      main: purple[200],
-                      light: purple[50],
+                      main: blue[500],
+                      light: blue[200],
+                      dark: blue[700],
                   },
-                  divider: "#A5C9CA",
+                  divider: "#161618",
                   background: {
-                      default: "#121212",
-                      paper: "#ffffff0d",
+                      default: "#15202b",
+                      paper: "#192734",
                   },
                   text: {
-                      primary: "#fff",
-                      secondary: "#ccc",
+                      primary: "#F5F8FA",
+                      secondary: "#FFFFFF",
                   },
                   secondary: {
-                      main: purple[200],
-                      light: purple[50],
-                      dark: purple[300],
+                      main: "#AAB8C2",
+                      light: "#E1E8ED",
+                      dark: "#657786",
                   },
                   info: {
                       main: "#1B2430cc",
                       light: "#f6f7fb",
                       dark: "#1B2430cc",
+                  },
+                  action: {
+                      selected: purple[500],
                   },
               }),
     },

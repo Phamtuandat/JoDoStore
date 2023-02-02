@@ -1,101 +1,98 @@
-import Brightness4Icon from "@mui/icons-material/Brightness4"
-import Brightness7Icon from "@mui/icons-material/Brightness7"
 import MenuIcon from "@mui/icons-material/Menu"
-import AppBar from "@mui/material/AppBar"
+import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined"
+import { Badge } from "@mui/material"
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
 import IconButton from "@mui/material/IconButton"
-import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
-import { useTheme } from "@mui/system"
+import { useTheme } from "@mui/material/styles"
 import { useAppDispatch, useAppSelector } from "app/hooks"
 import Footer from "components/Footer"
-import { ThemeContext } from "Context/ColorModeContext"
+import ProfileMenu from "components/common/ProfileMenu"
+import BasicSpeedDial from "components/common/SpeedDial"
 import { AuthSliceAction } from "features/authenticate/authSlice"
-import { useContext, useEffect } from "react"
-import { NavLink } from "react-router-dom"
-
+import MiniCart from "features/cart/components/MiniCart"
+import { motion } from "framer-motion"
+import { useState } from "react"
+import { Link } from "react-router-dom"
 type IProps = {
     children?: React.ReactNode
 }
 export const MainLayout = (props: IProps) => {
+    const theme = useTheme()
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
     const dispatch = useAppDispatch()
-    const theme = useTheme()
-    const colorMode = useContext(ThemeContext)
-    useEffect(() => {
-        if (!!localStorage.getItem("tokenExpirationDate")) {
-            const tokenExpirationDate = localStorage.getItem("tokenExpirationDate")
-            const date = new Date(Date.parse(JSON.parse(tokenExpirationDate as string)))
-            if (date.getTime() - new Date().getTime() <= 0) {
-                dispatch(AuthSliceAction.refreshToken())
-            }
-        }
-    }, [dispatch, isLoggedIn])
-
+    const [scrollY, setScrollY] = useState<number>(0)
+    window.addEventListener("scroll", function () {
+        setScrollY(this.scrollY)
+    })
     const handleLogout = () => {
         dispatch(AuthSliceAction.logout())
-        console.log(AuthSliceAction.logout())
     }
     return (
-        <>
-            <Box sx={{ flexGrow: 1 }} bgcolor="background.default">
-                <AppBar position="static">
-                    <Toolbar>
-                        <IconButton
-                            size="large"
-                            edge="start"
-                            color="inherit"
-                            aria-label="menu"
-                            sx={{ mr: 2 }}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            News
-                        </Typography>
-
-                        <IconButton
-                            sx={{ ml: 1 }}
-                            onClick={colorMode.toggleColorMode}
-                            color="inherit"
-                        >
-                            {theme.palette.mode === "dark" ? (
-                                <Brightness7Icon />
-                            ) : (
-                                <Brightness4Icon />
-                            )}
-                        </IconButton>
-
-                        {!isLoggedIn ? (
-                            <Box
-                                component={NavLink}
-                                to="/auth"
-                                sx={{
-                                    textDecoration: "none",
-                                }}
-                            >
-                                <Button color="secondary">Login</Button>
-                            </Box>
-                        ) : (
-                            <Button color="secondary" onClick={handleLogout}>
-                                Logout
-                            </Button>
-                        )}
-                    </Toolbar>
-                </AppBar>
-            </Box>
+        <Box display="flex" flexDirection="column" bgcolor={theme.palette.background.default}>
             <Box
-                flexDirection="column"
-                display="flex"
-                bgcolor="background.default"
-                color="text.primary"
+                component={motion.div}
+                position={"sticky"}
+                sx={{
+                    mx: "auto",
+                    justifyContent: "space-between",
+                    display: "flex",
+                    height: "60px",
+                    alignItems: "center",
+                    p: 2,
+                    bgcolor: theme.palette.background.paper,
+                    color: theme.palette.text.primary,
+                    zIndex: 100,
+                    boxShadow: theme.shadows[2],
+                    width: "100%",
+                }}
+                top={0}
+                animate={
+                    scrollY > 30
+                        ? { borderRadius: 10, width: "98%", top: 6, opacity: 0.95 }
+                        : { borderRadius: 0, width: "100%", top: 0 }
+                }
+                transition={{ duration: 0.2 }}
             >
-                {props.children}
+                <IconButton size="large" edge="start" aria-label="menu" sx={{ mr: 2 }}>
+                    <MenuIcon color="primary" />
+                </IconButton>
+                <Box sx={{ flexGrow: 1 }}>
+                    <Typography
+                        sx={{ textDecoration: "none" }}
+                        variant="h6"
+                        color="primary"
+                        component={Link}
+                        to="/"
+                    >
+                        Gear
+                    </Typography>
+                </Box>
+                <Box zIndex={10000}>
+                    <MiniCart />
+                    <IconButton
+                        sx={{
+                            color: theme.palette.text.secondary,
+                        }}
+                    >
+                        <Badge badgeContent={4} color="primary">
+                            <NotificationsNoneOutlinedIcon />
+                        </Badge>
+                    </IconButton>
+                </Box>
+                <Box>
+                    <ProfileMenu isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+                </Box>
+            </Box>
+            <Box flexDirection="column" display="flex" color="text.primary">
+                <Box>{props.children}</Box>
+                <Box sx={{ position: "fixed", bottom: 0, left: 0, right: 15, zIndex: 100 }}>
+                    <BasicSpeedDial label="Actions" />
+                </Box>
                 <Box mt="auto" justifyContent="center" display="flex">
                     <Footer />
                 </Box>
             </Box>
-        </>
+        </Box>
     )
 }

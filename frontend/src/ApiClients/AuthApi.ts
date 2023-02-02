@@ -3,26 +3,20 @@ import axiosClient from "./AxiosClient"
 
 const authApi = {
     login(params: LoginRequest): Promise<AuthResponse<AuthenticateInfo>> {
-        const url = "Authenticate/Login"
-        return axiosClient.post(url, params)
+        const url = "User/login"
+        return axiosClient.post(url, params, { withCredentials: true })
     },
     register(params: RegisterRequest): Promise<AuthResponse<AuthenticateInfo>> {
-        const url = "Authenticate/Register"
+        const url = "User/register"
         return axiosClient.post(url, params)
     },
-    refreshToken(refreshToken: string): Promise<AuthResponse<AuthenticateInfo>> {
-        const url = "Authenticate/refreshToken"
-
-        return axiosClient.post(url, undefined, {
-            headers: { Authorization: "Bearer " + JSON.parse(refreshToken) },
-        })
+    logout() {
+        const url = "User/logout"
+        return axiosClient.post(url)
     },
-    checkAdminRole() {
-        const token: string = JSON.parse(localStorage.getItem("token") as string)
-        const url = "Authenticate/AdminCheck"
-        return axiosClient.post(url, undefined, {
-            headers: { Authorization: "Bearer " + token },
-        })
+    refreshCookie(): Promise<AuthResponse<AuthenticateInfo>> {
+        const url = "User/validate"
+        return axiosClient.post(url)
     },
 }
 export default authApi

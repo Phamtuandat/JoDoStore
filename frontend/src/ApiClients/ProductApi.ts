@@ -1,40 +1,29 @@
-import { ListParams, Product } from "models"
+import { ListResponse, Product } from "models"
 import axiosClient from "./AxiosClient"
 
 export const productApi = {
-    create(data: FormData, token: string) {
+    create(data: FormData) {
         const url = "/Product"
         return axiosClient.post(url, data, {
             headers: {
-                "Content-Type": "multipart/form-data",
-                Authorization: "Bearer " + token,
+                "Content-Type": "multipart/form-data; boundary=something",
             },
         })
     },
-    getList(params?: ListParams) {
-        const url = "/Product"
-        return axiosClient.get(url, {
-            params: params,
-        })
+    getList(params?: string): Promise<ListResponse<Product>> {
+        const url = `/Product${params || ""}`
+        return axiosClient.get(url)
     },
     getById(id: number) {
         const url = `/Product/${id}`
         return axiosClient.get(url)
     },
-    update(id: number, product: Product) {
+    update(data: FormData, id: number) {
         const url = `/Product/${id}`
-        return axiosClient.patch(url, product, {
-            headers: {
-                Authorization: "Bearer " + JSON.parse(localStorage.getItem("token") as string),
-            },
-        })
+        return axiosClient.patch(url, data)
     },
     delete(id: number) {
         const url = `/Product/${id}`
-        return axiosClient.delete(url, {
-            headers: {
-                Authorization: "Bearer " + JSON.parse(localStorage.getItem("token") as string),
-            },
-        })
+        return axiosClient.delete(url)
     },
 }

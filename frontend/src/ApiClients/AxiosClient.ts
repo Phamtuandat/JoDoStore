@@ -1,24 +1,12 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
-
+import axios, { AxiosResponse } from "axios"
 const axiosClient = axios.create({
-    baseURL: "https://localhost:44332/api",
+    baseURL: process.env.REACT_APP_SERVER_URL,
+    withCredentials: true,
     headers: {
         "Content-Type": "application/json",
     },
 })
 export default axiosClient
-
-// Add a request interceptor
-axiosClient.interceptors.request.use(
-    function (config: AxiosRequestConfig) {
-        // Do something before request is sent
-        return config
-    },
-    function (error) {
-        // Do something with request error
-        return Promise.reject(error)
-    }
-)
 
 // Add a response interceptor
 axiosClient.interceptors.response.use(

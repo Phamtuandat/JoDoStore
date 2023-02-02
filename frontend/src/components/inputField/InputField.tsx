@@ -28,7 +28,6 @@ export const InputField = ({
     return (
         <TextField
             size="small"
-            margin="none"
             fullWidth={fullWidth}
             label={label}
             variant={variant || "outlined"}
@@ -40,6 +39,7 @@ export const InputField = ({
             helperText={error?.message}
             inputProps={inputProps}
             type="text"
+            margin="normal"
         />
     )
 }

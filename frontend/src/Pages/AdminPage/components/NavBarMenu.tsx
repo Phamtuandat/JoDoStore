@@ -1,8 +1,10 @@
 import CategoryIcon from "@mui/icons-material/Category"
 import DashboardIcon from "@mui/icons-material/Dashboard"
 import { Box, ListSubheader } from "@mui/material"
+import Divider from "@mui/material/Divider/Divider"
 import List from "@mui/material/List"
 import { styled } from "@mui/material/styles"
+import { useState } from "react"
 import { NestedMenuItem } from "./NestedMenuItem"
 type Props = {}
 
@@ -17,19 +19,41 @@ const productMenu = [
         icon: <ListItemIconCustom>N</ListItemIconCustom>,
         title: "New Product",
         nestedLink: "product/new",
+        pathName: "/admin/product/new",
     },
     {
         icon: <ListItemIconCustom>E</ListItemIconCustom>,
         title: "Edit Product",
         nestedLink: "product/edit",
+        pathName: "/admin/product/edit",
     },
     {
         icon: <ListItemIconCustom>P</ListItemIconCustom>,
         title: "Product Page",
         nestedLink: "product/list",
+        pathName: "/admin/product/list",
     },
 ]
+const initialSate = {
+    Product: false,
+    orders: false,
+    Analytics: false,
+}
 const NavBarMenu = (props: Props) => {
+    const [open, setOpen] = useState<{
+        Product: boolean
+        orders: boolean
+        Analytics: boolean
+    }>(initialSate)
+    const handleOpen = (value: "Product" | "Analytics" | "orders") => {
+        setOpen((prevState) => {
+            return {
+                ...prevState,
+                [value]: !prevState[value],
+            }
+        })
+        // console.log(local)
+    }
     return (
         <Box
             sx={{
@@ -59,34 +83,21 @@ const NavBarMenu = (props: Props) => {
                     </ListSubheader>
                 }
             >
-                <NestedMenuItem
-                    icon={<DashboardIcon />}
-                    menu="Dashboard"
-                    nestedItemList={[]}
-                    to={""}
-                />
+                <NestedMenuItem icon={<DashboardIcon />} menu="Analytics" to="Analytics" />
+                <Divider />
                 <NestedMenuItem
                     icon={<CategoryIcon />}
                     menu="Product"
                     nestedItemList={productMenu}
                     to="product"
+                    open={open.Product}
+                    setOpen={() => handleOpen("Product")}
                 />
+                <Divider />
                 <NestedMenuItem
-                    to={""}
+                    to="orders"
                     icon={<DashboardIcon />}
-                    menu="Dashboard"
-                    nestedItemList={[]}
-                />
-                <NestedMenuItem
-                    to={""}
-                    icon={<DashboardIcon />}
-                    menu="Dashboard"
-                    nestedItemList={[]}
-                />
-                <NestedMenuItem
-                    to={""}
-                    icon={<DashboardIcon />}
-                    menu="Dashboard"
+                    menu="Order List"
                     nestedItemList={[]}
                 />
             </List>

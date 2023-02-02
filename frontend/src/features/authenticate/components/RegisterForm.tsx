@@ -24,6 +24,7 @@ export const RegisterForm = ({ onSubmit, toggleMode }: Props) => {
         firstName: "",
         lastName: "",
         phoneNumber: null,
+        userName: "",
     }
     const schema = Yup.object({
         email: Yup.string().required("Email is required").email("Email is invalid"),
@@ -48,6 +49,7 @@ export const RegisterForm = ({ onSubmit, toggleMode }: Props) => {
     })
     const handleFormSubmit = (formValue: RegisterRequest) => {
         if (formValue !== null) {
+            formValue.userName = formValue.email
             onSubmit(formValue)
         }
     }

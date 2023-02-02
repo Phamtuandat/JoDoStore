@@ -4,7 +4,7 @@ import axiosClient from "./AxiosClient"
 
 const categoryApi = {
     getAll(): Promise<ListResponse<Category>> {
-        const url = "/Categories"
+        const url = "/Category"
         return axiosClient.get(url)
     },
 }

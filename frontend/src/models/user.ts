@@ -3,8 +3,7 @@ export interface AuthenticateInfo {
     firstName: string
     lastName: string
     email: string
-    token: string
-    refreshToken: string
+    adress: any
 }
 
 export interface UserInfor {
@@ -16,6 +15,7 @@ export interface UserInfor {
 export interface LoginRequest {
     email: string
     password: string
+    rememberMe?: boolean
 }
 
 export interface RegisterRequest {
@@ -25,4 +25,5 @@ export interface RegisterRequest {
     firstName: string
     lastName: string
     phoneNumber: number | null
+    userName: string
 }

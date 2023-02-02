@@ -1,34 +1,47 @@
 import { Box, Paper, Typography } from "@mui/material"
 import { productApi } from "ApiClients/ProductApi"
-import { useAppSelector } from "app/hooks"
 import "draft-js/dist/Draft.css"
-import { SaveProductReq } from "models"
 import handleNotify from "utils/Toast-notify"
 import ProductForm from "./ProductComponent/ProductForm"
 type Props = {}
 
+export type SaveProductForm = {
+    id?: number | string | null
+    name: string | ""
+    category: string | null
+    brand: string | null
+    description: string | null
+    price: number | null
+    salePrice: number | null
+    smallImageLink?: string
+    thumbnail?: File[] | []
+    tags?: Array<string> | null
+}
+
 const AddProductPage = (props: Props) => {
-    const token = useAppSelector((state) => state.auth.currentUser?.token)
-    const handleFormSubmit = async (value: SaveProductReq) => {
+    const handleFormSubmit = async (value: SaveProductForm) => {
         const formData = new FormData()
         formData.append("name", value.name)
-        formData.append("descriptions", value.descriptions)
-        formData.append("categories", JSON.stringify(value.categories))
+        formData.append("description", `${value.description}`)
+        formData.append("category.name", value.category || "No Category")
+        formData.append("salePrice", `${value.salePrice}`)
         formData.append("price", `${value.price}`)
-        formData.append("brand", `${value.brand}`)
-        if (value.thumbnail) {
-            value.thumbnail.forEach((th) => {
-                formData.append("media", th)
+        formData.append("brand.name", `${value.brand}`)
+        if (value.tags) {
+            value.tags.forEach((tag, i) => {
+                formData.append(`tags[${i}]`, `${tag}`)
             })
         }
-        if (token) {
-            try {
-                const result = await productApi.create(formData, token)
-                console.log(result)
-                handleNotify.success("Add Product Successfully")
-            } catch (error) {
-                handleNotify.error(error as string)
-            }
+        if (value.thumbnail) {
+            value.thumbnail.forEach((th) => {
+                formData.append("thumbnails", th)
+            })
+        }
+        try {
+            await productApi.create(formData)
+            handleNotify.success("Add Product Successfully")
+        } catch (error) {
+            handleNotify.error(error as string)
         }
     }
     return (

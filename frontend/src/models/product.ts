@@ -1,33 +1,41 @@
 import { Brand } from "./brand"
-import { Tags } from "./tags"
+import { Category } from "./category"
+import { Tag } from "./tags"
 
-export interface Media {
-    Id: number | string
-    Title: string
-    thumbnailPath: string
+export interface Thumbnail {
+    id: number | string
+    title: string
+    imageUrl: string
+    productId: number
+}
+export interface SaveThumbReq {
+    title: string
+    productId?: number
+    thumbnail: File
 }
 
 export interface Product {
     id: string | number | null
     name: string
-    categories: number
+    category: Category | null
     brand: Brand | null
-    descriptions: string
+    description: string | null
     price: number | null
-    priceSale?: number | null
+    salePrice?: number | null
     smallImageLink?: string
-    mediaResource: Media[]
-    tags?: Tags[] | []
+    thumbnails: Thumbnail[] | []
+    tags?: Tag[] | []
 }
 
 export interface SaveProductReq {
+    id?: number | string | null
     name: string | ""
-    categories: number | null
-    brand: number | null
-    descriptions: string
-    price: number | 0
-    priceSale?: number | 0
+    category: Category | null
+    brand: Brand | null
+    description: string | null
+    price: number | null
+    salePrice: number | null
     smallImageLink?: string
-    thumbnail?: File[]
-    tags?: Tags[] | []
+    thumbnail?: File[] | []
+    tags?: Tag[] | []
 }

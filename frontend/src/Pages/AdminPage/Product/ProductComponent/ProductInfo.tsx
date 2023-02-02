@@ -1,28 +1,22 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Grid } from "@mui/material"
 import { Box } from "@mui/system"
 import { InputField } from "components/inputField"
 import SelectTextFields from "components/inputField/SelectField"
-import { convertToRaw, EditorState } from "draft-js"
+import { convertToRaw } from "draft-js"
 import "draft-js/dist/Draft.css"
 import { Brand, Category } from "models"
-import { useEffect, useState } from "react"
-import { Control } from "react-hook-form"
-import TextEditTor from "../../components/TextEditTor"
+import { Control, UseFormSetValue } from "react-hook-form"
+import TextEditTor from "../../components/TextEditor"
+import { SaveProductForm } from "../AddProductPage"
+
 type Props = {
-    setValue: (value: string) => void
     control: Control<any>
     brands: Brand[]
     categories: Category[]
+    setValue: UseFormSetValue<SaveProductForm>
 }
-
-const ProductInfo = ({ setValue, control, categories, brands }: Props) => {
-    const [editorState, setEditorState] = useState<EditorState>()
-    useEffect(() => {
-        if (editorState) {
-            setValue(JSON.stringify(convertToRaw(editorState.getCurrentContent())))
-        }
-    }, [editorState, setValue])
-
+const ProductInfo = ({ control, categories, brands, setValue }: Props) => {
     return (
         <Grid
             sx={{
@@ -48,7 +42,16 @@ const ProductInfo = ({ setValue, control, categories, brands }: Props) => {
                     autoComplete="new-password"
                     fullWidth={true}
                 />
-                <TextEditTor handleChange={(value) => setEditorState(value)} />
+                <TextEditTor
+                    control={control}
+                    name="description"
+                    handleChange={(value) => {
+                        setValue(
+                            "description",
+                            JSON.stringify(convertToRaw(value.getCurrentContent()))
+                        )
+                    }}
+                />
             </Grid>
             <Grid
                 item
@@ -67,11 +70,12 @@ const ProductInfo = ({ setValue, control, categories, brands }: Props) => {
                 >
                     <SelectTextFields
                         control={control}
-                        name="categories"
-                        label="Categories"
+                        name="category"
+                        label="category"
                         disabled={false}
                         options={categories}
                         isMutiple={false}
+                        setValue={(value) => setValue("category", value)}
                     />
                     <SelectTextFields
                         control={control}
@@ -80,6 +84,7 @@ const ProductInfo = ({ setValue, control, categories, brands }: Props) => {
                         disabled={false}
                         options={brands}
                         isMutiple={false}
+                        setValue={(value) => setValue("brand", value)}
                     />
                 </Box>
             </Grid>
