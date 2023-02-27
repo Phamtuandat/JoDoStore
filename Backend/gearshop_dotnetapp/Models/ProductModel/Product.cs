@@ -19,7 +19,6 @@ namespace gearshop_dotnetapp.Models.ProductModel
         public Brand Brand { get; set; }
         public ICollection<Tag> Tags { get; set; }
         public ICollection<Photo> Thumbnails { get; set; }
-
         public int Price { get; set; }
         public int SalePrice { get; set; }
 

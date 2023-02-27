@@ -1,10 +1,151 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import { Box, Divider, Typography, useMediaQuery } from "@mui/material"
-import { Link, useLocation } from "react-router-dom"
 import { useTheme } from "@mui/material/styles"
+import { Link } from "react-router-dom"
+import SubHeaderItem from "./SubHeaderItem"
+import { useState } from "react"
 
+const subHeaderList = ["MEN", "WOMEN", "KIDS", "CUSTOMISE", "SALE"]
+const fakeCategories = [
+    {
+        category: "New & Featured",
+        linkList: [
+            {
+                name: "New Release",
+                link: "/shop",
+            },
+            {
+                name: "Member Access",
+                link: "/shop",
+            },
+            {
+                name: "Couple Wear ",
+                link: "/shop",
+            },
+            {
+                name: "Basic Essentials ",
+                link: "/shop",
+            },
+            {
+                name: "Football Club Kit ",
+                link: "/shop",
+            },
+            {
+                name: "Top Pick Under",
+                link: "/shop",
+            },
+            {
+                name: "Sale ",
+                link: "/shop",
+            },
+        ],
+    },
+    {
+        category: "Shoes",
+        linkList: [
+            {
+                name: "New Release",
+                link: "/shop",
+            },
+            {
+                name: "Member Access",
+                link: "/shop",
+            },
+            {
+                name: "Couple Wear ",
+                link: "/shop",
+            },
+            {
+                name: "Basic Essentials ",
+                link: "/shop",
+            },
+            {
+                name: "Football Club Kit ",
+                link: "/shop",
+            },
+            {
+                name: "Top Pick Under",
+                link: "/shop",
+            },
+            {
+                name: "Sale ",
+                link: "/shop",
+            },
+        ],
+    },
+    {
+        category: "Clothing",
+        linkList: [
+            {
+                name: "New Release",
+                link: "/shop",
+            },
+            {
+                name: "Member Access",
+                link: "/shop",
+            },
+            {
+                name: "Couple Wear ",
+                link: "/shop",
+            },
+            {
+                name: "Basic Essentials ",
+                link: "/shop",
+            },
+            {
+                name: "Football Club Kit ",
+                link: "/shop",
+            },
+            {
+                name: "Top Pick Under",
+                link: "/shop",
+            },
+            {
+                name: "Sale ",
+                link: "/shop",
+            },
+        ],
+    },
+    {
+        category: "Shop By Sport",
+        linkList: [
+            {
+                name: "Rnning",
+                link: "/shop",
+            },
+            {
+                name: "Football",
+                link: "/shop",
+            },
+            {
+                name: "Basketball ",
+                link: "/shop",
+            },
+            {
+                name: "Volleyball ",
+                link: "/shop",
+            },
+            {
+                name: "GYM and Tranning",
+                link: "/shop",
+            },
+            {
+                name: "Yoga",
+                link: "/shop",
+            },
+            {
+                name: "Tennis ",
+                link: "/shop",
+            },
+            {
+                name: "Sketeboarding ",
+                link: "/shop",
+            },
+        ],
+    },
+]
 const SubHeader = () => {
-    const location = useLocation()
+    const [drop, setDrop] = useState(false)
+
     const theme = useTheme()
     const mathes = useMediaQuery(theme.breakpoints.up("sm"))
     return (
@@ -14,124 +155,45 @@ const SubHeader = () => {
             sx={{
                 flexDirection: { xs: "column", md: "row" },
                 justifyContent: { md: "center" },
-                "&>a": {
-                    my: { xs: 2, md: 0 },
-                    justifyContent: { xs: "flex-start", md: "center" },
-                    color: mathes && location.pathname === "/" ? "text.secondary" : "text.primary",
-                },
             }}
         >
-            <Box
-                component={Link}
-                to="/shop"
-                p={1}
-                mx={1}
-                sx={{
-                    transition: "all 0.3s ease-in-out",
-                    textDecoration: "none",
-                    "&:hover": {
-                        bgcolor: { md: "white" },
-                        color: { md: "black" },
-                    },
-                }}
-                justifyContent="center"
-                display="flex"
-            >
-                <Typography my="auto" fontSize={18} component="span" fontWeight={700}>
-                    SHOP
-                </Typography>
-                {mathes && <ExpandMoreIcon fontSize="large" sx={{ alignSelf: "center" }} />}
-            </Box>
-            {!mathes && <Divider />}
-
-            <Box
-                justifyContent="center"
-                component={Link}
-                to="/shop"
-                p={1}
-                mx={1}
-                sx={{
-                    transition: "all 0.3s ease-in-out",
-                    textDecoration: "none",
-                    "&:hover": {
-                        bgcolor: { md: "white" },
-                        color: { md: "black" },
-                    },
-                }}
-                display="flex"
-            >
-                <Typography my="auto" fontSize={18} component="span" fontWeight={700}>
-                    FEATURED
-                </Typography>
-                {mathes && <ExpandMoreIcon fontSize="large" sx={{ alignSelf: "center" }} />}
-            </Box>
-            {!mathes && <Divider />}
-            <Box
-                component={Link}
-                to="/shop"
-                p={1}
-                mx={1}
-                sx={{
-                    transition: "all 0.3s ease-in-out",
-                    textDecoration: "none",
-                    "&:hover": {
-                        bgcolor: { md: "white" },
-                        color: { md: "black" },
-                    },
-                }}
-                justifyContent="center"
-                display="flex"
-            >
-                <Typography my="auto" fontSize={18} component="span" fontWeight={700}>
-                    LOOKBOOK
-                </Typography>
-                {mathes && <ExpandMoreIcon fontSize="large" sx={{ alignSelf: "center" }} />}
-            </Box>
-            {!mathes && <Divider />}
-            <Box
-                component={Link}
-                to="/shop"
-                p={1}
-                mx={1}
-                sx={{
-                    transition: "all 0.3s ease-in-out",
-                    textDecoration: "none",
-                    "&:hover": {
-                        bgcolor: { md: "white" },
-                        color: { md: "black" },
-                    },
-                }}
-                justifyContent="center"
-                display="flex"
-            >
-                <Typography my="auto" fontSize={18} component="span" fontWeight={700}>
-                    JOURNAL
-                </Typography>
-                {mathes && <ExpandMoreIcon fontSize="large" sx={{ alignSelf: "center" }} />}
-            </Box>
-            {!mathes && <Divider />}
-            <Box
-                justifyContent="center"
-                component={Link}
-                to="/shop"
-                p={1}
-                mx={1}
-                sx={{
-                    transition: "all 0.3s ease-in-out",
-                    textDecoration: "none",
-                    "&:hover": {
-                        bgcolor: { md: "white" },
-                        color: { md: "black" },
-                    },
-                }}
-                display="flex"
-            >
-                <Typography my="auto" fontSize={18} component="span" fontWeight={700}>
-                    ABOUT
-                </Typography>
-                {mathes && <ExpandMoreIcon fontSize="large" sx={{ alignSelf: "center" }} />}
-            </Box>
-            {!mathes && <Divider />}
+            {subHeaderList.map((item) => (
+                <Box
+                    key={item}
+                    sx={{
+                        my: { xs: 2, md: 0 },
+                        justifyContent: { xs: "flex-start", md: "center" },
+                        borderBottom: "0px solid",
+                        transition: "0.1s",
+                        mx: 2,
+                        "&:hover": {
+                            borderBottom: "1px solid",
+                        },
+                        "&>div>a": {
+                            textDecoration: "none",
+                            color: "text.primary",
+                        },
+                        display: "flex",
+                    }}
+                >
+                    <Box justifyContent="center" p={1} display="flex">
+                        <Typography
+                            my="auto"
+                            component={Link}
+                            to="/shop"
+                            onMouseEnter={() => {
+                                if (!!setDrop) setDrop(true)
+                            }}
+                        >
+                            {item}
+                        </Typography>
+                    </Box>
+                    {!mathes && <Divider />}
+                    <Box onMouseLeave={() => setDrop(false)}>
+                        <SubHeaderItem isOpen={drop} categoryList={fakeCategories} />
+                    </Box>
+                </Box>
+            ))}
         </Box>
     )
 }

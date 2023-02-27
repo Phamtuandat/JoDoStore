@@ -1,52 +1,17 @@
-import FavoriteIcon from "@mui/icons-material/Favorite"
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined"
-import { Box, CardContent, Hidden, Paper, Typography } from "@mui/material"
-import Button from "@mui/material/Button/Button"
-import { styled, useTheme } from "@mui/material/styles"
-import { cartAction } from "features/cart/cartSlice"
+import { Box, CardContent, Paper, Typography } from "@mui/material"
+import { useTheme } from "@mui/material/styles"
 import { motion } from "framer-motion"
-import { useWidth } from "Hooks/width-hook"
 import { Product } from "models"
 
 import { useEffect, useState } from "react"
-import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 type Props = {
     product: Product
-}
-const StyledButton = styled(Box)`
-    ${({ theme }) => `
-            border-radius: 50%;
-            line-height: 0;
-            align-self: center;
-            box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-            padding: 4px;
-            font-size: 10px;
-            cursor: pointer;
-            background-color: ${theme.palette.primary.dark};
-            transition: ${theme.transitions.create(["transform"], {
-                duration: theme.transitions.duration.short,
-            })};
-            &:hover {
-                transform: scale(1.2);
-            }
-            
-        `}
-`
-
-const variants = {
-    open: { opacity: 1, y: 0 },
-    closed: {
-        opacity: 0,
-        y: 50,
-    },
 }
 export const ProductItem = ({ product }: Props) => {
     const theme = useTheme()
     const [imgIndex, setIndex] = useState<number>(0)
     const [checked, setCheck] = useState(false)
-    const width = useWidth()
-    const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const handleClick = (id: string | number | null) => {
@@ -90,7 +55,7 @@ export const ProductItem = ({ product }: Props) => {
                 <Box
                     component={motion.div}
                     sx={{
-                        pb: "50%",
+                        pb: "100%",
                         backgroundImage: ` url(${product.thumbnails[imgIndex]?.imageUrl})`,
                         backgroundPosition: "center",
                         backgroundSize: "cover",
@@ -100,51 +65,6 @@ export const ProductItem = ({ product }: Props) => {
                     animate={checked ? { scale: 1.1 } : { scale: 1 }}
                     transition={{ duration: 0.9 }}
                 />
-                <Hidden smDown>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                        }}
-                        component={motion.div}
-                        initial={{ opacity: 0 }}
-                        animate={checked && width !== "xs" ? "open" : "closed"}
-                        variants={variants}
-                        transition={{ duration: 0.3 }}
-                    >
-                        <StyledButton
-                            sx={{
-                                color: "text.primary",
-                            }}
-                        >
-                            <FavoriteIcon color="action" />
-                        </StyledButton>
-                        <Button
-                            variant="contained"
-                            size="medium"
-                            sx={{
-                                mx: 1,
-                                transition: ` transform ${theme.transitions.duration.complex}ms `,
-                                "&:hover": {
-                                    transform: "scale(1.05)",
-                                },
-                            }}
-                            onClick={() =>
-                                dispatch(
-                                    cartAction.addToCart({
-                                        product,
-                                        quantity: 1,
-                                    })
-                                )
-                            }
-                        >
-                            Add to cart
-                        </Button>
-                        <StyledButton aria-label="watch more">
-                            <RemoveRedEyeOutlinedIcon color="action" />
-                        </StyledButton>
-                    </Box>
-                </Hidden>
             </Box>
             <CardContent>
                 <Box display="flex" flexDirection="column" pt={2}>

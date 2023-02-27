@@ -39,7 +39,7 @@ const ProductMediaCard = ({ product }: Props) => {
                 sx={{
                     mt: 3,
                     position: { xs: "static", sm: "sticky" },
-                    top: "150px",
+                    top: 40,
                     mb: 6,
                     display: "flex",
                     flexDirection: "column",
