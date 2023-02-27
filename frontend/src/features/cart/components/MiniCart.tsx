@@ -3,11 +3,9 @@ import { Badge, ClickAwayListener, Drawer, IconButton } from "@mui/material"
 import { useAppDispatch, useAppSelector } from "app/hooks"
 import { useRef } from "react"
 import { cartAction, cartSelector, showMiniCartSelector } from "../cartSlice"
-import { useTheme } from "@mui/material/styles"
 import CartReview from "./CartReview"
 
 function MiniCart() {
-    const theme = useTheme()
     const anchorEl = useRef<HTMLButtonElement>(null)
     const showMiniCart = useAppSelector(showMiniCartSelector)
     const carts = useAppSelector(cartSelector)
@@ -27,10 +25,10 @@ function MiniCart() {
                     ref={anchorEl}
                     onClick={handleClick}
                     sx={{
-                        color: theme.palette.text.secondary,
+                        color: "inherit",
                     }}
                 >
-                    <Badge badgeContent={carts.length} color="primary">
+                    <Badge badgeContent={carts.length}>
                         <LocalMallOutlinedIcon />
                     </Badge>
                 </IconButton>

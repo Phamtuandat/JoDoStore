@@ -1,16 +1,28 @@
-﻿using gearshop_dotnetapp.Data;
+﻿using gearshop_dotnetapp;
+using gearshop_dotnetapp.Data;
 using gearshop_dotnetapp.Models.Identity;
 using gearshop_dotnetapp.Repositories;
+using gearshop_dotnetapp.Services.OrderServices;
 using gearshop_dotnetapp.Services.ProductServices;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging.Configuration;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+builder.Services.TryAddEnumerable(
+    ServiceDescriptor.Singleton<ILoggerProvider, ColorConsoleLoggerProvider>());
+LoggerProviderOptions.RegisterProviderOptions
+    <ColorConsoleLoggerConfiguration, ColorConsoleLoggerProvider>(builder.Services);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
@@ -40,7 +52,14 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     // Cookie settings
     options.Cookie.HttpOnly = true;
-    options.Cookie.SameSite = SameSiteMode.Lax;
+    if (builder.Environment.IsProduction())
+    {
+        options.Cookie.SameSite = SameSiteMode.Lax;
+    }
+    else
+    {
+        options.Cookie.SameSite = SameSiteMode.None;
+    }
     options.Events.OnSigningIn = ctx =>
     {
         if (ctx.Properties.IsPersistent)
@@ -56,13 +75,18 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IBrandService, BrandService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IAddredssService, AddressService>();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.WebHost.ConfigureKestrel(options =>
+if (builder.Environment.IsProduction())
 {
-    options.ListenAnyIP(4432);
-});
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.ListenAnyIP(4432);
+    });
+}
 
 builder.Services.AddCors(options =>
 {
@@ -74,14 +98,13 @@ builder.Services.AddCors(options =>
                 policy.WithOrigins("http://localhost:3000",
                                     "http://localhost:3000").AllowCredentials().AllowAnyMethod().AllowAnyHeader().AllowCredentials();
             }
-            policy.WithOrigins("http://phamtuandat.click",
-                                    "http://phamtuandat.click").AllowCredentials().AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+                policy.WithOrigins("https://phamtuandat.click",
+                                    "https://phamtuandat.click").AllowCredentials().AllowAnyMethod().AllowAnyHeader().AllowCredentials();
         });
 });
 
 
 builder.Services.AddControllers();
-
 
 var app = builder.Build();
 
@@ -94,20 +117,20 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors();
 app.UseAuthentication();
-
 app.UseAuthorization();
 app.UseStaticFiles();
 app.MapControllers();
-
-using (var scope = app.Services.CreateScope())
+if (!builder.Environment.IsDevelopment())
 {
-    var services = scope.ServiceProvider;
-
-    var context = services.GetRequiredService<DataContext>();
-    if (context.Database.GetPendingMigrations().Any())
+    using (var scope = app.Services.CreateScope())
     {
-        context.Database.Migrate();
+        var services = scope.ServiceProvider;
+
+        var context = services.GetRequiredService<DataContext>();
+        if (context.Database.GetPendingMigrations().Any())
+        {
+            context.Database.Migrate();
+        }
     }
 }
-
 app.Run();

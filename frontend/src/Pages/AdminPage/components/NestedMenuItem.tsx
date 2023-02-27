@@ -1,6 +1,6 @@
 import ExpandLess from "@mui/icons-material/ExpandLess"
 import ExpandMore from "@mui/icons-material/ExpandMore"
-import { Box, List, ListItem } from "@mui/material"
+import { Box, List } from "@mui/material"
 import Collapse from "@mui/material/Collapse"
 import ListItemButton from "@mui/material/ListItemButton"
 import ListItemIcon from "@mui/material/ListItemIcon"
@@ -29,23 +29,27 @@ export const NestedMenuItem = ({ icon, menu, nestedItemList, to, open, setOpen }
 
     const theme = useTheme()
 
-    const handleClick = () => {
-        if (setOpen) {
-            setOpen()
+    const handleClick = (e: any) => {
+        if (!(nestedItemList?.length === 0 && to)) {
+            e.preventDefault()
+            if (setOpen) {
+                setOpen()
+            }
         }
     }
     return (
         <Box>
-            <ListItem
-                button
+            <ListItemButton
                 component={RouterLink as any}
-                to={!nestedItemList && to}
-                onClick={handleClick}
+                to={nestedItemList?.length === 0 && to}
+                onClick={(e: any) => handleClick(e)}
             >
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText primary={menu} />
-                {!!nestedItemList && <>{open ? <ExpandLess /> : <ExpandMore />}</>}
-            </ListItem>
+                {!!nestedItemList && nestedItemList.length > 0 && (
+                    <>{open ? <ExpandLess /> : <ExpandMore />}</>
+                )}
+            </ListItemButton>
             {!!nestedItemList && (
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>

@@ -1,5 +1,5 @@
 ﻿using Backend.Services.Communication;
-using gearshop_dotnetapp.Models.Product;
+using gearshop_dotnetapp.Models.ProductModel;
 
 namespace gearshop_dotnetapp.Services.Communications
 {

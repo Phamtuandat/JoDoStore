@@ -15,21 +15,21 @@ namespace gearshop_dotnetapp.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IMediator _mediatr;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
 
-        public UserController(IMediator mediatr, UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper)
+        public UserController( UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper, RoleManager<IdentityRole> roleManager)
         {
-            _mediatr = mediatr;
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;
+            _roleManager = roleManager;
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginModel userModel)
+        public async Task<ActionResult> Login([FromBody] UserLoginModel userModel)
         {
             if (!ModelState.IsValid)
             {
@@ -48,7 +48,7 @@ namespace gearshop_dotnetapp.Controllers
 
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterResource model)
+        public async Task<ActionResult> Register([FromBody] RegisterResource model)
         {
             if (!ModelState.IsValid)
             {
@@ -58,10 +58,19 @@ namespace gearshop_dotnetapp.Controllers
             if (user != null) return Unauthorized("Email has already existed!");
             user = _mapper.Map<RegisterResource, User>(model);
             var result = await _userManager.CreateAsync(user, model.Password);
+            var roleName = "Admin";
+            var roleExists = await _roleManager.RoleExistsAsync(roleName);
+
+            if (!roleExists)
+            {
+                var role = new IdentityRole(roleName);
+                await _roleManager.CreateAsync(role);
+            }
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 var userResource = _mapper.Map<User, UserResource>(user);
+                await _userManager.AddToRoleAsync(user, roleName );
                 return Ok(userResource);
             }
             foreach (var error in result.Errors)
@@ -72,7 +81,7 @@ namespace gearshop_dotnetapp.Controllers
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
+        public async Task<ActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
              return StatusCode(202);

@@ -2,16 +2,17 @@ import { Brand } from "./brand"
 import { Category } from "./category"
 import { Tag } from "./tags"
 
-export interface Thumbnail {
+export interface Photo {
     id: number | string
     title: string
     imageUrl: string
     productId: number
 }
-export interface SaveThumbReq {
+export interface SavePhotoReq {
     title: string
     productId?: number
-    thumbnail: File
+    FormFile: File | null
+    collections: string
 }
 
 export interface Product {
@@ -23,7 +24,7 @@ export interface Product {
     price: number | null
     salePrice?: number | null
     smallImageLink?: string
-    thumbnails: Thumbnail[] | []
+    thumbnails: Photo[] | []
     tags?: Tag[] | []
 }
 

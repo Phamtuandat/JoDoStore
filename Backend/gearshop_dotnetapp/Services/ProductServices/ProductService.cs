@@ -2,11 +2,12 @@
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using dotenv.net;
-using gearshop_dotnetapp.Models.Product;
+using gearshop_dotnetapp.Models.ProductModel;
 using gearshop_dotnetapp.Repositories;
 using gearshop_dotnetapp.Resources;
 using gearshop_dotnetapp.Services.Communications;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 using System.Text.RegularExpressions;
 
 namespace gearshop_dotnetapp.Services.ProductServices
@@ -62,19 +63,36 @@ namespace gearshop_dotnetapp.Services.ProductServices
                 {
                     if (file.Length > 0)
                     {
-                        var extension = Path.GetExtension(file.FileName);
                         string title = Regex.Replace(saveProductResource.Name, @"[^0-9a-zA-Z:,]+", "");
-                        var dynamicFileName = Convert.ToBase64String(Guid.NewGuid().ToByteArray()) + "_" + title + extension;
+                        var dynamicFileName = Convert.ToBase64String(Guid.NewGuid().ToByteArray()) + "_" + title;
                         using var stream = file.OpenReadStream();
                         var uploadParams = new ImageUploadParams()
                         {
-                            File = new FileDescription(dynamicFileName,stream)
+                            File = new FileDescription(dynamicFileName, stream),
+                            PublicId = dynamicFileName,
+                            DisplayName = title,
+                            UniqueFilename = true,
+                            EagerTransforms = new List<Transformation>()
+                            {
+                                new Transformation().Named("product-thumb")
+                            }
                         };
-                        var uploadResult = _cloudinary.Upload(uploadParams);
 
+                        var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                        var eagerList = uploadResult.Eager;
+                        string? imageUrl;
+                        if (eagerList != null && eagerList.Length > 0)
+                        {
+                            imageUrl = eagerList.FirstOrDefault()?.SecureUrl.ToString();
+                        }
+                        else
+                        {
+                            imageUrl = uploadResult.SecureUrl.ToString();
+                        }
+                        imageUrl ??= uploadResult.SecureUrl.ToString();
                         var newThumbnail = new Photo()
                         {
-                            ImageUrl = uploadResult.Url.ToString(),
+                            ImageUrl = imageUrl,
                             PublicId = uploadResult.PublicId,
                             ImageCollections = collection,
                             Created = DateTime.UtcNow,
@@ -129,14 +147,14 @@ namespace gearshop_dotnetapp.Services.ProductServices
 
         public async Task<ProductRes> DeleteAsync(int id)
         {
-            var product = _unitOfWork.ProductRepository.Get(id);
+            var product = _unitOfWork.ProductRepository.All().FirstOrDefault(x => x.Id == id);
             if (product == null) return new ProductRes("Can not find product id!");
             try
             {
                 var thumbList = product.Thumbnails.ToList();
                 foreach (var thumb in thumbList)
                 {
-                    var uploadResult = await _cloudinary.DeleteResourcesAsync(thumb.PublicId);
+                    var uploadResult = await _cloudinary.DestroyAsync(new DeletionParams(thumb.PublicId));
                 }
                 _unitOfWork.ProductRepository.Delete(product);
                 await _unitOfWork.CompleteAsync();

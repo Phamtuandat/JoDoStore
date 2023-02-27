@@ -8,6 +8,7 @@ import ProductPage from "Pages/AdminPage/Product"
 import AddProductPage from "Pages/AdminPage/Product/AddProductPage"
 import EditPage from "Pages/AdminPage/Product/EditPage"
 import EditForm from "Pages/AdminPage/Product/ProductComponent/EditForm"
+import UIPage from "Pages/AdminPage/UiPage/UIPage"
 import HomePage from "Pages/HomePage/HomePage"
 import OrderPage from "Pages/ProductPage/OrderPage"
 import ProductDetailPage from "Pages/ProductPage/ProductDetailPage"
@@ -90,6 +91,11 @@ const router = createBrowserRouter([
             {
                 path: "/admin/orders",
                 element: <OrderListPage />,
+                children: [],
+            },
+            {
+                path: "/admin/uiPage",
+                element: <UIPage />,
                 children: [],
             },
         ],

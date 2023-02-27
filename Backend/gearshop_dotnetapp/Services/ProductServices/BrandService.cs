@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using gearshop_dotnetapp.Models.Product;
+using gearshop_dotnetapp.Models.ProductModel;
 using gearshop_dotnetapp.Repositories;
 using gearshop_dotnetapp.Resources;
 using gearshop_dotnetapp.Services.Communications;

@@ -2,7 +2,7 @@
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using dotenv.net;
-using gearshop_dotnetapp.Models.Product;
+using gearshop_dotnetapp.Models.ProductModel;
 using gearshop_dotnetapp.Repositories;
 using gearshop_dotnetapp.Resources;
 using gearshop_dotnetapp.Services.Communications;
@@ -17,41 +17,67 @@ namespace gearshop_dotnetapp.Services.ProductServices
         private readonly Cloudinary _cloudinary;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _uniOfWork;
-        public PhotoService(IUnitOfWork uniOfWork, IMapper mapper)
+        private readonly ILogger<PhotoService> _logger;
+        public PhotoService(IUnitOfWork uniOfWork, IMapper mapper, ILogger<PhotoService> logger)
         {
             DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
             _cloudinary = new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL"));
             _cloudinary.Api.Secure = true;
             _uniOfWork = uniOfWork;
             _mapper = mapper;
+            _logger = logger;
+            _logger.LogInformation("Logging!");
         }
+
         public async Task<PhotoResponse> CreateAsync(SavPhotoResource model)
         {
             try
             {
                 var file = model.FormFile;
                 if (file == null) return new PhotoResponse("form file is required!");
-                var extension = Path.GetExtension(file.FileName);
+                var collections = _uniOfWork.ImageCollectionsRepository.Find(x => x.Name == model.Collections)?.FirstOrDefault();
+                if(collections == null)
+                {
+                    collections = new ImageCollections() { Name = model.Collections };
+                    _uniOfWork.ImageCollectionsRepository.Add(collections);
+                }
+                string[] resize = { model.Collections.ToLower() };
                 string title = Regex.Replace(model.Title, @"[^0-9a-zA-Z:,]+", "");
-                var dynamicFileName = Convert.ToBase64String(Guid.NewGuid().ToByteArray()) + "_" + title + extension;
+                var dynamicFileName = Convert.ToBase64String(Guid.NewGuid().ToByteArray()) + "_" + title;
                 using var stream = file.OpenReadStream();
                 var uploadParams = new ImageUploadParams()
                 {
-                    File = new FileDescription(dynamicFileName, stream)
+                    File = new FileDescription(dynamicFileName, stream),
+                    UniqueFilename = true,
+                    DisplayName = title,
+                    PublicId = dynamicFileName,
+                    EagerTransforms = new List<Transformation>()
+                    {
+                        new Transformation().Named(resize)
+                    }
                 };
-                var uploadResult = _cloudinary.Upload(uploadParams);
-                var collections = _uniOfWork.ImageCollectionsRepository.Find(x => x.Name == model.Collections)?.FirstOrDefault();
-                collections ??= new ImageCollections() { Name = model.Collections };
-
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                var eagerList = uploadResult.Eager;
+                string? imageUrl;
+                if (eagerList != null && eagerList.Length > 0)
+                {
+                    imageUrl = eagerList.FirstOrDefault()?.SecureUrl.ToString();
+                    _logger.LogInformation(imageUrl);
+                }
+                else
+                {
+                    imageUrl =  uploadResult.SecureUrl.ToString();
+                }
+                imageUrl ??= uploadResult.SecureUrl.ToString();
 
                 var newThumb = new Photo()
                 {
                     Title = model.Title,
                     ImageCollections = collections,
-                    ImageUrl = uploadResult.Url.ToString(),
+                    ImageUrl = imageUrl,
                     Description = model.Description,
                     ProductId = model.ProductId,
-
+                    PublicId = uploadResult.PublicId,
                 };
                 var result = _uniOfWork.ThumbnailRepository.Add(newThumb);
                 await _uniOfWork.CompleteAsync();
@@ -71,7 +97,7 @@ namespace gearshop_dotnetapp.Services.ProductServices
             {
                 var exitedThub = _uniOfWork.ThumbnailRepository.Find(x => x.Id == id)?.FirstOrDefault();
                 if (exitedThub == null) return new PhotoResponse("can not find thumbnai");
-                var response = await _cloudinary.DeleteResourcesAsync(exitedThub.PublicId);
+                var uploadResult = await _cloudinary.DestroyAsync(new DeletionParams(exitedThub.PublicId));
                 var result = _uniOfWork.ThumbnailRepository.Delete(exitedThub);
                 await _uniOfWork.CompleteAsync();
 
@@ -83,13 +109,13 @@ namespace gearshop_dotnetapp.Services.ProductServices
             }
         }
 
-        public async Task<IEnumerable<PhotoResource>> GetAllThumbnails()
+        public async Task<IEnumerable<PhotoResource>> GetAllPhoto()
         {
             var result  = await _uniOfWork.ThumbnailRepository.All().ToListAsync();
             return _mapper.Map<IEnumerable<Photo>, IEnumerable<PhotoResource>>(result);
         }
 
-        public PhotoResponse GetThumbnailById(int id)
+        public PhotoResponse GetPhotoById(int id)
         {
             var thumb = _uniOfWork.ThumbnailRepository.Get(id);
             if (thumb != null) return new PhotoResponse(thumb);

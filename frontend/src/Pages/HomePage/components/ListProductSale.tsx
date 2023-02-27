@@ -44,14 +44,22 @@ const ListProductSale = (props: Props) => {
     useEffect(() => {
         if (!ignore.current) {
             ignore.current = true
-            dispatch(ProductSliceActions.getList({ top: 20 }))
+            dispatch(
+                ProductSliceActions.getList({
+                    filter: {
+                        not: {
+                            name: "Banner",
+                        },
+                    },
+                })
+            )
         }
     }, [dispatch])
 
     const slidesPerView = (): number => {
         switch (width) {
             case "xs":
-                return 1
+                return 2
             case "sm":
                 return 2
             case "md":

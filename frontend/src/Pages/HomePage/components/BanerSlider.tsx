@@ -1,151 +1,191 @@
-import { Box, Button } from "@mui/material"
-import thumbApi from "ApiClients/ThumbApi"
-import { AnimatePresence, motion, useAnimationControls, wrap } from "framer-motion"
-import { Thumbnail } from "models"
+import EastIcon from "@mui/icons-material/East"
+import { Box, Hidden, Skeleton, Typography } from "@mui/material"
+import { styled } from "@mui/material/styles"
+import PhotoApi from "ApiClients/PhotoApi"
+import { useWidth } from "Hooks/width-hook"
+import { motion, useAnimationControls, useMotionValue } from "framer-motion"
+import { Photo } from "models"
 import buildQuery from "odata-query"
 import { useEffect, useRef, useState } from "react"
-// import CategorySlide from "./CategorySlide"
-const variants = {
-    enter: (direction: number) => {
-        return {
-            x: direction > 0 ? 1000 : -1000,
-            opacity: 0,
-        }
-    },
-    center: {
-        zIndex: 1,
-        x: 0,
-        opacity: 1,
-    },
-    exit: (direction: number) => {
-        return {
-            zIndex: 0,
-            x: direction < 0 ? 1000 : -1000,
-            opacity: 0,
-        }
-    },
-}
+import { Link } from "react-router-dom"
+import Slider, { Settings } from "react-slick"
+import "slick-carousel/slick/slick-theme.css"
+import "slick-carousel/slick/slick.css"
 
-const swipeConfidenceThreshold = 10000
-const swipePower = (offset: number, velocity: number) => {
-    return Math.abs(offset) * velocity
-}
+const CustomBtn = styled("button")(({ theme }) => ({
+    backgroundColor: theme.palette.background.default,
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    fontSize: "inherit",
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    color: theme.palette.text.primary,
+    border: "none",
+    padding: "2px",
+    "&>span>svg": {
+        marginLeft: "10px",
+        width: "0",
+        transition: " all 0.3s",
+        overflow: "hidden",
+    },
+    "&:hover>span>svg": {
+        width: "20px",
+    },
+}))
 
 export const BanerSlider = () => {
-    const [isMounted, setIsMounted] = useState(false)
-    const controls = useAnimationControls()
     const ignore = useRef(false)
-    const [images, setImages] = useState<Thumbnail[]>([])
-    const [[page, direction], setPage] = useState([0, 0])
-    // const [categories, setCategories] = useState<Category[]>([])
-    const imageIndex = wrap(0, images.length, page)
+    const width = useWidth()
+    const textStyles = {
+        y: useMotionValue(50),
+        opacity: useMotionValue(1),
+    }
+    const btnStyles = {
+        opacity: useMotionValue(1),
+    }
+    const textCtrl = useAnimationControls()
+    const btnCtrl = useAnimationControls()
+    const [images, setImages] = useState<Photo[] | []>()
+    const [currentSlide, setCurrentSlide] = useState<number>(0)
+    const handleBeforeChange = (oldIndex: number, newIndex: number) => {
+        textCtrl.set({
+            opacity: 0,
+            y: 300,
+        })
+        btnCtrl.set({
+            opacity: 0,
+        })
+        setCurrentSlide(newIndex)
+    }
+    const settings: Settings = {
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplaySpeed: 5000,
+        autoplay: true,
+        fade: true,
+        dots: true,
+        draggable: true,
+    }
     useEffect(() => {
-        setIsMounted(true)
         if (!ignore.current) {
             ignore.current = true
             ;(async () => {
                 const param = buildQuery({
                     filter: {
                         imageCollections: {
-                            name: "Banner",
+                            name: "hero",
                         },
                     },
                 })
-                // const result = await categoryApi.getAll()
-                // setCategories(result.data)
-                const mediaResource = (await thumbApi.getAll(param)).data
-                setImages(mediaResource)
+
+                const list = await (await PhotoApi.getAll(param)).data
+                setImages(list)
             })()
-            return () => {
-                setIsMounted(false)
-            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
-    const paginate = (newDirection: number) => {
-        setPage([page + newDirection, newDirection])
-    }
-
+    useEffect(() => {
+        textCtrl.start({
+            opacity: 1,
+            y: width !== "xs" ? 50 : 0,
+            transition: { duration: 1.5 },
+        })
+        btnCtrl.start({
+            opacity: 1,
+            transition: { delay: width !== "xs" ? 1.2 : 0, duration: 0.7 },
+        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentSlide])
     return (
-        <Box>
-            <Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        position: "relative",
-                        overflow: "hidden",
-                        "&::before": {
-                            content: `"  "`,
-                            position: "absolute",
-                            top: 0,
-                            bottom: 0,
-                            right: "50%",
-                            transform: "translateX(50%)",
-                            height: "100%",
+        <Box
+            sx={{
+                overflow: "hidden",
+                position: "relative",
+            }}
+        >
+            <Slider {...settings} beforeChange={handleBeforeChange}>
+                {images?.map((slide) => (
+                    <Box
+                        key={slide.id}
+                        sx={{
+                            backgroundImage: `url(${slide.imageUrl})`,
+                            backgroundSize: "contain",
+                            backgroundPosition: "top center",
+                            paddingBottom: "57%",
                             width: "100%",
-                        },
-                        height: "600px",
-                        width: "100%",
-                        alignItems: "center",
-                    }}
-                >
-                    <AnimatePresence custom={direction} initial={false}>
+                            backgroundRepeat: "no-repeat",
+                            px: 0,
+                        }}
+                    />
+                )) || (
+                    <Skeleton animation="wave" variant="rectangular" width="100%">
                         <Box
-                            component={motion.img}
-                            src={images[imageIndex]?.imageUrl}
-                            key={page}
                             sx={{
-                                height: { xs: "100%", md: "100%" },
-                                width: { xs: "100%", md: "100%" },
-                                position: "absolute",
+                                backgroundSize: "contain",
+                                backgroundPosition: "top center",
+                                paddingBottom: "57%",
+                                width: "100%",
+                                backgroundRepeat: "no-repeat",
+                                px: 0,
                             }}
-                            custom={direction}
-                            variants={variants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={{
-                                x: {
-                                    type: "spring",
-                                    stiffness: 300,
-                                    damping: 30,
-                                },
-                                opacity: { duration: 0.1 },
-                            }}
-                            drag="x"
-                            dragConstraints={{ left: 0, right: 0 }}
-                            dragElastic={1}
-                            onDragEnd={(e, { offset, velocity }) => {
-                                const swipe = swipePower(offset.x, velocity.x)
-                                if (swipe < -swipeConfidenceThreshold) {
-                                    paginate(1)
-                                } else if (swipe > swipeConfidenceThreshold) {
-                                    paginate(-1)
-                                }
-                            }}
-                            onDragStart={() => {
-                                if (isMounted) {
-                                    controls.start({
-                                        x: 0,
-                                        opacity: 0,
-                                    })
-                                }
-                            }}
-                            onAnimationComplete={() =>
-                                controls.start({
-                                    x: "100%",
-                                    transition: { duration: 1 },
-                                    opacity: 1,
-                                })
-                            }
                         />
-                        <motion.div style={{ zIndex: 10, opacity: 0 }} animate={controls}>
-                            <Button variant="contained">Shop now!</Button>
-                        </motion.div>
-                    </AnimatePresence>
-                </Box>
+                    </Skeleton>
+                )}
+            </Slider>
+            <Box
+                sx={{
+                    width: "fit-context",
+                    height: { xs: "fit-content", md: 300 },
+                    position: "absolute",
+                    top: { md: "40%", xs: "50%" },
+                    left: { xs: "50%", md: 0 },
+                    transform: { md: "translate(5%)", xs: "translate(-100%, 20%)" },
+                    overflow: "hidden",
+                    ml: 10,
+                }}
+            >
+                <Hidden smDown>
+                    <motion.div animate={textCtrl} style={textStyles}>
+                        <Typography
+                            color="white"
+                            variant="h2"
+                            fontFamily="fantasy"
+                            letterSpacing={1}
+                            my={1}
+                        >
+                            Lorem ipsum
+                        </Typography>
+                        <Typography color="white" variant="h6" component="span">
+                            sit amet adipisicing elit!
+                        </Typography>
+                    </motion.div>
+                    <motion.div animate={btnCtrl} style={btnStyles}>
+                        <Box
+                            component={Link}
+                            to="/shop"
+                            sx={{
+                                textDecoration: "none",
+                            }}
+                        >
+                            <Box
+                                width={{ md: 250, xs: 150 }}
+                                height={{ xs: 50, md: 70 }}
+                                mt={{ md: 10 }}
+                            >
+                                <CustomBtn>
+                                    Shop now!
+                                    <span>
+                                        <EastIcon />
+                                    </span>
+                                </CustomBtn>
+                            </Box>
+                        </Box>
+                    </motion.div>
+                </Hidden>
             </Box>
         </Box>
     )

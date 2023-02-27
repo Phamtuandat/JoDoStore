@@ -1,4 +1,6 @@
-﻿using gearshop_dotnetapp.Models.Product;
+﻿using Backend.Models.Identity;
+using gearshop_dotnetapp.Models.OrderModel;
+using gearshop_dotnetapp.Models.ProductModel;
 
 namespace gearshop_dotnetapp.Repositories
 {
@@ -10,6 +12,9 @@ namespace gearshop_dotnetapp.Repositories
         IRepository<ImageCollections> ImageCollectionsRepository { get; }
         IRepository<Brand> BrandRepository { get; }
         IRepository<Tag> TagRepository { get; }
+        IRepository<Order> OrderRepository { get; }
+        IRepository<OrderItem> OrderItemRepository { get; }
+        IRepository<Address> AdressRepository { get; }
         Task CompleteAsync();
     }
 }

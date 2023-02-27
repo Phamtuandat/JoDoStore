@@ -1,0 +1,6 @@
+This favicon was generated using the following font:
+
+- Font Title: Noto Sans Tirhuta
+- Font Author: Copyright 2018 Google Inc. All Rights Reserved.
+- Font Source: http://fonts.gstatic.com/s/notosanstirhuta/v15/t5t6IQYRNJ6TWjahPR6X-M-apUyby7uGUBsTrn5P.ttf
+- Font License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL))

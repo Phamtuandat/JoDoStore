@@ -22,6 +22,7 @@ namespace gearshop_dotnetapp.Extensions
             if (user == null) throw new UnauthorizedAccessException();
             if (signInManager.IsSignedIn(context.User))
             {
+
                 await signInManager.RefreshSignInAsync(user);
                 return;
             }

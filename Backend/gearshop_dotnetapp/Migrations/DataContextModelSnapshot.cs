@@ -8,7 +8,7 @@ using gearshop_dotnetapp.Data;
 
 #nullable disable
 
-namespace gearshopdotnetapp.Migrations
+namespace gearshop_dotnetapp.Migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -17,12 +17,12 @@ namespace gearshopdotnetapp.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.1")
+                .HasAnnotation("ProductVersion", "7.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Backend.Models.Identity.Adress", b =>
+            modelBuilder.Entity("Backend.Models.Identity.Address", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,8 +48,7 @@ namespace gearshopdotnetapp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Address");
                 });
@@ -277,7 +276,66 @@ namespace gearshopdotnetapp.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("gearshop_dotnetapp.Models.Product.Brand", b =>
+            modelBuilder.Entity("gearshop_dotnetapp.Models.OrderModel.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdressId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdressId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Order");
+                });
+
+            modelBuilder.Entity("gearshop_dotnetapp.Models.OrderModel.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderItem");
+                });
+
+            modelBuilder.Entity("gearshop_dotnetapp.Models.ProductModel.Brand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -298,7 +356,7 @@ namespace gearshopdotnetapp.Migrations
                     b.ToTable("Brand");
                 });
 
-            modelBuilder.Entity("gearshop_dotnetapp.Models.Product.Category", b =>
+            modelBuilder.Entity("gearshop_dotnetapp.Models.ProductModel.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -320,7 +378,7 @@ namespace gearshopdotnetapp.Migrations
                     b.ToTable("Category");
                 });
 
-            modelBuilder.Entity("gearshop_dotnetapp.Models.Product.ImageCollections", b =>
+            modelBuilder.Entity("gearshop_dotnetapp.Models.ProductModel.ImageCollections", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -337,7 +395,7 @@ namespace gearshopdotnetapp.Migrations
                     b.ToTable("ImageCollections");
                 });
 
-            modelBuilder.Entity("gearshop_dotnetapp.Models.Product.Photo", b =>
+            modelBuilder.Entity("gearshop_dotnetapp.Models.ProductModel.Photo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -379,7 +437,7 @@ namespace gearshopdotnetapp.Migrations
                     b.ToTable("Photo");
                 });
 
-            modelBuilder.Entity("gearshop_dotnetapp.Models.Product.Product", b =>
+            modelBuilder.Entity("gearshop_dotnetapp.Models.ProductModel.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -387,10 +445,10 @@ namespace gearshopdotnetapp.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BrandId")
+                    b.Property<int>("BrandId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("CaegoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
@@ -415,12 +473,12 @@ namespace gearshopdotnetapp.Migrations
 
                     b.HasIndex("BrandId");
 
-                    b.HasIndex("CaegoryId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Product");
                 });
 
-            modelBuilder.Entity("gearshop_dotnetapp.Models.Product.Tag", b =>
+            modelBuilder.Entity("gearshop_dotnetapp.Models.ProductModel.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -441,11 +499,11 @@ namespace gearshopdotnetapp.Migrations
                     b.ToTable("Tag");
                 });
 
-            modelBuilder.Entity("Backend.Models.Identity.Adress", b =>
+            modelBuilder.Entity("Backend.Models.Identity.Address", b =>
                 {
                     b.HasOne("gearshop_dotnetapp.Models.Identity.User", "User")
-                        .WithOne("Adress")
-                        .HasForeignKey("Backend.Models.Identity.Adress", "UserId")
+                        .WithMany("Addresses")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -505,43 +563,87 @@ namespace gearshopdotnetapp.Migrations
 
             modelBuilder.Entity("ProductTag", b =>
                 {
-                    b.HasOne("gearshop_dotnetapp.Models.Product.Product", null)
+                    b.HasOne("gearshop_dotnetapp.Models.ProductModel.Product", null)
                         .WithMany()
                         .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("gearshop_dotnetapp.Models.Product.Tag", null)
+                    b.HasOne("gearshop_dotnetapp.Models.ProductModel.Tag", null)
                         .WithMany()
                         .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("gearshop_dotnetapp.Models.Product.Photo", b =>
+            modelBuilder.Entity("gearshop_dotnetapp.Models.OrderModel.Order", b =>
                 {
-                    b.HasOne("gearshop_dotnetapp.Models.Product.ImageCollections", "ImageCollections")
+                    b.HasOne("Backend.Models.Identity.Address", "Adress")
+                        .WithMany()
+                        .HasForeignKey("AdressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("gearshop_dotnetapp.Models.Identity.User", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Adress");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("gearshop_dotnetapp.Models.OrderModel.OrderItem", b =>
+                {
+                    b.HasOne("gearshop_dotnetapp.Models.OrderModel.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("gearshop_dotnetapp.Models.ProductModel.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("gearshop_dotnetapp.Models.ProductModel.Photo", b =>
+                {
+                    b.HasOne("gearshop_dotnetapp.Models.ProductModel.ImageCollections", "ImageCollections")
                         .WithMany("Thumbnails")
                         .HasForeignKey("ImageCollectionsId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("gearshop_dotnetapp.Models.Product.Product", null)
+                    b.HasOne("gearshop_dotnetapp.Models.ProductModel.Product", "Product")
                         .WithMany("Thumbnails")
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("ImageCollections");
+
+                    b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("gearshop_dotnetapp.Models.Product.Product", b =>
+            modelBuilder.Entity("gearshop_dotnetapp.Models.ProductModel.Product", b =>
                 {
-                    b.HasOne("gearshop_dotnetapp.Models.Product.Brand", "Brand")
+                    b.HasOne("gearshop_dotnetapp.Models.ProductModel.Brand", "Brand")
                         .WithMany("Products")
-                        .HasForeignKey("BrandId");
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("gearshop_dotnetapp.Models.Product.Category", "Category")
+                    b.HasOne("gearshop_dotnetapp.Models.ProductModel.Category", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("CaegoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.Navigation("Brand");
 
@@ -550,25 +652,32 @@ namespace gearshopdotnetapp.Migrations
 
             modelBuilder.Entity("gearshop_dotnetapp.Models.Identity.User", b =>
                 {
-                    b.Navigation("Adress");
+                    b.Navigation("Addresses");
+
+                    b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("gearshop_dotnetapp.Models.Product.Brand", b =>
+            modelBuilder.Entity("gearshop_dotnetapp.Models.OrderModel.Order", b =>
+                {
+                    b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("gearshop_dotnetapp.Models.ProductModel.Brand", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("gearshop_dotnetapp.Models.Product.Category", b =>
+            modelBuilder.Entity("gearshop_dotnetapp.Models.ProductModel.Category", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("gearshop_dotnetapp.Models.Product.ImageCollections", b =>
+            modelBuilder.Entity("gearshop_dotnetapp.Models.ProductModel.ImageCollections", b =>
                 {
                     b.Navigation("Thumbnails");
                 });
 
-            modelBuilder.Entity("gearshop_dotnetapp.Models.Product.Product", b =>
+            modelBuilder.Entity("gearshop_dotnetapp.Models.ProductModel.Product", b =>
                 {
                     b.Navigation("Thumbnails");
                 });

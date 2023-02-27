@@ -27,14 +27,14 @@ const CartReview = ({ carts }: Props) => {
         <Box
             display="flex"
             flexDirection="column"
-            width={{ xs: "400px", sm: "480px", md: "480px" }}
-            height="100%"
+            width={{ xs: "300px", sm: "480px", md: "480px" }}
+            height="100vh"
             bgcolor={theme.palette.background.default}
         >
             <Paper
                 sx={{
                     pb: 3,
-                    pt: 8,
+                    pt: 2,
                     display: "flex",
                     flexDirection: "column",
                     height: "100%",

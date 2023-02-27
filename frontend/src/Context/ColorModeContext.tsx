@@ -25,6 +25,7 @@ const ColorModeContext = (props: IAppProps) => {
     )
     let theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode])
     theme = responsiveFontSizes(theme)
+
     return (
         <ThemeContext.Provider value={colorMode}>
             <ThemeProvider theme={theme}>{props.children}</ThemeProvider>

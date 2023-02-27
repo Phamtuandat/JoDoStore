@@ -57,6 +57,7 @@ const EditForm = () => {
     const { productId } = useParams()
     useEffect(() => {
         revalidator.revalidate()
+        console.log(!!product.description)
         reset({
             name: product.name,
             brand: product.brand?.name,
@@ -151,7 +152,7 @@ const EditForm = () => {
                                 height: "100%",
                             }}
                         >
-                            <Typography component="span" variant="h6" mx="auto" mb={-6}>
+                            <Typography component="span" variant="h6" mx="auto" mb={-2}>
                                 Product Information
                             </Typography>
                             {!!product.description && !state.isLoading && (
@@ -164,7 +165,7 @@ const EditForm = () => {
                             )}
                         </Paper>
                     </Grid>
-                    <Grid item md={12} sm={12}>
+                    <Grid item md={12} sm={12} xs={12}>
                         <Paper sx={{ mt: "10px", py: 1, width: "100%" }} elevation={1}>
                             <Pricing setValue={setValue} control={control} />
                         </Paper>

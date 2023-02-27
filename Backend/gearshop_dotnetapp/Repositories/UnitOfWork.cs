@@ -1,5 +1,7 @@
-﻿using gearshop_dotnetapp.Data;
-using gearshop_dotnetapp.Models.Product;
+﻿using Backend.Models.Identity;
+using gearshop_dotnetapp.Data;
+using gearshop_dotnetapp.Models.OrderModel;
+using gearshop_dotnetapp.Models.ProductModel;
 
 namespace gearshop_dotnetapp.Repositories
 {
@@ -38,7 +40,7 @@ namespace gearshop_dotnetapp.Repositories
         {
             get
             {
-                thumbnailRepository ??= new ThumbnailRepository(_context);
+                thumbnailRepository ??= new PhotoRepository(_context);
                 return thumbnailRepository;
             }
         }
@@ -70,6 +72,35 @@ namespace gearshop_dotnetapp.Repositories
             {
                 tagRepository ??= new TagRepository(_context);
                 return tagRepository;
+            }
+        }
+
+        private IRepository<Order> orderRepository;
+        public IRepository<Order> OrderRepository
+        {
+            get
+            {
+                orderRepository ??= new OrderRepository(_context);
+                return orderRepository;
+            }
+        }
+
+        private IRepository<OrderItem> orderItemRepository;
+        public IRepository<OrderItem> OrderItemRepository
+        {
+            get
+            {
+                orderItemRepository??= new OrderItemRepository(_context);
+                return orderItemRepository;
+            }
+        }
+        private IRepository<Address> adressRepository;
+        public IRepository<Address> AdressRepository
+        {
+            get
+            {
+                adressRepository ??= new AdressRepository(_context);
+                return adressRepository;
             }
         }
 

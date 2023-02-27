@@ -8,7 +8,7 @@ namespace gearshop_dotnetapp.Resources
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public Adress Adress { get; set; } = new();
+        public virtual Address Adress { get; set; }
     }
 
 }

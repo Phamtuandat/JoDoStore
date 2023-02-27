@@ -1,4 +1,4 @@
-import { Divider, Tab, Tabs } from "@mui/material"
+import { Tab, Tabs } from "@mui/material"
 import Box from "@mui/material/Box"
 import { SyntheticEvent, useState } from "react"
 type Props = {
@@ -33,11 +33,6 @@ export default function ProductSort({ handleSortChange }: Props) {
                 <Tab label="price desc" value="salePrice desc" />
                 <Tab label="price asc" value="salePrice asc" />
             </Tabs>
-            <Divider
-                sx={{
-                    boxShadow: "rgba(33, 35, 38, 0.1) 0px 10px 10px -10px",
-                }}
-            />
         </Box>
     )
 }

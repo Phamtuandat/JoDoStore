@@ -113,7 +113,11 @@ export default function MenuFilterOption({ handleFilterChange, param, queryParam
         })
     }
     return (
-        <>
+        <Box
+            sx={{
+                overflow: "hidden",
+            }}
+        >
             <List sx={{ width: "100%", maxWidth: 360 }}>
                 <ListItemButton
                     onClick={() => handleOpen("category")}
@@ -220,7 +224,7 @@ export default function MenuFilterOption({ handleFilterChange, param, queryParam
                     ALL Reset
                 </Button>
             </Box>
-        </>
+        </Box>
     )
 }
 function valuetext(value: number) {

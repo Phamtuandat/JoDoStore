@@ -44,7 +44,7 @@ const EditPage = (props: Props) => {
     const handleSearchChange = (value: string) => {
         dispatch(
             ProductSliceActions.setFilterWithDebounce({
-                filter: { name: { contains: value } },
+                filter: { normalizedName: { contains: value.toUpperCase() } },
                 top: 3,
             })
         )
@@ -56,7 +56,7 @@ const EditPage = (props: Props) => {
         setHidden(true)
     }
     return (
-        <Box mt={3} px={4}>
+        <Box mt={3} px={{ xs: 0, md: 2 }}>
             <ClickAwayListener onClickAway={handleClickAway}>
                 <Box
                     component="form"

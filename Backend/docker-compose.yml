@@ -29,6 +29,7 @@ services:
     environment:
       DB_CONNECTION_STRING: "host=store-db;port=5432;database=gearstore-app;username=phamtuandat1a0;password=admin;Pooling=true;"
       CLOUDINARY_URL: "cloudinary://416895123679212:CfXRRhXZEEKah4zLVL5ef49lgbs@dmzvhnnkh"
+      ASPNETCORE_ENVIRONMENT: "Production"
     networks:
       - postgres
     

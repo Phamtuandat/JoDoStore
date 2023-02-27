@@ -1,5 +1,5 @@
 ﻿
-using gearshop_dotnetapp.Models.Product;
+using gearshop_dotnetapp.Models.ProductModel;
 using gearshop_dotnetapp.Resources;
 using System.ComponentModel.DataAnnotations;
 

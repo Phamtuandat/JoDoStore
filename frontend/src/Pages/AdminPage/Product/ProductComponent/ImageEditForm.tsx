@@ -1,10 +1,10 @@
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore"
 import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 import { Box, Button, CardMedia, CircularProgress, Paper } from "@mui/material"
-import thumbApi from "ApiClients/ThumbApi"
+import PhotoApi from "ApiClients/PhotoApi"
 import { ImageFeild } from "components/inputField/ImageFeild"
 import { motion } from "framer-motion"
-import { Product, Thumbnail } from "models"
+import { Product, Photo } from "models"
 import buildQuery from "odata-query"
 import { useEffect, useRef, useState } from "react"
 import { Control } from "react-hook-form"
@@ -22,7 +22,7 @@ type Props = {
 const ImageEditForm = ({ product, control, productId }: Props) => {
     const ignore = useRef(false)
     const [isLoading, setLoading] = useState(false)
-    const [thumbs, setThumbs] = useState<Thumbnail[]>([])
+    const [thumbs, setThumbs] = useState<Photo[]>([])
     const [idx, setIdx] = useState(0)
     const [isHover, setHover] = useState<boolean>(false)
     useEffect(() => {
@@ -35,7 +35,7 @@ const ImageEditForm = ({ product, control, productId }: Props) => {
                     },
                 })
                 ;(async () => {
-                    const result = await thumbApi.getAll(query)
+                    const result = await PhotoApi.getAll(query)
                     setThumbs(result.data)
                 })()
             }
@@ -52,7 +52,7 @@ const ImageEditForm = ({ product, control, productId }: Props) => {
                 formData.append("Description", `${" None "}`)
                 formData.append("collections", "Product Image")
                 try {
-                    var result = await thumbApi.create(formData)
+                    var result = await PhotoApi.create(formData)
                     setThumbs(thumbs.concat(result.data))
                 } catch (error) {
                     console.log(error)
@@ -65,7 +65,7 @@ const ImageEditForm = ({ product, control, productId }: Props) => {
     const handleRemove = async (id: number | string) => {
         try {
             setLoading(true)
-            await thumbApi.delete(+id)
+            await PhotoApi.delete(+id)
             setThumbs(thumbs.filter((x) => x.id !== id))
             setLoading(false)
             if (idx === thumbs.length - 1) {
@@ -163,7 +163,7 @@ const ImageEditForm = ({ product, control, productId }: Props) => {
                             <Button
                                 color="warning"
                                 variant="contained"
-                                onClick={() => handleRemove(product.thumbnails[idx].id)}
+                                onClick={() => handleRemove(thumbs[idx].id)}
                             >
                                 Remove
                             </Button>

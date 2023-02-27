@@ -6,6 +6,8 @@ import List from "@mui/material/List"
 import { styled } from "@mui/material/styles"
 import { useState } from "react"
 import { NestedMenuItem } from "./NestedMenuItem"
+import AnalyticsIcon from "@mui/icons-material/Analytics"
+import FilterVintageIcon from "@mui/icons-material/FilterVintage"
 type Props = {}
 
 const ListItemIconCustom = styled("span")(({ theme }) => ({
@@ -83,7 +85,7 @@ const NavBarMenu = (props: Props) => {
                     </ListSubheader>
                 }
             >
-                <NestedMenuItem icon={<DashboardIcon />} menu="Analytics" to="Analytics" />
+                <NestedMenuItem icon={<AnalyticsIcon />} menu="Analytics" to="Analytics" />
                 <Divider />
                 <NestedMenuItem
                     icon={<CategoryIcon />}
@@ -98,6 +100,13 @@ const NavBarMenu = (props: Props) => {
                     to="orders"
                     icon={<DashboardIcon />}
                     menu="Order List"
+                    nestedItemList={[]}
+                />
+                <Divider />
+                <NestedMenuItem
+                    to="uiPage"
+                    icon={<FilterVintageIcon />}
+                    menu="UI "
                     nestedItemList={[]}
                 />
             </List>

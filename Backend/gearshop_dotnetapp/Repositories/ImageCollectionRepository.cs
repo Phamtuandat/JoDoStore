@@ -1,5 +1,5 @@
 ﻿using gearshop_dotnetapp.Data;
-using gearshop_dotnetapp.Models.Product;
+using gearshop_dotnetapp.Models.ProductModel;
 using gearshop_dotnetapp.Repositories;
 
 namespace gearshop_dotnetapp

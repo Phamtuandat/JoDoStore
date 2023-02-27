@@ -28,7 +28,7 @@ export const ImageFeild = ({ control, name, handleUpload, label, variant }: Inpu
             textAlign="center"
         >
             <Box>
-                <Button variant={variant || "outlined"} component="label">
+                <Button variant={variant || "outlined"} component="label" color="secondary">
                     <input
                         ref={ref}
                         type="file"

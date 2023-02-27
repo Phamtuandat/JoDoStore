@@ -7,6 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
+COPY ["gearshop_dotnetapp/nuget.config", "gearshop_dotnetapp/"]
 COPY ["gearshop_dotnetapp/gearshop_dotnetapp.csproj", "gearshop_dotnetapp/"]
 RUN dotnet restore "gearshop_dotnetapp/gearshop_dotnetapp.csproj"
 COPY . .
@@ -19,4 +20,4 @@ RUN dotnet publish "gearshop_dotnetapp.csproj" -c Release -o /app/publish /p:Use
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "gearshop_dotnetapp.dll"]
+ENTRYPOINT ["dotnet", "gearshop_dotnetapp.dll",  "--environment=Production"]

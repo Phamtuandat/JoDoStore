@@ -17,6 +17,7 @@ const breadcrumbNameMap: { [key: string]: string } = {
     "/admin/product/edit": "Edit Product",
     "/admin/product/list": "list",
     "/admin/Analytics": "Analytics",
+    "/admin/uiPage": "UI Page",
 }
 interface LinkRouterProps extends LinkProps {
     to: string

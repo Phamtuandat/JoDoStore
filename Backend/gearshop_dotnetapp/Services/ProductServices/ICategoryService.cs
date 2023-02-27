@@ -1,4 +1,4 @@
-﻿using gearshop_dotnetapp.Models.Product;
+﻿using gearshop_dotnetapp.Models.ProductModel;
 using gearshop_dotnetapp.Resources;
 
 namespace gearshop_dotnetapp.Services.ProductServices

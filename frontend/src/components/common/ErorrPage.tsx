@@ -1,8 +1,8 @@
 import { Box, CardMedia, Typography } from "@mui/material"
 import Stack from "@mui/material/Stack"
-import thumbApi from "ApiClients/ThumbApi"
+import PhotoApi from "ApiClients/PhotoApi"
 import { MainLayout } from "components/Layout/MainLayout"
-import { Thumbnail } from "models"
+import { Photo } from "models"
 import { useEffect, useRef, useState } from "react"
 import { useRouteError } from "react-router-dom"
 import buildQuery from "odata-query"
@@ -10,7 +10,7 @@ import buildQuery from "odata-query"
 export default function ErrorPage() {
     const ignore = useRef(false)
     const error = useRouteError() as string
-    const [errorThumb, setErrorThumn] = useState<Thumbnail>()
+    const [errorPhoto, setErrorThumn] = useState<Photo>()
     useEffect(() => {
         if (!ignore.current) {
             ignore.current = true
@@ -20,7 +20,7 @@ export default function ErrorPage() {
                 },
             })
             ;(async () => {
-                var result = await thumbApi.getAll(param)
+                var result = await PhotoApi.getAll(param)
                 setErrorThumn(result.data[0])
             })()
         }
@@ -35,10 +35,10 @@ export default function ErrorPage() {
                 justifyContent="center"
                 minHeight="60vh"
             >
-                <Box height={300} width={300}>
+                <Box height={300} width={300} mt={{ md: 20, xs: 0, sm: 10 }}>
                     <CardMedia
                         component="img"
-                        image={errorThumb?.imageUrl}
+                        image={errorPhoto?.imageUrl}
                         sx={{
                             height: "100%",
                             width: "100%",

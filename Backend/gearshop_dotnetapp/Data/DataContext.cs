@@ -1,5 +1,6 @@
 ﻿using gearshop_dotnetapp.Models.Identity;
-using gearshop_dotnetapp.Models.Product;
+using gearshop_dotnetapp.Models.OrderModel;
+using gearshop_dotnetapp.Models.ProductModel;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,18 +8,32 @@ namespace gearshop_dotnetapp.Data
 {
     public class DataContext : IdentityDbContext<User>
     {
+        private readonly IWebHostEnvironment _env;
+        private readonly IConfiguration _config;
+
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        public DataContext(DbContextOptions<DataContext> options, IWebHostEnvironment env, IConfiguration config) : base(options)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
-
+            _env = env;
+            _config = config;
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connetionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder
-                .UseNpgsql(connetionString);
+
+            string? connetionString;
+            if (_env.IsDevelopment())
+            {
+                connetionString = _config.GetConnectionString("GearShopDB");
+            }
+            else
+            {
+                connetionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+            }
+                base.OnConfiguring(optionsBuilder);
+                optionsBuilder
+                    .UseNpgsql(connetionString);
         }
 
 
@@ -28,6 +43,8 @@ namespace gearshop_dotnetapp.Data
         public HashSet<Photo> Thumbnails { get; set; }
         public HashSet<ImageCollections> ImageCollections { get; set; }
         public HashSet<Tag> Tags { get; set; }
+        public HashSet<Order> Orders { get; set; }
+        public HashSet<OrderItem> OrderItems { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
@@ -54,9 +71,12 @@ namespace gearshop_dotnetapp.Data
                 .WithOne(t => t.ImageCollections)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            builder.Entity<Product>()
-                .HasOne(p => p.Brand)
-                .WithMany(b => b.Products);
+            builder.Entity<Photo>()
+                .HasOne(p => p.Product)
+                .WithMany(t => t.Thumbnails)
+                .HasForeignKey(t => t.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
         }
     }
 }

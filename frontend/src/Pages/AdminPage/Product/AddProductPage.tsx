@@ -1,6 +1,9 @@
 import { Box, Paper, Typography } from "@mui/material"
+import Backdrop from "@mui/material/Backdrop"
+import CircularProgress from "@mui/material/CircularProgress"
 import { productApi } from "ApiClients/ProductApi"
 import "draft-js/dist/Draft.css"
+import { useState } from "react"
 import handleNotify from "utils/Toast-notify"
 import ProductForm from "./ProductComponent/ProductForm"
 type Props = {}
@@ -19,6 +22,7 @@ export type SaveProductForm = {
 }
 
 const AddProductPage = (props: Props) => {
+    const [isLoading, setLoading] = useState(false)
     const handleFormSubmit = async (value: SaveProductForm) => {
         const formData = new FormData()
         formData.append("name", value.name)
@@ -38,8 +42,10 @@ const AddProductPage = (props: Props) => {
             })
         }
         try {
+            setLoading(true)
             await productApi.create(formData)
             handleNotify.success("Add Product Successfully")
+            setLoading(false)
         } catch (error) {
             handleNotify.error(error as string)
         }
@@ -63,9 +69,16 @@ const AddProductPage = (props: Props) => {
                 <Paper
                     elevation={3}
                     sx={{
-                        p: 3,
+                        py: 3,
+                        px: { sm: 2, xs: 0, md: 3 },
                     }}
                 >
+                    <Backdrop
+                        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                        open={isLoading}
+                    >
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
                     <ProductForm handleSubmitForm={handleFormSubmit} />
                 </Paper>
             </Box>

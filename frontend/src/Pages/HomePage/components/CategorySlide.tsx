@@ -1,5 +1,5 @@
 import { Box, Container, Paper } from "@mui/material"
-import { Category, Thumbnail } from "models"
+import { Category, Photo } from "models"
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react"
 

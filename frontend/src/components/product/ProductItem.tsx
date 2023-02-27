@@ -1,6 +1,6 @@
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined"
-import { Box, CardContent, Paper, Typography } from "@mui/material"
+import { Box, CardContent, Hidden, Paper, Typography } from "@mui/material"
 import Button from "@mui/material/Button/Button"
 import { styled, useTheme } from "@mui/material/styles"
 import { cartAction } from "features/cart/cartSlice"
@@ -35,10 +35,10 @@ const StyledButton = styled(Box)`
 `
 
 const variants = {
-    open: { opacity: 1, y: -80 },
+    open: { opacity: 1, y: 0 },
     closed: {
         opacity: 0,
-        y: 0,
+        y: 50,
     },
 }
 export const ProductItem = ({ product }: Props) => {
@@ -79,11 +79,18 @@ export const ProductItem = ({ product }: Props) => {
             onMouseEnter={() => setCheck((prv) => !prv)}
             onMouseLeave={() => setCheck((prv) => !prv)}
         >
-            <Box height="250px" overflow="hidden" onClick={() => handleClick(product.id)}>
+            <Box
+                height={{ xs: "130px", md: "250px" }}
+                overflow="hidden"
+                onClick={() => handleClick(product.id)}
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+            >
                 <Box
                     component={motion.div}
                     sx={{
-                        p: "125px",
+                        pb: "50%",
                         backgroundImage: ` url(${product.thumbnails[imgIndex]?.imageUrl})`,
                         backgroundPosition: "center",
                         backgroundSize: "cover",
@@ -93,49 +100,51 @@ export const ProductItem = ({ product }: Props) => {
                     animate={checked ? { scale: 1.1 } : { scale: 1 }}
                     transition={{ duration: 0.9 }}
                 />
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                    }}
-                    component={motion.div}
-                    initial={{ opacity: 0 }}
-                    animate={checked && width !== "xs" ? "open" : "closed"}
-                    variants={variants}
-                    transition={{ duration: 0.3 }}
-                >
-                    <StyledButton
+                <Hidden smDown>
+                    <Box
                         sx={{
-                            color: "text.primary",
+                            display: "flex",
+                            justifyContent: "center",
                         }}
+                        component={motion.div}
+                        initial={{ opacity: 0 }}
+                        animate={checked && width !== "xs" ? "open" : "closed"}
+                        variants={variants}
+                        transition={{ duration: 0.3 }}
                     >
-                        <FavoriteIcon color="action" />
-                    </StyledButton>
-                    <Button
-                        variant="contained"
-                        size="medium"
-                        sx={{
-                            mx: 1,
-                            transition: ` transform ${theme.transitions.duration.complex}ms `,
-                            "&:hover": {
-                                transform: "scale(1.05)",
-                            },
-                        }}
-                        onClick={() =>
-                            dispatch(
-                                cartAction.addToCart({
-                                    product,
-                                    quantity: 1,
-                                })
-                            )
-                        }
-                    >
-                        Add to cart
-                    </Button>
-                    <StyledButton aria-label="watch more">
-                        <RemoveRedEyeOutlinedIcon color="action" />
-                    </StyledButton>
-                </Box>
+                        <StyledButton
+                            sx={{
+                                color: "text.primary",
+                            }}
+                        >
+                            <FavoriteIcon color="action" />
+                        </StyledButton>
+                        <Button
+                            variant="contained"
+                            size="medium"
+                            sx={{
+                                mx: 1,
+                                transition: ` transform ${theme.transitions.duration.complex}ms `,
+                                "&:hover": {
+                                    transform: "scale(1.05)",
+                                },
+                            }}
+                            onClick={() =>
+                                dispatch(
+                                    cartAction.addToCart({
+                                        product,
+                                        quantity: 1,
+                                    })
+                                )
+                            }
+                        >
+                            Add to cart
+                        </Button>
+                        <StyledButton aria-label="watch more">
+                            <RemoveRedEyeOutlinedIcon color="action" />
+                        </StyledButton>
+                    </Box>
+                </Hidden>
             </Box>
             <CardContent>
                 <Box display="flex" flexDirection="column" pt={2}>
@@ -148,13 +157,14 @@ export const ProductItem = ({ product }: Props) => {
                             display: "inline-block",
                             whiteSpace: "nowrap",
                         }}
-                        variant="h6"
+                        fontSize={{ xs: theme.typography.h6.fontSize, md: "20px" }}
                     >
                         {product.name}
                     </Typography>
                     <Typography
+                        my={1}
                         textAlign="center"
-                        variant="body1"
+                        fontSize={{ xs: theme.typography.h6.fontSize, md: "20px" }}
                         color={theme.palette.text.secondary}
                     >
                         {product.brand?.name}
@@ -162,7 +172,7 @@ export const ProductItem = ({ product }: Props) => {
                 </Box>
                 <Box textAlign="center">
                     <Typography
-                        fontSize="22px"
+                        fontSize={{ xs: theme.typography.h6.fontSize, md: "20px" }}
                         sx={{
                             fontWeight: "900",
                             opacity: 0.4,
@@ -173,7 +183,11 @@ export const ProductItem = ({ product }: Props) => {
                     >
                         ${product.price}
                     </Typography>
-                    <Typography fontSize="22px" sx={{ fontWeight: "900" }} component="span">
+                    <Typography
+                        fontSize={{ xs: theme.typography.h6.fontSize, md: "20px" }}
+                        sx={{ fontWeight: "900" }}
+                        component="span"
+                    >
                         ${product.salePrice}
                     </Typography>
                 </Box>

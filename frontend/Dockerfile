@@ -20,13 +20,13 @@ FROM nginx:alpine
 COPY --from=build /app/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 WORKDIR /usr/share/nginx/html
-COPY .env .
+COPY .env.production .
 
 # Add bash
 RUN apk add --no-cache bash
 
 # Make our shell script executable
-RUN chmod +x .env
+RUN chmod +x .env.production
 # Remove default nginx static assets
 RUN rm -rf ./*
 # Copy static assets from builder stage
