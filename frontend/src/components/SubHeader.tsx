@@ -144,10 +144,17 @@ const fakeCategories = [
     },
 ]
 const SubHeader = () => {
-    const [drop, setDrop] = useState(false)
-
+    const obj = subHeaderList.reduce((o, key) => Object.assign(o, { [key]: false }), {})
+    const [drop, setDrop] = useState<{
+        [key: string]: any
+    }>(obj)
     const theme = useTheme()
     const mathes = useMediaQuery(theme.breakpoints.up("sm"))
+    const handleDropMenu = (item: string, isDrop: boolean) => {
+        setDrop({
+            [item]: isDrop,
+        })
+    }
     return (
         <Box
             height={60}
@@ -182,15 +189,23 @@ const SubHeader = () => {
                             component={Link}
                             to="/shop"
                             onMouseEnter={() => {
-                                if (!!setDrop) setDrop(true)
+                                handleDropMenu(item, true)
                             }}
                         >
                             {item}
                         </Typography>
                     </Box>
                     {!mathes && <Divider />}
-                    <Box onMouseLeave={() => setDrop(false)}>
-                        <SubHeaderItem isOpen={drop} categoryList={fakeCategories} />
+                    <Box
+                        onMouseLeave={() => {
+                            handleDropMenu(item, false)
+                        }}
+                    >
+                        <SubHeaderItem
+                            isOpen={drop[item]}
+                            categoryList={fakeCategories}
+                            key={item}
+                        />
                     </Box>
                 </Box>
             ))}

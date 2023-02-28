@@ -1,31 +1,46 @@
-import { Box, Divider, Paper, Typography } from "@mui/material"
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined"
+import { Box, Divider, Hidden, IconButton, Paper, Typography } from "@mui/material"
 import FormControl from "@mui/material/FormControl"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import Radio from "@mui/material/Radio"
 import RadioGroup from "@mui/material/RadioGroup"
-import { useTheme } from "@mui/material/styles"
 import { Container } from "@mui/system"
-import { useAppSelector } from "app/hooks"
+import { useAppDispatch, useAppSelector } from "app/hooks"
 import { MainLayout } from "components/Layout/MainLayout"
 import { cartTotalSelector } from "features/cart/cartSelector"
-import { cartSelector } from "features/cart/cartSlice"
+import { cartAction, cartSelector } from "features/cart/cartSlice"
+import QuantityForm from "features/cart/components/QuantityForm"
+import { Product } from "models"
 type Props = {}
 
 const OrderPage = (props: Props) => {
     const carts = useAppSelector(cartSelector)
     const Subtotal = useAppSelector(cartTotalSelector)
-    const theme = useTheme()
+    const dispatch = useAppDispatch()
+    const handleQuantityChange = (product: Product, quantity: number) => {
+        dispatch(
+            cartAction.setQuantity({
+                product,
+                quantity,
+            })
+        )
+        console.log(quantity)
+    }
+    const handleRemoveCartItem = (id: number) => {
+        dispatch(cartAction.removeFromCart(id))
+    }
     return (
         <MainLayout>
-            <Container>
-                <Box mt={3}>
-                    <Paper
-                        sx={{
-                            p: 2,
-                            borderRadius: "3px",
-                            overflow: "hidden",
-                        }}
-                    >
+            <Box mt={5} mx={1}>
+                <Paper
+                    variant="outlined"
+                    sx={{
+                        py: 3,
+                        borderRadius: "3px",
+                        overflow: "hidden",
+                    }}
+                >
+                    <Container>
                         <Typography fontWeight={700} variant="h4" py={4}>
                             Your Order
                         </Typography>
@@ -37,32 +52,99 @@ const OrderPage = (props: Props) => {
                                 Subtotal
                             </Typography>
                         </Box>
+                        <Divider />
                         <Box>
                             {carts.map((cart) => (
-                                <Box key={cart.product.id}>
-                                    <Divider
-                                        sx={{
-                                            my: 1,
+                                <Box key={cart.product.id} display="flex">
+                                    <Divider />
+                                    <Box
+                                        py={1}
+                                        display="flex"
+                                        justifyContent="space-between"
+                                        position="relative"
+                                        flexDirection={{
+                                            xs: "column",
+                                            md: "row",
                                         }}
-                                    />
-                                    <Box py={1} display="flex" justifyContent="space-between">
-                                        <Box display="flex" flexDirection="column">
-                                            <Typography fontWeight={700}>
+                                        flexGrow={1}
+                                    >
+                                        <Box
+                                            display="flex"
+                                            flexDirection="column"
+                                            justifyContent="space-between"
+                                        >
+                                            <Typography
+                                                fontWeight={700}
+                                                sx={{
+                                                    display: "-webkit-box",
+                                                    textOverflow: "ellipsis",
+                                                    WebkitLineClamp: 2,
+                                                    maxWidth: "250px",
+                                                    overflow: "hidden",
+                                                    "-webkit-box-orient": "vertical",
+                                                }}
+                                            >
                                                 {cart.product.name}
                                             </Typography>
-                                            <Typography component="span">
-                                                x{cart.quantity}
-                                            </Typography>
                                         </Box>
+
                                         <Box
-                                            component="span"
-                                            fontWeight={700}
-                                            color={theme.palette.secondary.dark}
-                                            width={{ xs: "60px" }}
-                                            textAlign="center"
+                                            display="flex"
+                                            flexDirection={{
+                                                xs: "column",
+                                                md: "row",
+                                            }}
+                                            justifyContent="space-around"
+                                            flexGrow={1}
+                                            alignItems={{
+                                                xs: "start",
+                                                md: "center",
+                                            }}
+                                            mt={1}
                                         >
-                                            ${cart.quantity * (cart.product.salePrice || 0)}
+                                            <Hidden smDown>
+                                                <Typography component="span" textAlign="center">
+                                                    ${cart.product.salePrice}
+                                                </Typography>
+                                                <Box maxWidth={120}>
+                                                    <QuantityForm
+                                                        handleQuantityChange={(quantity: number) =>
+                                                            handleQuantityChange(
+                                                                cart.product,
+                                                                quantity
+                                                            )
+                                                        }
+                                                        quantity={cart.quantity}
+                                                    />
+                                                </Box>
+                                            </Hidden>
+                                            <Typography component="span" color="red" fontSize={20}>
+                                                ${cart.quantity * (cart.product.salePrice || 0)}
+                                            </Typography>
+                                            <Box maxWidth={100}>
+                                                <QuantityForm
+                                                    handleQuantityChange={(quantity: number) =>
+                                                        handleQuantityChange(cart.product, quantity)
+                                                    }
+                                                    quantity={cart.quantity}
+                                                />
+                                            </Box>
                                         </Box>
+                                    </Box>
+                                    <Box
+                                        sx={{
+                                            alignSelf: "center",
+                                        }}
+                                    >
+                                        <IconButton
+                                            onClick={() => {
+                                                if (cart.product.id) {
+                                                    handleRemoveCartItem(+cart.product.id)
+                                                }
+                                            }}
+                                        >
+                                            <DeleteOutlinedIcon />
+                                        </IconButton>
                                     </Box>
                                 </Box>
                             ))}
@@ -72,14 +154,12 @@ const OrderPage = (props: Props) => {
                             <Typography variant="h6" fontWeight={700}>
                                 Subtotal
                             </Typography>
-                            <Typography fontWeight={700} color={theme.palette.secondary.dark}>
-                                ${Subtotal}
-                            </Typography>
+                            <Typography fontWeight={700}>${Subtotal}</Typography>
                         </Box>
                         <Divider />
                         <Box mt={2} display="flex" justifyContent="space-between">
                             <Typography>Shipping Method</Typography>
-                            <Typography>$35</Typography>
+                            <Typography>$3</Typography>
                         </Box>
                         <Box my={2}>
                             <FormControl margin="none" size="small">
@@ -111,17 +191,13 @@ const OrderPage = (props: Props) => {
                             <Typography fontWeight={700} variant="h4">
                                 Total
                             </Typography>
-                            <Typography
-                                fontWeight={700}
-                                variant="h6"
-                                color={theme.palette.secondary.dark}
-                            >
+                            <Typography fontWeight={700} variant="h6">
                                 ${Subtotal + 35}
                             </Typography>
                         </Box>
-                    </Paper>
-                </Box>
-            </Container>
+                    </Container>
+                </Paper>
+            </Box>
         </MainLayout>
     )
 }
