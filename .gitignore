@@ -9,7 +9,9 @@
 *.user
 *.userosscache
 *.sln.docstates
-
+docker-compose.yml
+Backend/gearshop_dotnetapp/.env
+frontend/.env.production
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -362,4 +364,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-
