@@ -24,7 +24,6 @@ const OrderPage = (props: Props) => {
                 quantity,
             })
         )
-        console.log(quantity)
     }
     const handleRemoveCartItem = (id: number) => {
         dispatch(cartAction.removeFromCart(id))
@@ -81,7 +80,6 @@ const OrderPage = (props: Props) => {
                                                     WebkitLineClamp: 2,
                                                     maxWidth: "250px",
                                                     overflow: "hidden",
-                                                    "-webkit-box-orient": "vertical",
                                                 }}
                                             >
                                                 {cart.product.name}
@@ -91,7 +89,7 @@ const OrderPage = (props: Props) => {
                                         <Box
                                             display="flex"
                                             flexDirection={{
-                                                xs: "column",
+                                                xs: "column-reverse",
                                                 md: "row",
                                             }}
                                             justifyContent="space-around"
@@ -102,26 +100,12 @@ const OrderPage = (props: Props) => {
                                             }}
                                             mt={1}
                                         >
-                                            <Hidden smDown>
+                                            <Hidden mdDown>
                                                 <Typography component="span" textAlign="center">
                                                     ${cart.product.salePrice}
                                                 </Typography>
-                                                <Box maxWidth={120}>
-                                                    <QuantityForm
-                                                        handleQuantityChange={(quantity: number) =>
-                                                            handleQuantityChange(
-                                                                cart.product,
-                                                                quantity
-                                                            )
-                                                        }
-                                                        quantity={cart.quantity}
-                                                    />
-                                                </Box>
                                             </Hidden>
-                                            <Typography component="span" color="red" fontSize={20}>
-                                                ${cart.quantity * (cart.product.salePrice || 0)}
-                                            </Typography>
-                                            <Box maxWidth={100}>
+                                            <Box maxWidth={90} border={"1px solid"}>
                                                 <QuantityForm
                                                     handleQuantityChange={(quantity: number) =>
                                                         handleQuantityChange(cart.product, quantity)
@@ -129,6 +113,9 @@ const OrderPage = (props: Props) => {
                                                     quantity={cart.quantity}
                                                 />
                                             </Box>
+                                            <Typography component="span" color="red" fontSize={20}>
+                                                ${cart.quantity * (cart.product.salePrice || 0)}
+                                            </Typography>
                                         </Box>
                                     </Box>
                                     <Box

@@ -9,16 +9,14 @@ type Props = {
 }
 
 const QuantityForm = ({ quantity, handleQuantityChange }: Props) => {
-    const { control, handleSubmit, setValue } = useForm<IFormState>({
+    const { control, setValue } = useForm<IFormState>({
         defaultValues: {
             quantity: quantity,
         },
     })
-    const onSubmit = (value: IFormState) => {
-        console.log(value)
-    }
+
     return (
-        <Box component="form" onSubmit={handleSubmit(onSubmit)} width={"100%"}>
+        <Box width={"100%"}>
             <QuantityField
                 control={control}
                 handleQuantityChange={(value) => {

@@ -18,7 +18,6 @@ const QuantityField = ({ handleQuantityChange, control }: Props) => {
     const [quantity, setQuantity] = useState<number>(value)
     useEffect(() => {
         handleQuantityChange(quantity)
-        console.log()
     }, [handleQuantityChange, quantity])
     return (
         <Box display="flex" alignItems={"center"} width="100%">
@@ -34,6 +33,14 @@ const QuantityField = ({ handleQuantityChange, control }: Props) => {
                     sx={{
                         minWidth: "0",
                         p: 0,
+                        border: "none",
+                        "&:hover": {
+                            border: "none",
+                            borderRight: "1px solid",
+                            borderRadius: "0",
+                        },
+                        borderRight: "1px solid",
+                        borderRadius: "0",
                     }}
                 >
                     <RemoveIcon />
@@ -71,6 +78,16 @@ const QuantityField = ({ handleQuantityChange, control }: Props) => {
                     sx={{
                         minWidth: "0",
                         p: 0,
+                        border: "none",
+                        "&:hover": {
+                            borderleft: "1px solid",
+                            borderRadius: "0",
+                            borderRight: "none",
+                            borderBottom: "none",
+                            borderTop: "none",
+                        },
+                        borderLeft: "1px solid",
+                        borderRadius: "0",
                     }}
                     color="secondary"
                     onClick={() => setQuantity(quantity + 1)}

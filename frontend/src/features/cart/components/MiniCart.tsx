@@ -4,13 +4,14 @@ import { useAppDispatch, useAppSelector } from "app/hooks"
 import { useRef } from "react"
 import { cartAction, cartSelector, showMiniCartSelector } from "../cartSlice"
 import CartReview from "./CartReview"
+import { useLocation } from "react-router-dom"
 
 function MiniCart() {
     const anchorEl = useRef<HTMLButtonElement>(null)
     const showMiniCart = useAppSelector(showMiniCartSelector)
     const carts = useAppSelector(cartSelector)
     const dispatch = useAppDispatch()
-
+    const location = useLocation()
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         dispatch(cartAction.showMiniCart())
     }
@@ -21,18 +22,25 @@ function MiniCart() {
     return (
         <ClickAwayListener onClickAway={handleClose}>
             <>
-                <IconButton
-                    ref={anchorEl}
-                    onClick={handleClick}
-                    sx={{
-                        color: "inherit",
-                    }}
+                {location.pathname !== "/orders" && (
+                    <IconButton
+                        ref={anchorEl}
+                        onClick={handleClick}
+                        sx={{
+                            color: "inherit",
+                        }}
+                    >
+                        <Badge badgeContent={carts.length}>
+                            <LocalMallOutlinedIcon />
+                        </Badge>
+                    </IconButton>
+                )}
+                <Drawer
+                    id="basic-menu"
+                    open={showMiniCart && location.pathname !== "/orders"}
+                    anchor={"right"}
+                    onClose={handleClose}
                 >
-                    <Badge badgeContent={carts.length}>
-                        <LocalMallOutlinedIcon />
-                    </Badge>
-                </IconButton>
-                <Drawer id="basic-menu" open={showMiniCart} anchor={"right"} onClose={handleClose}>
                     <CartReview carts={carts} />
                 </Drawer>
             </>

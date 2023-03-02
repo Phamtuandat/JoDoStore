@@ -60,15 +60,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     {
         options.Cookie.SameSite = SameSiteMode.None;
     }
-    options.Events.OnSigningIn = ctx =>
-    {
-        if (ctx.Properties.IsPersistent)
-        {
-            var issued = ctx.Properties.IssuedUtc ?? DateTimeOffset.UtcNow;
-            ctx.Properties.ExpiresUtc = issued.AddDays(14);
-        }
-        return Task.FromResult(0);
-    };
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromDays(7); // set the expiration time to 7 days
+    options.SlidingExpiration = true;
 });
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

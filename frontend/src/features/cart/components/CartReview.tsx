@@ -150,7 +150,10 @@ const CartReview = ({ carts }: Props) => {
                                         >
                                             ${(cart.product.salePrice || 0) * cart.quantity}
                                         </Typography>
-                                        <Box color={theme.palette.secondary.main}>
+                                        <Box
+                                            color={theme.palette.secondary.main}
+                                            border={"1px solid"}
+                                        >
                                             <QuantityForm
                                                 quantity={cart.quantity}
                                                 handleQuantityChange={(quantity) =>

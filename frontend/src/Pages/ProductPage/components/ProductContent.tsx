@@ -172,7 +172,7 @@ const ProductContent = ({ product }: Props) => {
                 onSubmit={handleSubmit(onSubmit)}
                 alignItems="center"
             >
-                <Box alignSelf="center" mx={2} my={2} maxWidth="150px">
+                <Box alignSelf="center" mx={2} my={2} maxWidth={100} border="1px solid">
                     <QuantityField
                         handleQuantityChange={(value) => setValue("quantity", value)}
                         control={control}
