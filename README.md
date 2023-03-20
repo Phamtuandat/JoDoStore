@@ -40,7 +40,7 @@ JoDo Store
 **✔️ 1. Customer Management**
 
 - Managing customers profiles
-- Managing sale orders, accepting payments,
+- Managing sale orders,
   <br/>
 
 ---
