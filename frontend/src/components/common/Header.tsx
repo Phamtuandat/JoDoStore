@@ -46,7 +46,8 @@ const Header = (props: Props) => {
             sx={{
                 width: "100%",
                 transform: !visible ? "translateY(-60px)" : "none",
-                transition: "transform 0.1s",
+                boxShadow: visible && prevScrollPos > 10 ? theme.shadows[1] : "none",
+                transition: "transform  0.1s, boxShadow 0.2s",
             }}
         >
             <Box

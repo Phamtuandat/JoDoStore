@@ -2,20 +2,24 @@
 import { call, fork, put, take } from "@redux-saga/core/effects"
 import { PayloadAction } from "@reduxjs/toolkit"
 import authApi from "ApiClients/AuthApi"
-import { AuthResponse, AuthenticateInfo, LoginRequest, RegisterRequest } from "models"
+import { LoginRequest, RegisterRequest } from "models"
 import { Task } from "redux-saga"
-import { cancel, cancelled } from "redux-saga/effects"
+import { cancel, cancelled, delay, race } from "redux-saga/effects"
 import handleNotify from "utils/Toast-notify"
 import { AuthSliceAction } from "./authSlice"
 
 function* handleLogin(action: PayloadAction<LoginRequest>): any {
     try {
-        const response = yield call(authApi.login, action.payload)
-        if (response) {
+        const { response, timeout } = yield race({
+            response: yield call(authApi.login, action.payload),
+            timeout: delay(30 * 1000),
+        })
+        if (timeout) {
+            yield put(AuthSliceAction.failed("timeout of 60000ms exceeded"))
+            throw new Error("timeout of 60000ms exceeded")
+        } else {
             yield put(AuthSliceAction.success(response.data))
             yield call(handleNotify.success, "Login is successfully!")
-        } else {
-            throw new Error("Somthing went wrong!")
         }
     } catch (error) {
         yield put(AuthSliceAction.failed(error as string))
@@ -28,9 +32,17 @@ function* handleLogin(action: PayloadAction<LoginRequest>): any {
 
 function* handleRegister(action: PayloadAction<RegisterRequest>): any {
     try {
-        const result: AuthResponse<AuthenticateInfo> = yield call(authApi.register, action.payload)
-        yield put(AuthSliceAction.success(result.data))
-        yield call(handleNotify.success, "Register is successfully!")
+        const { result, timeout } = yield race({
+            result: call(authApi.register, action.payload),
+            timeout: delay(30 * 1000),
+        })
+        if (timeout) {
+            yield put(AuthSliceAction.failed("timeout of 60000ms exceeded"))
+            throw new Error("timeout of 60000ms exceeded")
+        } else {
+            yield put(AuthSliceAction.success(result.data))
+            yield call(handleNotify.success, "Register is successfully!")
+        }
     } catch (error) {
         yield put(AuthSliceAction.failed)
     } finally {
@@ -41,7 +53,12 @@ function* handleRegister(action: PayloadAction<RegisterRequest>): any {
 }
 
 function* handleLogout() {
-    yield call(authApi.logout)
+    const isLoggedIn = JSON.parse(
+        JSON.parse(localStorage.getItem("persist:root") as string)?.auth
+    ).isLoggedIn
+    if (isLoggedIn) {
+        yield call(authApi.logout)
+    }
     yield put(AuthSliceAction.logout)
 }
 function* watchLogingFlow() {

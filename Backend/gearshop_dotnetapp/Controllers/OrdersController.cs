@@ -1,4 +1,5 @@
-﻿using gearshop_dotnetapp.Exceptions;
+﻿using gearshop_dotnetapp.Enums;
+using gearshop_dotnetapp.Exceptions;
 using gearshop_dotnetapp.Models.Identity;
 using gearshop_dotnetapp.Resources;
 using gearshop_dotnetapp.Services.OrderServices;
@@ -22,21 +23,49 @@ namespace gearshop_dotnetapp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult GetAll() {
             var result = _orderService.GetAllOrders();
             return Ok(result);
         }
-        [HttpPost]
-        public async Task<ActionResult> CreateAsync(SaveOrderResource saveOrderResource ) {
+        [HttpGet("user")]
+        public async Task<ActionResult> GetUserOrders()
+        {
             var userContext = HttpContext.User;
             var user = await _userManager.GetUserAsync(userContext);
-            if(user == null)
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            var result = _orderService.GetOrdersByUser(user);
+            return Ok(result);
+        }
+        [HttpPost]
+        public async Task<ActionResult> CreateAsync(SaveOrderResource saveOrderResource) {
+            var userContext = HttpContext.User;
+            var user = await _userManager.GetUserAsync(userContext);
+            if (user == null)
             {
                 return Unauthorized();
             }
             var order = await _orderService.CreateOrderAsync(saveOrderResource, user);
             return Ok(order);
 
+        }
+        [HttpPatch("{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> UpdateStatusAsync([FromQuery] int id, string status)
+        {
+            if (Enum.TryParse(status, out OrderStatus orderStatus))
+            {
+                // update the order status in the database
+                var order = await _orderService.UpdateStatusAsync(id, orderStatus);
+                return Ok(order);
+            }
+            else
+            {
+                return BadRequest("Invalid order status.");
+            }
         }
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteAsync(int id)

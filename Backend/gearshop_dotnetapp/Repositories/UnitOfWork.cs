@@ -99,7 +99,7 @@ namespace gearshop_dotnetapp.Repositories
         {
             get
             {
-                adressRepository ??= new AdressRepository(_context);
+                adressRepository ??= new AddressRepository(_context);
                 return adressRepository;
             }
         }

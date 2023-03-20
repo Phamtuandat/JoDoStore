@@ -17,7 +17,7 @@ namespace gearshop_dotnetapp.Services.OrderServices
         {
             try
             {
-                var newAddress= new Address()
+                var newAddress = new Address()
                 {
                     User = user,
                     City = address.City,
@@ -62,6 +62,22 @@ namespace gearshop_dotnetapp.Services.OrderServices
 
                 throw new Exception(ex.Message);
             }
+        }
+
+        public IEnumerable<AddressResource>? GetAddressByUserIdAsync(string userId)
+        {
+            var list = _unitOfWork.AdressRepository.Find(addr => addr.User.Id == userId)?.ToList();
+            if(list == null) return null;
+            IEnumerable<AddressResource> addressList = list.Select(a => new AddressResource()
+            {
+                City = a.City,
+                State = a.State,
+                Id= a.Id,
+                StreetAddress = a.StreetAddress
+            });
+            return addressList;
+
+
         }
 
         public async Task<Address> UpdateAddressAsync(int id, SaveAddressResource mode)

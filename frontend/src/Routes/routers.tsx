@@ -1,6 +1,5 @@
+import authApi from "ApiClients/AuthApi"
 import { productApi } from "ApiClients/ProductApi"
-import ErrorPage from "components/common/ErorrPage"
-import AuthenticatePage from "features/authenticate/page/AuthenticatePage"
 import AdminPage from "Pages/AdminPage/AdminPage"
 import AnalyticsPage from "Pages/AdminPage/Analytics/AnalyticsPage"
 import OrderListPage from "Pages/AdminPage/OrderListPage/OrderListPage"
@@ -13,7 +12,12 @@ import HomePage from "Pages/HomePage/HomePage"
 import OrderPage from "Pages/ProductPage/OrderPage"
 import ProductDetailPage from "Pages/ProductPage/ProductDetailPage"
 import ProductShopPage from "Pages/ProductPage/ProductShopPage"
-import { createBrowserRouter } from "react-router-dom"
+import AccountPage from "Pages/UserPage/AccountPage"
+import CustomerPage from "Pages/UserPage/CustomerPage"
+import UserPage from "Pages/UserPage/Index"
+import ErrorPage from "components/common/ErorrPage"
+import AuthenticatePage from "features/authenticate/page/AuthenticatePage"
+import { createBrowserRouter, redirect } from "react-router-dom"
 
 const router = createBrowserRouter([
     {
@@ -44,6 +48,28 @@ const router = createBrowserRouter([
         path: "/orders",
         element: <OrderPage />,
         errorElement: <ErrorPage />,
+    },
+    {
+        path: "/user",
+        element: <UserPage />,
+        loader: async () => {
+            try {
+                await authApi.refreshCookie()
+                return null
+            } catch (error) {
+                return redirect("/auth")
+            }
+        },
+        children: [
+            {
+                path: "/user/customer",
+                element: <CustomerPage />,
+            },
+            {
+                path: "/user/account",
+                element: <AccountPage />,
+            },
+        ],
     },
     {
         path: "/admin",

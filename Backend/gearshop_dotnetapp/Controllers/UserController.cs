@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Backend.Extentions;
+using gearshop_dotnetapp.Enums;
 using gearshop_dotnetapp.Extensions;
 using gearshop_dotnetapp.Models.Identity;
 using gearshop_dotnetapp.Resources;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace gearshop_dotnetapp.Controllers
 {
@@ -20,7 +23,7 @@ namespace gearshop_dotnetapp.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
 
-        public UserController( UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper, RoleManager<IdentityRole> roleManager)
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -36,7 +39,7 @@ namespace gearshop_dotnetapp.Controllers
                 return Unauthorized(ModelState.GetErrorMessages());
             }
             var user = await _userManager.FindByEmailAsync(userModel.Email);
-            if(user != null && await _userManager.CheckPasswordAsync(user, userModel.Password)) 
+            if (user != null && await _userManager.CheckPasswordAsync(user, userModel.Password))
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 var userResource = _mapper.Map<User, UserResource>(user);
@@ -45,6 +48,61 @@ namespace gearshop_dotnetapp.Controllers
             return BadRequest("Email or password is invalid!");
         }
 
+        [HttpPatch]
+        [Authorize]
+        public async Task<ActionResult> EditAsync([FromBody] EditUserResource model)
+        {
+            Gender gender;
+            if (!Enum.TryParse(model.Gender, out gender))
+            {
+                return BadRequest("Invalid gender value.");
+            }
+            if (!ModelState.IsValid)
+            {
+                return Unauthorized(ModelState.GetErrorMessages());
+            }
+            var userContext = HttpContext.User;
+            var user = await _userManager.GetUserAsync(userContext);
+            if (user == null)
+            {
+                await _signInManager.SignOutAsync();
+                return Unauthorized();
+            }
+            var dateOnly = DateOnly.FromDateTime(model.Birthday);
+            user.Gender = gender;
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Birthday = dateOnly;
+            user.PhoneNumber = model.PhoneNumber;
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                return Ok(_mapper.Map<User, UserResource>(user));
+            }
+            return BadRequest(result.Errors);
+        }
+        [HttpPatch("changePassword")]
+        [Authorize]
+        public async Task<ActionResult> ChangePwAsync([FromBody] ChangePwResource model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Unauthorized(ModelState.GetErrorMessages());
+            }
+            var userContext = HttpContext.User;
+            var user = await _userManager.GetUserAsync(userContext);
+            if (user == null)
+            {
+                await _signInManager.SignOutAsync();
+                return Unauthorized();
+            }
+            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            return BadRequest("password or email is invalid!");
+        }
 
 
         [HttpPost("register")]
@@ -70,7 +128,7 @@ namespace gearshop_dotnetapp.Controllers
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 var userResource = _mapper.Map<User, UserResource>(user);
-                await _userManager.AddToRoleAsync(user, roleName );
+                await _userManager.AddToRoleAsync(user, roleName);
                 return Ok(userResource);
             }
             foreach (var error in result.Errors)
@@ -84,7 +142,7 @@ namespace gearshop_dotnetapp.Controllers
         public async Task<ActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-             return StatusCode(202);
+            return StatusCode(202);
         }
 
         [HttpPost("[action]")]
@@ -93,7 +151,7 @@ namespace gearshop_dotnetapp.Controllers
         {
             var userContext = HttpContext.User;
             var user = await _userManager.GetUserAsync(userContext);
-            if(user == null) return Unauthorized();
+            if (user == null) return Unauthorized();
             if (_signInManager.IsSignedIn(userContext))
             {
                 await _signInManager.RefreshSignInAsync(user);

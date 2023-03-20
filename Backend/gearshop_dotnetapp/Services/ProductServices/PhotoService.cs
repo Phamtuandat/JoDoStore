@@ -51,30 +51,15 @@ namespace gearshop_dotnetapp.Services.ProductServices
                     UniqueFilename = true,
                     DisplayName = title,
                     PublicId = dynamicFileName,
-                    EagerTransforms = new List<Transformation>()
-                    {
-                        new Transformation().Named(resize)
-                    }
                 };
                 var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-                var eagerList = uploadResult.Eager;
-                string? imageUrl;
-                if (eagerList != null && eagerList.Length > 0)
-                {
-                    imageUrl = eagerList.FirstOrDefault()?.SecureUrl.ToString();
-                    _logger.LogInformation(imageUrl);
-                }
-                else
-                {
-                    imageUrl =  uploadResult.SecureUrl.ToString();
-                }
-                imageUrl ??= uploadResult.SecureUrl.ToString();
+
 
                 var newThumb = new Photo()
                 {
                     Title = model.Title,
                     ImageCollections = collections,
-                    ImageUrl = imageUrl,
+                    ImageUrl = uploadResult.SecureUri?.ToString(),
                     Description = model.Description,
                     ProductId = model.ProductId,
                     PublicId = uploadResult.PublicId,

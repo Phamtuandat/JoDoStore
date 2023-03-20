@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging.Configuration;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
@@ -31,7 +32,6 @@ builder.Services.AddDbContext<DataContext>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddControllers()
     .AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
@@ -61,9 +61,10 @@ builder.Services.ConfigureApplicationCookie(options =>
         options.Cookie.SameSite = SameSiteMode.None;
     }
     options.Cookie.HttpOnly = true;
-    options.ExpireTimeSpan = TimeSpan.FromDays(7); // set the expiration time to 7 days
+    options.ExpireTimeSpan = TimeSpan.FromDays(30); // set the expiration time to 7 days
     options.SlidingExpiration = true;
 });
+
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IBrandService, BrandService>();

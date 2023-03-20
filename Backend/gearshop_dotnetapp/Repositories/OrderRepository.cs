@@ -1,5 +1,6 @@
 ﻿using gearshop_dotnetapp.Data;
 using gearshop_dotnetapp.Models.OrderModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace gearshop_dotnetapp.Repositories
 {
@@ -8,5 +9,11 @@ namespace gearshop_dotnetapp.Repositories
         public OrderRepository(DataContext context) : base(context)
         {   
         }
+
+        public override IQueryable<Order> All()
+        {
+            return base.All().Include(o => o.OrderItems).Include(o => o.Address);
+        }
+
     }
 }

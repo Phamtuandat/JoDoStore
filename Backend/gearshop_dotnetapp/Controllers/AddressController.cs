@@ -2,7 +2,6 @@
 using gearshop_dotnetapp.Resources;
 using gearshop_dotnetapp.Services.OrderServices;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,7 +38,7 @@ namespace gearshop_dotnetapp.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin, Customer")]
-        public async Task<IActionResult> CreateAsync( SaveAddressResource saveAddressResource)
+        public async Task<IActionResult> CreateAsync(SaveAddressResource saveAddressResource)
         {
             try
             {
@@ -57,7 +56,33 @@ namespace gearshop_dotnetapp.Controllers
 
                 return BadRequest(ex.Message);
             }
-            
+
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, Customer")]
+        public async Task<ActionResult> GetByUserId()
+        {
+            try
+            {
+                var userContext = HttpContext.User;
+                var user = await _userManager.GetUserAsync(userContext);
+
+                if (user == null )
+                {
+                    return Unauthorized();
+                }
+                
+                var list = _adressService.GetAddressByUserIdAsync(user.Id);
+                if (list == null) return NotFound();
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+
         }
     }
 }

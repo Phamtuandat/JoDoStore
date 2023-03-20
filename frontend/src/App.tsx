@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useTheme } from "@mui/system"
 import authApi from "ApiClients/AuthApi"
 import ColorModeContext from "Context/ColorModeContext"
 import router from "Routes/routers"
@@ -7,13 +6,11 @@ import { useAppDispatch } from "app/hooks"
 import { AuthSliceAction } from "features/authenticate/authSlice"
 import { useEffect, useRef } from "react"
 import { RouterProvider } from "react-router-dom"
-import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import handleNotify from "utils/Toast-notify"
 
 function App() {
     const ignore = useRef(false)
-    const theme = useTheme()
     const dispatch = useAppDispatch()
     const isLoggedIn =
         localStorage.getItem("persist:root") &&
@@ -38,18 +35,6 @@ function App() {
 
     return (
         <ColorModeContext>
-            <ToastContainer
-                position="bottom-right"
-                autoClose={2500}
-                hideProgressBar={true}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme={theme.palette.mode}
-            />
             <RouterProvider router={router} />
         </ColorModeContext>
     )

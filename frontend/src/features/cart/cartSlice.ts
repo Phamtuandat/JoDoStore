@@ -50,6 +50,9 @@ const cartSlice = createSlice({
             const idNeedRemove = action.payload
             state.cartItems = state.cartItems.filter((x) => x.product.id !== idNeedRemove)
         },
+        removeAllCartItem(state) {
+            state.cartItems = []
+        },
     },
 })
 

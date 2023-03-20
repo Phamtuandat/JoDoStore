@@ -32,7 +32,6 @@ export default function SelectTextFields({
         <Box
             sx={{
                 "& .MuiTextField-root": { m: 1 },
-                my: 5,
             }}
         >
             <Autocomplete

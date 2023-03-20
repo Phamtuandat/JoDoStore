@@ -1,10 +1,12 @@
 import { Box, Drawer, Hidden, Paper } from "@mui/material"
+import { useTheme } from "@mui/material/styles"
 import BasicSpeedDial from "components/common/SpeedDial"
 import Footer from "components/Footer"
 import { useState } from "react"
 import { Outlet } from "react-router-dom"
 import DashHeader from "./components/DashHeader"
 import NavBarMenu from "./components/NavBarMenu"
+import { ToastContainer } from "react-toastify"
 function AdminPage() {
     const [state, setState] = useState(false)
     const toggleDrawer = (open: boolean) => (event: KeyboardEvent | MouseEvent) => {
@@ -20,7 +22,7 @@ function AdminPage() {
     window.addEventListener("scroll", function () {
         setScrollY(this.scrollY)
     })
-
+    const theme = useTheme()
     return (
         <Box
             display="flex"
@@ -31,6 +33,18 @@ function AdminPage() {
                 overflowY: "clip",
             }}
         >
+            <ToastContainer
+                position="bottom-right"
+                autoClose={2500}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme={theme.palette.mode}
+            />
             <Paper elevation={2}>
                 <Hidden lgDown>
                     <NavBarMenu />

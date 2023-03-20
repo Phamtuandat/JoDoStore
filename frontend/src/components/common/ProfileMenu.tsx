@@ -40,8 +40,8 @@ export default function BasicMenu({ isLoggedIn, handleLogout }: Props) {
                     "aria-labelledby": "basic-button",
                 }}
             >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
                 <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleClose}>My Orders</MenuItem>
                 <MenuItem onClick={handleClose}>
                     {!isLoggedIn ? (
                         <Box

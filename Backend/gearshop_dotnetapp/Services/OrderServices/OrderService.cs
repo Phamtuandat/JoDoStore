@@ -1,4 +1,6 @@
-﻿using gearshop_dotnetapp.Exceptions;
+﻿using AutoMapper;
+using gearshop_dotnetapp.Enums;
+using gearshop_dotnetapp.Exceptions;
 using gearshop_dotnetapp.Models.Identity;
 using gearshop_dotnetapp.Models.OrderModel;
 using gearshop_dotnetapp.Repositories;
@@ -9,15 +11,18 @@ namespace gearshop_dotnetapp.Services.OrderServices
     public class OrderService : IOrderService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public OrderService( IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public OrderService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitOfWork= unitOfWork;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public async Task<Order> CreateOrderAsync(SaveOrderResource model, User user)
+        public async Task<OrderResource> CreateOrderAsync(SaveOrderResource model, User user)
         {
             try
             {
+                decimal subTotal = 0;
                 var orderItems = new List<OrderItem>();
                 foreach (var item in model.OrderItems)
                 {
@@ -30,33 +35,38 @@ namespace gearshop_dotnetapp.Services.OrderServices
                     {
                         ProductId = product.Id,
                         Quantity = item.Quantity,
-                        UnitPrice = product.SalePrice
+                        UnitPrice = product.SalePrice,
+
                     };
+                    subTotal += orderItem.TotalPrice;
                     orderItems.Add(orderItem);
                     _unitOfWork.OrderItemRepository.Add(orderItem);
                 }
                 var address = _unitOfWork.AdressRepository.Get(model.AddressId);
-                if(address == null)
+                if (address == null)
                 {
                     throw new Exception($"address with id {model.AddressId} not found.");
                 }
                 var order = new Order()
                 {
                     OrderDate = DateTime.UtcNow,
-                    Adress = address,
+                    Address = address,
                     OrderItems = orderItems,
-                    User = user
+                    User = user,
+                    ShippingCash = model.ShippingCash,
+                    SubtotalPrice = subTotal,
+                    TotalPrice = subTotal + model.ShippingCash
                 };
                 var result = _unitOfWork.OrderRepository.Add(order);
                 await _unitOfWork.CompleteAsync();
-                return result;
+                return _mapper.Map<OrderResource>(result);
             }
             catch (Exception ex)
             {
 
                 throw new OrderProcessingException($"Something went wrong, \n Ex: {ex.Message}");
             }
-            
+
         }
 
         public async Task DeleteOrderAsync(int orderId)
@@ -76,50 +86,69 @@ namespace gearshop_dotnetapp.Services.OrderServices
 
                 throw new OrderProcessingException($"Something went wrong, \n Ex: {ex.Message}");
             }
-           
+
         }
 
-        public IEnumerable<Order> GetAllOrders()
+        public IEnumerable<OrderResource> GetAllOrders()
         {
-            return _unitOfWork.OrderRepository.All().ToList();
+            var result = _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResource>>(_unitOfWork.OrderRepository.All().ToList());
+            return result;
         }
 
-        public Order GetOrderById(int orderId)
+        public OrderResource GetOrderById(int orderId)
         {
             var order = _unitOfWork.OrderRepository.All().FirstOrDefault();
-            if(order == null)
+            if (order == null)
             {
                 throw new OrderNotFoundException($"could not find orderId {orderId} please try again!");
             }
-            return order;
+
+            return _mapper.Map<OrderResource>(order);
         }
 
-        public async Task<Order> UpdateOrderAsync(SaveOrderResource model, int id)
+        public IEnumerable<OrderResource> GetOrdersByUser(User user)
+        {
+            var list = _unitOfWork.OrderRepository.All().Where(o => o.User.Id == user.Id)?.ToList();
+            var result = _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResource>>(list);
+            return result;
+        }
+
+        public async Task<OrderResource> UpdateOrderAsync(SaveOrderResource model, int id)
         {
             try
             {
                 var order = _unitOfWork.OrderRepository.Get(id);
-            
+
                 if (order == null)
                 {
                     throw new OrderNotFoundException($"could not find orderId {id} please try again!");
                 }
                 var address = _unitOfWork.AdressRepository.Get(id);
-                if(address == null)
+                if (address == null)
                 {
                     throw new Exception(" address could not found");
                 }
                 order.OrderDate = DateTime.Now;
-                order.Adress = address;
+                order.Address = address;
                 var orderEdited = _unitOfWork.OrderRepository.Update(order);
                 await _unitOfWork.CompleteAsync();
-                return orderEdited;
+                return _mapper.Map<OrderResource>(orderEdited);
 
             }
             catch (Exception ex)
             {
                 throw new OrderProcessingException(ex.Message);
             }
+        }
+
+        public async Task<OrderResource> UpdateStatusAsync(int id, OrderStatus status)
+        {
+            var order = _unitOfWork.OrderRepository.Get(id);
+            if (order == null) throw new OrderNotFoundException("Notfound orderId!");
+            order.Status = status;
+            var result = _unitOfWork.OrderRepository.Update(order);
+            await _unitOfWork.CompleteAsync();
+            return _mapper.Map<Order, OrderResource>(result);
         }
     }
 }

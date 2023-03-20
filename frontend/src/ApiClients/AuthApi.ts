@@ -1,10 +1,14 @@
-import { AuthenticateInfo, AuthResponse, LoginRequest, RegisterRequest } from "models"
+import { AuthenticateInfo, AuthResponse, editForm, LoginRequest, RegisterRequest } from "models"
 import axiosClient from "./AxiosClient"
 
 const authApi = {
     login(params: LoginRequest): Promise<AuthResponse<AuthenticateInfo>> {
         const url = "User/login"
         return axiosClient.post(url, params, { withCredentials: true })
+    },
+    updateInfo(params: editForm): Promise<AuthResponse<AuthenticateInfo>> {
+        const url = "User"
+        return axiosClient.patch(url, params, { withCredentials: true })
     },
     register(params: RegisterRequest): Promise<AuthResponse<AuthenticateInfo>> {
         const url = "User/register"

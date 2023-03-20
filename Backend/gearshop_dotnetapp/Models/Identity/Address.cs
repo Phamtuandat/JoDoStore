@@ -19,6 +19,7 @@ namespace Backend.Models.Identity
         public string? StreetAddress { get; set; }
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
+        public bool IsDefault { get; set; } = false;
 
     }
 }

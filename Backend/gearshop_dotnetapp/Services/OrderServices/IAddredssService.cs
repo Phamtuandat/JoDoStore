@@ -10,5 +10,6 @@ namespace gearshop_dotnetapp.Services.OrderServices
         Task<Address> CreateAddressAsync(SaveAddressResource address, User user);
         Task<Address> UpdateAddressAsync(int id, SaveAddressResource address);
         Task DeleteAddressAsync(int id);
+        IEnumerable<AddressResource>? GetAddressByUserIdAsync(string userId);
     }
 }

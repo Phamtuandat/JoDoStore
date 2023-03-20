@@ -34,6 +34,9 @@ namespace gearshop_dotnetapp.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("State")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
@@ -208,11 +211,14 @@ namespace gearshop_dotnetapp.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
+                    b.Property<DateOnly>("Birthday")
+                        .HasColumnType("date");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("DateTime")
+                    b.Property<DateTime>("CreateAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
@@ -226,6 +232,9 @@ namespace gearshop_dotnetapp.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("integer");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -284,11 +293,20 @@ namespace gearshop_dotnetapp.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AdressId")
+                    b.Property<int>("AddressId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("ShippingCash")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("SubtotalPrice")
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("numeric");
@@ -299,7 +317,7 @@ namespace gearshop_dotnetapp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdressId");
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("UserId");
 
@@ -578,9 +596,9 @@ namespace gearshop_dotnetapp.Migrations
 
             modelBuilder.Entity("gearshop_dotnetapp.Models.OrderModel.Order", b =>
                 {
-                    b.HasOne("Backend.Models.Identity.Address", "Adress")
+                    b.HasOne("Backend.Models.Identity.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AdressId")
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -590,7 +608,7 @@ namespace gearshop_dotnetapp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Adress");
+                    b.Navigation("Address");
 
                     b.Navigation("User");
                 });

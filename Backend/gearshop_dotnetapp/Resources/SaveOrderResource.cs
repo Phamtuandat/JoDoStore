@@ -6,5 +6,6 @@ namespace gearshop_dotnetapp.Resources
     {
         public List<SaveOrderItemResource> OrderItems { get; set; }
         public int AddressId { get;  set; }
+        public decimal ShippingCash { get; set; }
     }
 }

@@ -14,6 +14,7 @@ public class RegisterResource
     [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
     public string ConfirmPassword { get; set; } = string.Empty;
     public string? UserName { get; set; }
+    public string PhoneNumber { get; set; } = string.Empty;
 
     public RegisterResource()
     {

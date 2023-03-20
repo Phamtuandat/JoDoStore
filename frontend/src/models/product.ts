@@ -16,7 +16,7 @@ export interface SavePhotoReq {
 }
 
 export interface Product {
-    id: string | number | null
+    id: string | number
     name: string
     category: Category | null
     brand: Brand | null

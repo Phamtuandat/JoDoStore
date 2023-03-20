@@ -20,7 +20,7 @@ export default function AuthenticatePage() {
 
     useEffect(() => {
         if (isLoggedIn) {
-            navigate("/")
+            navigate(-1)
         }
     }, [isLoggedIn, navigate])
 

@@ -3,6 +3,7 @@ import { useTheme } from "@mui/material/styles"
 import Footer from "components/Footer"
 import Header from "components/common/Header"
 import BasicSpeedDial from "components/common/SpeedDial"
+import { ToastContainer } from "react-toastify"
 type IProps = {
     children?: React.ReactNode
 }
@@ -11,6 +12,18 @@ export const MainLayout = (props: IProps) => {
 
     return (
         <Box display="flex" flexDirection="column" bgcolor={theme.palette.background.default}>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={2500}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme={theme.palette.mode}
+            />
             <Box flexDirection="column" display="flex" color="text.primary">
                 <Box>
                     <Header />
