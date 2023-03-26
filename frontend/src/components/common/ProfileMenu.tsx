@@ -2,8 +2,9 @@ import * as React from "react"
 import Button from "@mui/material/Button"
 import Menu from "@mui/material/Menu"
 import MenuItem from "@mui/material/MenuItem"
-import { Avatar, Box } from "@mui/material"
+import { Avatar, Box, Typography } from "@mui/material"
 import { NavLink } from "react-router-dom"
+import { Link } from "react-router-dom"
 
 type Props = {
     isLoggedIn: boolean | null
@@ -40,7 +41,18 @@ export default function BasicMenu({ isLoggedIn, handleLogout }: Props) {
                     "aria-labelledby": "basic-button",
                 }}
             >
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleClose}>
+                    <Typography
+                        component={Link}
+                        to="/user"
+                        sx={{
+                            textDecoration: "none",
+                            color: "text.primary",
+                        }}
+                    >
+                        My account
+                    </Typography>
+                </MenuItem>
                 <MenuItem onClick={handleClose}>My Orders</MenuItem>
                 <MenuItem onClick={handleClose}>
                     {!isLoggedIn ? (

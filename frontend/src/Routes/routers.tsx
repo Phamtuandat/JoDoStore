@@ -33,7 +33,11 @@ const router = createBrowserRouter([
         path: "/Product/:productId",
         loader: async ({ params }) => {
             if (params.productId) {
-                return (await productApi.getById(+params.productId)).data
+                return (
+                    await productApi.getById(+params.productId).catch(() => {
+                        throw new Response("Could Not Found Product", { status: 404 })
+                    })
+                ).data
             }
         },
         element: <ProductDetailPage />,
@@ -73,8 +77,14 @@ const router = createBrowserRouter([
     },
     {
         path: "/admin",
+        loader: async () => {
+            return await authApi.adminValidate().catch(() => {
+                throw new Response("Unauthorize!", { status: 400 })
+            })
+        },
         element: <AdminPage />,
         errorElement: <ErrorPage />,
+
         children: [
             {
                 path: "/admin/Analytics",

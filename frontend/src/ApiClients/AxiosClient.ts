@@ -1,9 +1,9 @@
-import axios, { AxiosResponse } from "axios"
+import axios, { AxiosError, AxiosResponse } from "axios"
 const axiosClient = axios.create({
     baseURL: process.env.REACT_APP_SERVER_URL,
     withCredentials: true,
     headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json; odata.metadata=minimal",
     },
 })
 export default axiosClient
@@ -15,9 +15,9 @@ axiosClient.interceptors.response.use(
         // Do something with response data
         return response
     },
-    function (error) {
+    function (error: AxiosError) {
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
-        return Promise.reject(error.message)
+        return Promise.reject(error.response?.data)
     }
 )

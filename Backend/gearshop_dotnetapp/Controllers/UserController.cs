@@ -1,16 +1,14 @@
 ﻿using AutoMapper;
-using Azure.Core;
 using Backend.Extentions;
 using gearshop_dotnetapp.Enums;
-using gearshop_dotnetapp.Extensions;
 using gearshop_dotnetapp.Models.Identity;
 using gearshop_dotnetapp.Resources;
-using MediatR;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 
 namespace gearshop_dotnetapp.Controllers
 {
@@ -23,7 +21,7 @@ namespace gearshop_dotnetapp.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper, RoleManager<IdentityRole> roleManager)
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper, RoleManager<IdentityRole> roleManager, AuthenticatorTokenProvider<User> authenticatorTokenProvider) 
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -41,7 +39,7 @@ namespace gearshop_dotnetapp.Controllers
             var user = await _userManager.FindByEmailAsync(userModel.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, userModel.Password))
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                await _signInManager.SignInAsync(user, isPersistent: true);
                 var userResource = _mapper.Map<User, UserResource>(user);
                 return Ok(userResource);
             }
@@ -126,7 +124,7 @@ namespace gearshop_dotnetapp.Controllers
             }
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                await _signInManager.SignInAsync(user, isPersistent: true);
                 var userResource = _mapper.Map<User, UserResource>(user);
                 await _userManager.AddToRoleAsync(user, roleName);
                 return Ok(userResource);
@@ -159,5 +157,27 @@ namespace gearshop_dotnetapp.Controllers
             }
             return Unauthorized();
         }
+
+        [HttpPost("[action]")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Admin()
+        {
+            
+            var userContext = HttpContext.User;
+            var user = await _userManager.GetUserAsync(userContext);
+            if(user == null)
+            {
+                await _signInManager.SignOutAsync();
+                return Unauthorized();
+            }
+            if (_signInManager.IsSignedIn(userContext))
+            {
+                await _signInManager.RefreshSignInAsync(user);
+                return Ok();
+            }
+            return Unauthorized();
+        }
+
+
     }
 }

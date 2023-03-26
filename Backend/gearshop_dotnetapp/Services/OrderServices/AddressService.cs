@@ -1,4 +1,5 @@
 ﻿using Backend.Models.Identity;
+using CloudinaryDotNet.Actions;
 using gearshop_dotnetapp.Models.Identity;
 using gearshop_dotnetapp.Repositories;
 using gearshop_dotnetapp.Resources;
@@ -13,16 +14,19 @@ namespace gearshop_dotnetapp.Services.OrderServices
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Address> CreateAddressAsync(SaveAddressResource address, User user)
+        public async Task<AddressBook> CreateAddressAsync(SaveAddressResource address, User user)
         {
             try
             {
-                var newAddress = new Address()
+                var newAddress = new AddressBook()
                 {
                     User = user,
-                    City = address.City,
-                    State = address.State,
-                    StreetAddress = address.StreetAddress,
+                    District = address.District,
+                    Province = address.Province,
+                    Address = address.Address,
+                    Name = address.Name,
+                    Ward = address.Ward,
+                    PhoneNumber = address.PhoneNumber,
                 };
                 _unitOfWork.AdressRepository.Add(newAddress);
                 await _unitOfWork.CompleteAsync();
@@ -49,7 +53,7 @@ namespace gearshop_dotnetapp.Services.OrderServices
             }
         }
 
-        public Address GetAddressById(int id)
+        public AddressBook GetAddressById(int id)
         {
             try
             {
@@ -70,26 +74,31 @@ namespace gearshop_dotnetapp.Services.OrderServices
             if(list == null) return null;
             IEnumerable<AddressResource> addressList = list.Select(a => new AddressResource()
             {
-                City = a.City,
-                State = a.State,
+                District = a.District,
+                Province = a.Province,
+                Ward= a.Ward,
                 Id= a.Id,
-                StreetAddress = a.StreetAddress
+                Address = a.Address,
+                Name = a.Name,
+                PhoneNumber = a.PhoneNumber,
             });
             return addressList;
 
 
         }
 
-        public async Task<Address> UpdateAddressAsync(int id, SaveAddressResource mode)
+        public async Task<AddressBook> UpdateAddressAsync(int id, SaveAddressResource mode)
         {
             try
             {
                 var address = _unitOfWork.AdressRepository.Get(id);
                 if (address == null) throw new Exception("Could not found address");
-                address.State = mode.State;
-                address.StreetAddress = mode.StreetAddress;
-                address.City = mode.City;
-
+                address.Province = mode.Province;
+                address.Address = mode.Address;
+                address.District = mode.District;
+                address.Name = mode.Name;
+                address.Ward = address.Ward;
+                address.PhoneNumber= mode.PhoneNumber;
                 var addressUpdated = _unitOfWork.AdressRepository.Update(address);
                 await _unitOfWork.CompleteAsync();
                 return address;

@@ -84,5 +84,34 @@ namespace gearshop_dotnetapp.Controllers
             }
 
         }
+        [HttpPatch("{id:int}")]
+        [Authorize(Roles = "Admin, Customer")]
+        public async Task<IActionResult> UpdateAsync (int id, [FromBody] SaveAddressResource model)
+        {
+            try
+            {
+                var userContext = HttpContext.User;
+                var user = await _userManager.GetUserAsync(userContext);
+
+                if (user == null)
+                {
+                    return Unauthorized();
+                }
+                var isUpdateAble = user.Addresses?.FirstOrDefault(x => x.Id == id);
+                if(isUpdateAble == null)
+                {
+                    return Unauthorized();
+                }
+                var list = _adressService.UpdateAddressAsync(id, model);
+                if (list == null) return NotFound();
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+
+        }
     }
 }

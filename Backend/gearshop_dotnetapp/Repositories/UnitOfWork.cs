@@ -94,8 +94,8 @@ namespace gearshop_dotnetapp.Repositories
                 return orderItemRepository;
             }
         }
-        private IRepository<Address> adressRepository;
-        public IRepository<Address> AdressRepository
+        private IRepository<AddressBook> adressRepository;
+        public IRepository<AddressBook> AdressRepository
         {
             get
             {

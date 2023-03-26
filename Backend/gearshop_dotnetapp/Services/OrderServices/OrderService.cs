@@ -50,7 +50,7 @@ namespace gearshop_dotnetapp.Services.OrderServices
                 var order = new Order()
                 {
                     OrderDate = DateTime.UtcNow,
-                    Address = address,
+                    AddressBook = address,
                     OrderItems = orderItems,
                     User = user,
                     ShippingCash = model.ShippingCash,
@@ -89,10 +89,10 @@ namespace gearshop_dotnetapp.Services.OrderServices
 
         }
 
-        public IEnumerable<OrderResource> GetAllOrders()
+        public IQueryable<OrderResource> GetAllOrders()
         {
             var result = _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResource>>(_unitOfWork.OrderRepository.All().ToList());
-            return result;
+            return result.AsQueryable();
         }
 
         public OrderResource GetOrderById(int orderId)
@@ -129,7 +129,7 @@ namespace gearshop_dotnetapp.Services.OrderServices
                     throw new Exception(" address could not found");
                 }
                 order.OrderDate = DateTime.Now;
-                order.Address = address;
+                order.AddressBook = address;
                 var orderEdited = _unitOfWork.OrderRepository.Update(order);
                 await _unitOfWork.CompleteAsync();
                 return _mapper.Map<OrderResource>(orderEdited);

@@ -8,7 +8,7 @@ namespace gearshop_dotnetapp.Services.OrderServices
     public interface IOrderService
     {
         OrderResource GetOrderById(int orderId);
-        IEnumerable<OrderResource> GetAllOrders();
+        IQueryable<OrderResource> GetAllOrders();
         Task<OrderResource> CreateOrderAsync(SaveOrderResource model, User user);
         Task<OrderResource> UpdateOrderAsync(SaveOrderResource model, int id);
         Task DeleteOrderAsync(int orderId);

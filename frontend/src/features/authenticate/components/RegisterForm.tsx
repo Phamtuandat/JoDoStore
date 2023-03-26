@@ -30,7 +30,7 @@ export const RegisterForm = ({ onSubmit, toggleMode }: Props) => {
         email: Yup.string().required("Email is required").email("Email is invalid"),
         firstName: Yup.string().min(3).required(),
         lastName: Yup.string().required(),
-        phoneNumber: Yup.number().min(9).required(),
+        phoneNumber: Yup.string().min(9).required(),
         password: Yup.string()
             .min(
                 8,

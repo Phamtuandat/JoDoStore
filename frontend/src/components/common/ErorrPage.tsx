@@ -9,7 +9,7 @@ import buildQuery from "odata-query"
 
 export default function ErrorPage() {
     const ignore = useRef(false)
-    const error = useRouteError() as string
+    const error: any = useRouteError()
     const [errorPhoto, setErrorThumn] = useState<Photo>()
     useEffect(() => {
         if (!ignore.current) {
@@ -53,7 +53,7 @@ export default function ErrorPage() {
                     Sorry, an unexpected error has occurred.
                 </Typography>
                 <Typography component="span" variant="h3" fontWeight={700}>
-                    {error}
+                    {error.data}
                 </Typography>
             </Stack>
         </MainLayout>

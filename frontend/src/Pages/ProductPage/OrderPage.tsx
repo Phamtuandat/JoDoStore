@@ -65,9 +65,6 @@ const OrderPage = (props: Props) => {
         dispatch(cartAction.removeFromCart(id))
     }
     const handleCreateOrder = async () => {
-        const timeout = setTimeout(() => {
-            throw new Error("Request Timeout")
-        }, 20000)
         try {
             setLoading(true)
             const orders = carts.map((item) => ({
@@ -75,20 +72,17 @@ const OrderPage = (props: Props) => {
                 quantity: item.quantity,
             }))
             await orderApi.create({
-                addressId: +addressList[0].id,
+                addressId: +(addressList[0].id || 1),
                 orderItems: orders,
                 shippingCash: 0,
             })
-            clearTimeout(timeout)
             setLoading(false)
             dispatch(cartAction.removeAllCartItem())
             toast(<Msg />)
         } catch (error) {
             handleNotify.error(error as string)
-            clearTimeout(timeout)
             setLoading(false)
         }
-        clearTimeout(timeout)
     }
     return (
         <MainLayout>
@@ -270,13 +264,16 @@ const OrderPage = (props: Props) => {
                                                 {addressList.length !== 0 && (
                                                     <Box>
                                                         <Typography component="span">
-                                                            {addressList[0].streetAddress},
+                                                            {addressList[0].address},
                                                         </Typography>{" "}
                                                         <Typography component="span">
-                                                            {addressList[0].state},
+                                                            {addressList[0].ward},
                                                         </Typography>{" "}
                                                         <Typography component="span">
-                                                            {addressList[0].city}
+                                                            {addressList[0].district},
+                                                        </Typography>{" "}
+                                                        <Typography component="span">
+                                                            {addressList[0].province}
                                                         </Typography>
                                                     </Box>
                                                 )}

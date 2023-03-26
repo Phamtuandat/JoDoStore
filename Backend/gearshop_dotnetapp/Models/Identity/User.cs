@@ -11,7 +11,7 @@ namespace gearshop_dotnetapp.Models.Identity
         public string LastName { get; set; } = string.Empty;
         public DateTime CreateAt { get; set; } = DateTime.UtcNow;
         public Gender Gender { get; set; }
-        public virtual ICollection<Address>? Addresses { get; set; }
+        public virtual ICollection<AddressBook>? Addresses { get; set; }
         public override string? UserName { get => base.UserName; set => base.UserName = value; }
 #pragma warning disable CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
         public DateOnly Birthday { get; set; }

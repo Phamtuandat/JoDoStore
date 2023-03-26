@@ -6,6 +6,8 @@ using gearshop_dotnetapp.Services.OrderServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
+using System.Drawing.Printing;
 
 namespace gearshop_dotnetapp.Controllers
 {
@@ -22,11 +24,14 @@ namespace gearshop_dotnetapp.Controllers
             _userManager = userManager;
         }
 
+        [EnableQuery(PageSize = 5)]
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public ActionResult GetAll() {
+        public IQueryable GetAll() {
             var result = _orderService.GetAllOrders();
-            return Ok(result);
+            var totalCount = result.Count();
+            HttpContext.Response.Headers.Add("X-Pagination-Total-Count", totalCount.ToString());
+            return result;
         }
         [HttpGet("user")]
         public async Task<ActionResult> GetUserOrders()

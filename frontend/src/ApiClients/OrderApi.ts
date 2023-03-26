@@ -10,4 +10,8 @@ export const orderApi = {
         const url = "/orders/user"
         return axiosClient.get(url)
     },
+    getAll(params?: string): Promise<ListResponse<Order>> {
+        const url = `/orders/${params || ""}`
+        return axiosClient.get(url)
+    },
 }

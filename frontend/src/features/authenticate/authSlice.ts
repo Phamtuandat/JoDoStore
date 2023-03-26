@@ -45,6 +45,9 @@ const AuthSlice = createSlice({
             state.currentUser = null
             state.processing = false
         },
+        cancel(state) {
+            state.processing = false
+        },
     },
 })
 

@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "app/hooks"
 import { LoginRequest, RegisterRequest } from "models"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { ToastContainer } from "react-toastify"
 import { AuthSliceAction } from "../authSlice"
 import { LoginForm } from "../components/LoginForm"
 import { RegisterForm } from "../components/RegisterForm"
@@ -18,6 +19,13 @@ export default function AuthenticatePage() {
     const isLogging = !!useAppSelector((state) => state.auth.processing)
     const isLoggedIn = !!useAppSelector((state) => state.auth.isLoggedIn)
 
+    useEffect(() => {
+        return () => {
+            if (!isLoggedIn) {
+                dispatch(AuthSliceAction.cancel())
+            }
+        }
+    }, [])
     useEffect(() => {
         if (isLoggedIn) {
             navigate(-1)
@@ -45,6 +53,7 @@ export default function AuthenticatePage() {
     }
     return (
         <Box>
+            <ToastContainer />
             <Grid container component="main" sx={{ height: "calc(100vh - 0px)" }}>
                 <CssBaseline />
                 <Grid

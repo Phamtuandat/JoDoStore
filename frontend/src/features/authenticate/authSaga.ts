@@ -4,27 +4,23 @@ import { PayloadAction } from "@reduxjs/toolkit"
 import authApi from "ApiClients/AuthApi"
 import { LoginRequest, RegisterRequest } from "models"
 import { Task } from "redux-saga"
-import { cancel, cancelled, delay, race } from "redux-saga/effects"
+import { cancel, cancelled, race } from "redux-saga/effects"
 import handleNotify from "utils/Toast-notify"
 import { AuthSliceAction } from "./authSlice"
 
 function* handleLogin(action: PayloadAction<LoginRequest>): any {
     try {
-        const { response, timeout } = yield race({
+        const { response } = yield race({
             response: yield call(authApi.login, action.payload),
-            timeout: delay(30 * 1000),
         })
-        if (timeout) {
-            yield put(AuthSliceAction.failed("timeout of 60000ms exceeded"))
-            throw new Error("timeout of 60000ms exceeded")
-        } else {
-            yield put(AuthSliceAction.success(response.data))
-            yield call(handleNotify.success, "Login is successfully!")
-        }
+
+        yield put(AuthSliceAction.success(response.data))
+        yield call(handleNotify.success, "Login is successfully!")
     } catch (error) {
         yield put(AuthSliceAction.failed(error as string))
     } finally {
         if (yield cancelled()) {
+            yield put(AuthSliceAction.cancel())
             console.log("login cancelled")
         }
     }
@@ -32,21 +28,17 @@ function* handleLogin(action: PayloadAction<LoginRequest>): any {
 
 function* handleRegister(action: PayloadAction<RegisterRequest>): any {
     try {
-        const { result, timeout } = yield race({
+        const { result } = yield race({
             result: call(authApi.register, action.payload),
-            timeout: delay(30 * 1000),
         })
-        if (timeout) {
-            yield put(AuthSliceAction.failed("timeout of 60000ms exceeded"))
-            throw new Error("timeout of 60000ms exceeded")
-        } else {
-            yield put(AuthSliceAction.success(result.data))
-            yield call(handleNotify.success, "Register is successfully!")
-        }
+
+        yield put(AuthSliceAction.success(result.data))
+        yield call(handleNotify.success, "Register is successfully!")
     } catch (error) {
-        yield put(AuthSliceAction.failed)
+        yield put(AuthSliceAction.failed(error as string))
     } finally {
         if (yield cancelled()) {
+            yield put(AuthSliceAction.cancel())
             console.log("register cancelled")
         }
     }

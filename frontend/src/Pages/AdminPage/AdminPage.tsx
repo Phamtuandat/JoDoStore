@@ -2,11 +2,12 @@ import { Box, Drawer, Hidden, Paper } from "@mui/material"
 import { useTheme } from "@mui/material/styles"
 import BasicSpeedDial from "components/common/SpeedDial"
 import Footer from "components/Footer"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Outlet } from "react-router-dom"
 import DashHeader from "./components/DashHeader"
 import NavBarMenu from "./components/NavBarMenu"
 import { ToastContainer } from "react-toastify"
+
 function AdminPage() {
     const [state, setState] = useState(false)
     const toggleDrawer = (open: boolean) => (event: KeyboardEvent | MouseEvent) => {
@@ -23,6 +24,11 @@ function AdminPage() {
         setScrollY(this.scrollY)
     })
     const theme = useTheme()
+
+    useEffect(() => {
+        return () => {}
+    }, [])
+
     return (
         <Box
             display="flex"

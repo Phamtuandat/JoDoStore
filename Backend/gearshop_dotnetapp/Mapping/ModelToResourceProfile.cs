@@ -18,9 +18,9 @@ namespace gearshop_dotnetapp.Mapping
             CreateMap<Photo, PhotoResource>();
             CreateMap<RegisterResource, User>();
             CreateMap<Brand, BrandResource>();
-            CreateMap<Address, AddressResource>();
+            CreateMap<AddressBook, AddressResource>();
             CreateMap<OrderItem, OrderItemResource>();
-            CreateMap<Order, OrderResource>().ForMember(dest => dest.Status, opt => opt.MapFrom<OrderValueResolver>());
+            CreateMap<Order, OrderResource>().ForMember(dest => dest.Status, opt => opt.MapFrom<OrderValueResolver>()).ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.FirstName + " " + src.User.LastName));
 
         }
     }

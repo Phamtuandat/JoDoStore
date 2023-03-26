@@ -1,6 +1,8 @@
-﻿using gearshop_dotnetapp;
+﻿using Castle.Core.Resource;
+using gearshop_dotnetapp;
 using gearshop_dotnetapp.Data;
 using gearshop_dotnetapp.Models.Identity;
+using gearshop_dotnetapp.Models.OrderModel;
 using gearshop_dotnetapp.Repositories;
 using gearshop_dotnetapp.Services.OrderServices;
 using gearshop_dotnetapp.Services.ProductServices;
@@ -11,31 +13,47 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging.Configuration;
+using Microsoft.OData.Edm;
+using Microsoft.OData.ModelBuilder;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
+builder.Services.AddControllers(options =>
+{
+    options.EnableEndpointRouting = false;
+})
+    .AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
+        .AddOData(opt => opt.AddRouteComponents("odata", GetEdmModel())
+    .Count()
+    .Filter()
+    .OrderBy()
+    .Select()
+    .Expand());
+static IEdmModel GetEdmModel()
+{
+    var builder = new ODataConventionModelBuilder();
+    return builder.GetEdmModel();
+}
 builder.Services.TryAddEnumerable(
     ServiceDescriptor.Singleton<ILoggerProvider, ColorConsoleLoggerProvider>());
 LoggerProviderOptions.RegisterProviderOptions
     <ColorConsoleLoggerConfiguration, ColorConsoleLoggerProvider>(builder.Services);
 // Add services to the container.
-builder.Services.AddControllers();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckles
 builder.Services.AddDbContext<DataContext>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers()
-    .AddJsonOptions(x =>
-                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
-    .AddOData(options => options.Select().Filter().OrderBy().Count().SetMaxTop(50).Expand());
+
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
@@ -91,8 +109,8 @@ builder.Services.AddCors(options =>
             if (builder.Environment.IsDevelopment())
             {
                 policy.WithOrigins("http://localhost:3000",
-                                    "http://localhost:3000").AllowCredentials().AllowAnyMethod().AllowAnyHeader().AllowCredentials();
-            }
+                                    "http://localhost:3000").AllowCredentials().AllowAnyMethod().AllowAnyHeader().AllowCredentials().WithExposedHeaders("X-Pagination-Total-Count");
+}
                 policy.WithOrigins("https://phamtuandat.click",
                                     "https://phamtuandat.click").AllowCredentials().AllowAnyMethod().AllowAnyHeader().AllowCredentials();
         });
@@ -102,7 +120,6 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

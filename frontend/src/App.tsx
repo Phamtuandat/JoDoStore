@@ -24,9 +24,8 @@ function App() {
                         var result = (await authApi.refreshCookie()).data
                         dispatch(AuthSliceAction.success(result))
                     } catch (error) {
-                        console.log(error)
                         dispatch(AuthSliceAction.logout())
-                        handleNotify.error("session has expired, please login again!")
+                        handleNotify.error(error as string)
                     }
                 })()
             }

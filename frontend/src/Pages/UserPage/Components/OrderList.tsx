@@ -65,8 +65,8 @@ const OrderList = (props: Props) => {
                             >
                                 <Box display="flex" alignItems="end">
                                     <Typography mr={1}>
-                                        {x.address?.streetAddress}, {x.address?.state},{" "}
-                                        {x.address?.city}
+                                        {x.address?.name}, {x.address?.address}, {x.address?.ward}{" "}
+                                        {x.address?.district}, {x.address?.province},
                                     </Typography>
                                     <Typography color="#4caf50" fontSize={12}>
                                         {convertTime(x.orderDate)}

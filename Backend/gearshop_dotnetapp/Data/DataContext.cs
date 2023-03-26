@@ -1,4 +1,5 @@
-﻿using gearshop_dotnetapp.Models.Identity;
+﻿using Backend.Models.Identity;
+using gearshop_dotnetapp.Models.Identity;
 using gearshop_dotnetapp.Models.OrderModel;
 using gearshop_dotnetapp.Models.ProductModel;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -45,6 +46,7 @@ namespace gearshop_dotnetapp.Data
         public HashSet<Tag> Tags { get; set; }
         public HashSet<Order> Orders { get; set; }
         public HashSet<OrderItem> OrderItems { get; set; }
+        public HashSet<AddressBook> AddressBooks { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
 

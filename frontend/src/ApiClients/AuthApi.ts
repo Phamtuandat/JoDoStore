@@ -22,5 +22,9 @@ const authApi = {
         const url = "User/validate"
         return axiosClient.post(url)
     },
+    adminValidate(): Promise<AuthResponse<AuthenticateInfo>> {
+        const url = "User/Admin"
+        return axiosClient.post(url)
+    },
 }
 export default authApi

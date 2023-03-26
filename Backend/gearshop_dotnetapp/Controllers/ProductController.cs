@@ -2,7 +2,6 @@
 using gearshop_dotnetapp.Command.Product;
 using gearshop_dotnetapp.Queries;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 
@@ -49,6 +48,7 @@ namespace gearshop_dotnetapp.Controllers
             return BadRequest(result.Message);
         }
 
+        [EnableQuery(PageSize = 10)]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

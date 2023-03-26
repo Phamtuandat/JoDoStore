@@ -12,6 +12,8 @@ namespace gearshop_dotnetapp.Resources
         public decimal SubtotalPrice { get; set;}
         public AddressResource Address { get; set; }
         public DateTime OrderDate { get; set; }
+        public UserResource User { get; set; }
         public string Status { get; set; }
+        public string UserName { get; set; } 
     }
 }

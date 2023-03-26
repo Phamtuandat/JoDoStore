@@ -29,7 +29,7 @@ const UserPage = () => {
                                 <UserNav />
                             </Grid>
                         </Hidden>
-                        <Grid item md={9} lg={9} sm={12}>
+                        <Grid item md={9} lg={9} sm={12} xs={12}>
                             <Box>
                                 <Outlet />
                             </Box>

@@ -6,19 +6,18 @@ import {
     Grid,
     Paper,
     Stack,
-    TextField,
     Typography,
 } from "@mui/material"
-import { useAppDispatch, useAppSelector } from "app/hooks"
-import { AuthSliceAction, selectCurrentUser } from "features/authenticate/authSlice"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import DatePicker from "react-datepicker"
-import "react-datepicker/dist/react-datepicker.css"
-import { editForm } from "models"
 import authApi from "ApiClients/AuthApi"
+import { useAppDispatch, useAppSelector } from "app/hooks"
 import { InputField } from "components/inputField"
 import SelectTextFields from "components/inputField/SelectField"
+import { AuthSliceAction, selectCurrentUser } from "features/authenticate/authSlice"
+import { editForm } from "models"
+import { useState } from "react"
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
+import { useForm } from "react-hook-form"
 
 const ManagerProfile = () => {
     const [editMode, setMode] = useState(false)
@@ -26,12 +25,7 @@ const ManagerProfile = () => {
     const dispatch = useAppDispatch()
     const currentUser = useAppSelector(selectCurrentUser)
     const [startDate, setStartDate] = useState(new Date(currentUser?.birthday || ""))
-    const {
-        handleSubmit,
-        formState: { defaultValues },
-        control,
-        setValue,
-    } = useForm<editForm>({
+    const { handleSubmit, control, setValue } = useForm<editForm>({
         defaultValues: {
             firstName: currentUser?.firstName,
             lastName: currentUser?.lastName,
@@ -63,7 +57,7 @@ const ManagerProfile = () => {
     return (
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
             <Paper elevation={0}>
-                <Stack p={5} minHeight={"60vh"}>
+                <Stack p={{ xs: 2, md: 5 }} minHeight={"60vh"}>
                     {loading ? (
                         <Box display="flex" justifyContent="center" my="auto">
                             <CircularProgress />
@@ -266,7 +260,7 @@ const ManagerProfile = () => {
                                     <Typography mt={2}>{currentUser?.phoneNumber}</Typography>
                                 </Grid>
                             </Grid>
-                            <Box width="250px" mt="50px">
+                            <Box width={{ xs: "100%", sm: 250 }} mt="50px">
                                 <Box mb={2}>
                                     {!editMode ? (
                                         <Button

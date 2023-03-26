@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using gearshop_dotnetapp.Enums;
-using gearshop_dotnetapp.Models.Identity;
 using gearshop_dotnetapp.Models.OrderModel;
 using gearshop_dotnetapp.Resources;
 

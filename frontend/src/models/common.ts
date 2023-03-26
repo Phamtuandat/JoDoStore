@@ -1,14 +1,12 @@
+import { AxiosHeaders } from "axios"
 import { Filter } from "odata-query"
 
-export interface PaginationParams {
-    _limit: number
-    _page: number
-    _totalRows: number
+interface headers extends AxiosHeaders {
+    "x-pagination-total-count": string
 }
-
 export interface ListResponse<T> {
     data: T[]
-    pagination: PaginationParams
+    headers: headers
 }
 export interface ListParams {
     top?: number

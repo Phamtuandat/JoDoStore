@@ -12,7 +12,7 @@ namespace gearshop_dotnetapp.Repositories
 
         public override IQueryable<Order> All()
         {
-            return base.All().Include(o => o.OrderItems).Include(o => o.Address);
+            return base.All().Include(o => o.OrderItems).Include(o => o.AddressBook).Include(o => o.User);
         }
 
     }

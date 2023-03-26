@@ -4,13 +4,13 @@ using System.Linq.Expressions;
 
 namespace gearshop_dotnetapp.Repositories
 {
-    public class AddressRepository : GenericRepository<Address>
+    public class AddressRepository : GenericRepository<AddressBook>
     {
         public AddressRepository(DataContext context) : base(context)
         {
         }
 
-        public override IEnumerable<Address> Find(Expression<Func<Address, bool>> predicate)
+        public override IEnumerable<AddressBook> Find(Expression<Func<AddressBook, bool>> predicate)
         {
             return base.Find(predicate);
         }

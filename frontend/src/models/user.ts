@@ -16,10 +16,14 @@ export type editForm = {
     phoneNumber: string
 }
 export interface Address {
-    id: number
-    state: string
-    city: string
-    streetAddress: string
+    id?: number
+    district: string
+    province: string
+    ward: string
+    address: string
+    isDefault?: boolean
+    name: string
+    phoneNumber: string
 }
 
 export interface UserInfor {
@@ -41,7 +45,7 @@ export interface RegisterRequest {
     confirmPassword: string
     firstName: string
     lastName: string
-    phoneNumber: number | null
+    phoneNumber: string | null
     userName: string
 }
 export interface OrderItem {
@@ -57,4 +61,7 @@ export interface Order {
     addressId: number
     address?: Address
     orderDate?: string
+    userName?: string
+    totalPrice?: string | number
+    status?: string
 }
