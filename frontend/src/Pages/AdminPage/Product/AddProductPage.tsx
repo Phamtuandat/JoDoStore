@@ -51,7 +51,7 @@ const AddProductPage = (props: Props) => {
         }
     }
     return (
-        <Box display="flex" justifyContent="center" mt={2} flexDirection="column">
+        <Box display="flex" justifyContent="center" mt={2} flexDirection="column" mx={1}>
             <Box display="flex" flexDirection="column" textAlign="center">
                 <Typography variant="h4" fontWeight={700} my={2}>
                     Add New Product
@@ -65,7 +65,7 @@ const AddProductPage = (props: Props) => {
                     This information will describe more about the product.
                 </Typography>
             </Box>
-            <Box width="80%" mx="auto" mt={6}>
+            <Box width="100%" mx="auto" mt={6}>
                 <Paper
                     elevation={3}
                     sx={{

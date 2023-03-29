@@ -22,7 +22,7 @@ const CustomBtn = styled("button")(({ theme }) => ({
     height: "100%",
     justifyContent: "center",
     color: theme.palette.text.primary,
-    border: "none",
+    border: "1px solid #ccc",
     padding: "2px",
     "&>span>svg": {
         marginLeft: "10px",
@@ -101,30 +101,19 @@ export const BanerSlider = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentSlide])
     return (
-        <Box
-            sx={{
-                overflow: "hidden",
-                position: "relative",
-            }}
-        >
-            <Slider {...settings} beforeChange={handleBeforeChange}>
-                {images?.map((slide) => (
-                    <Box
-                        key={slide.id}
-                        sx={{
-                            backgroundImage: `url(${slide.imageUrl})`,
-                            backgroundSize: "contain",
-                            backgroundPosition: "top center",
-                            paddingBottom: "57%",
-                            width: "100%",
-                            backgroundRepeat: "no-repeat",
-                            px: 0,
-                        }}
-                    />
-                )) || (
-                    <Skeleton animation="wave" variant="rectangular" width="100%">
+        <Box>
+            <Box
+                sx={{
+                    overflow: "hidden",
+                    position: "relative",
+                }}
+            >
+                <Slider {...settings} beforeChange={handleBeforeChange}>
+                    {images?.map((slide) => (
                         <Box
+                            key={slide.id}
                             sx={{
+                                backgroundImage: `url(${slide.imageUrl})`,
                                 backgroundSize: "contain",
                                 backgroundPosition: "top center",
                                 paddingBottom: "57%",
@@ -133,60 +122,111 @@ export const BanerSlider = () => {
                                 px: 0,
                             }}
                         />
-                    </Skeleton>
-                )}
-            </Slider>
-            <Box
-                sx={{
-                    width: "fit-context",
-                    height: { xs: "fit-content", md: 300 },
-                    position: "absolute",
-                    top: { md: "40%", xs: "50%" },
-                    left: { xs: "50%", md: 0 },
-                    transform: { md: "translate(5%)", xs: "translate(-100%, 20%)" },
-                    overflow: "hidden",
-                    ml: 10,
-                }}
-            >
-                <Hidden smDown>
-                    <motion.div animate={textCtrl} style={textStyles}>
-                        <Typography
-                            color="white"
-                            variant="h2"
-                            fontFamily="fantasy"
-                            letterSpacing={1}
-                            my={1}
-                        >
-                            Lorem ipsum
-                        </Typography>
-                        <Typography color="white" variant="h6" component="span">
-                            sit amet adipisicing elit!
-                        </Typography>
-                    </motion.div>
-                    <motion.div animate={btnCtrl} style={btnStyles}>
+                    )) || (
+                        <Skeleton animation="wave" variant="rectangular" width="100%">
+                            <Box
+                                sx={{
+                                    backgroundSize: "contain",
+                                    backgroundPosition: "top center",
+                                    paddingBottom: "57%",
+                                    width: "100%",
+                                    backgroundRepeat: "no-repeat",
+                                    px: 0,
+                                }}
+                            />
+                        </Skeleton>
+                    )}
+                </Slider>
+                <Box
+                    sx={{
+                        width: "fit-context",
+                        height: { xs: "fit-content", md: 300 },
+                        position: "absolute",
+                        top: { md: "40%", xs: "50%" },
+                        left: { xs: "50%", md: 0 },
+                        transform: { md: "translate(5%)", xs: "translate(-100%, 20%)" },
+                        overflow: "hidden",
+                        ml: 10,
+                    }}
+                >
+                    <Hidden mdDown>
+                        <motion.div animate={textCtrl} style={textStyles}>
+                            <Typography
+                                color="white"
+                                variant="h2"
+                                fontFamily="fantasy"
+                                letterSpacing={1}
+                                my={1}
+                            >
+                                Lorem ipsum
+                            </Typography>
+                            <Typography color="white" variant="h6" component="span">
+                                sit amet adipisicing elit!
+                            </Typography>
+                        </motion.div>
+                        <motion.div animate={btnCtrl} style={btnStyles}>
+                            <Box
+                                component={Link}
+                                to="/shop"
+                                sx={{
+                                    textDecoration: "none",
+                                }}
+                            >
+                                <Box
+                                    width={{ md: 250, xs: 150 }}
+                                    height={{ xs: 50, md: 70 }}
+                                    mt={{ md: 10 }}
+                                >
+                                    <CustomBtn>
+                                        Shop now!
+                                        <span>
+                                            <EastIcon />
+                                        </span>
+                                    </CustomBtn>
+                                </Box>
+                            </Box>
+                        </motion.div>
+                    </Hidden>
+                </Box>
+            </Box>
+            <Hidden smUp>
+                <Box
+                    sx={{
+                        text: "text.primary",
+                        textAlign: "center",
+                    }}
+                >
+                    <Typography variant="h2" fontFamily="fantasy" letterSpacing={1} my={1}>
+                        Lorem ipsum
+                    </Typography>
+                    <Typography variant="h6" component="span">
+                        sit amet adipisicing elit!
+                    </Typography>
+                    <Box
+                        component={Link}
+                        to="/shop"
+                        sx={{
+                            textDecoration: "none",
+                        }}
+                    >
                         <Box
-                            component={Link}
-                            to="/shop"
+                            height={{ xs: 50, md: 70 }}
+                            mt={{ sm: 40, md: 10 }}
                             sx={{
-                                textDecoration: "none",
+                                color: "text.primary",
+                                px: { sm: 13, xs: 2 },
                             }}
                         >
-                            <Box
-                                width={{ md: 250, xs: 150 }}
-                                height={{ xs: 50, md: 70 }}
-                                mt={{ md: 10 }}
-                            >
-                                <CustomBtn>
-                                    Shop now!
-                                    <span>
-                                        <EastIcon />
-                                    </span>
-                                </CustomBtn>
-                            </Box>
+                            <CustomBtn>
+                                Shop now!
+                                <span>
+                                    <EastIcon />
+                                </span>
+                            </CustomBtn>
                         </Box>
-                    </motion.div>
-                </Hidden>
-            </Box>
+                    </Box>
+                </Box>
+            </Hidden>
         </Box>
     )
 }

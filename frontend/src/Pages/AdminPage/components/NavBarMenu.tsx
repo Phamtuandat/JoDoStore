@@ -1,14 +1,15 @@
+import AnalyticsIcon from "@mui/icons-material/Analytics"
 import CategoryIcon from "@mui/icons-material/Category"
 import DashboardIcon from "@mui/icons-material/Dashboard"
+import FilterVintageIcon from "@mui/icons-material/FilterVintage"
 import { Box, ListSubheader } from "@mui/material"
 import Divider from "@mui/material/Divider/Divider"
 import List from "@mui/material/List"
 import { styled } from "@mui/material/styles"
-import { useState } from "react"
 import { NestedMenuItem } from "./NestedMenuItem"
-import AnalyticsIcon from "@mui/icons-material/Analytics"
-import FilterVintageIcon from "@mui/icons-material/FilterVintage"
-type Props = {}
+type Props = {
+    onClose?: () => void
+}
 
 const ListItemIconCustom = styled("span")(({ theme }) => ({
     fontSize: "14px",
@@ -36,26 +37,26 @@ const productMenu = [
         pathName: "/admin/product/list",
     },
 ]
-const initialSate = {
-    Product: false,
-    orders: false,
-    Analytics: false,
-}
-const NavBarMenu = (props: Props) => {
-    const [open, setOpen] = useState<{
-        Product: boolean
-        orders: boolean
-        Analytics: boolean
-    }>(initialSate)
-    const handleOpen = (value: "Product" | "Analytics" | "orders") => {
-        setOpen((prevState) => {
-            return {
-                ...prevState,
-                [value]: !prevState[value],
-            }
-        })
-        // console.log(local)
-    }
+// const initialSate = {
+//     Product: false,
+//     orders: false,
+//     Analytics: false,
+// }
+const NavBarMenu = ({ onClose }: Props) => {
+    // const [open, setOpen] = useState<{
+    //     Product: boolean
+    //     orders: boolean
+    //     Analytics: boolean
+    // }>(initialSate)
+    // const handleOpen = (value: "Product" | "Analytics" | "orders") => {
+    //     setOpen((prevState) => {
+    //         return {
+    //             ...prevState,
+    //             [value]: !prevState[value],
+    //         }
+    //     })
+    //     // console.log(local)
+    // }
     return (
         <Box
             sx={{
@@ -92,8 +93,7 @@ const NavBarMenu = (props: Props) => {
                     menu="Product"
                     nestedItemList={productMenu}
                     to="product"
-                    open={open.Product}
-                    setOpen={() => handleOpen("Product")}
+                    // setOpen={() => handleOpen("Product")}
                 />
                 <Divider />
                 <NestedMenuItem

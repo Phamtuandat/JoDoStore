@@ -36,7 +36,8 @@ builder.Services.AddControllers(options =>
     .Filter()
     .OrderBy()
     .Select()
-    .Expand());
+    .Expand()
+    .SetMaxTop(100));
 static IEdmModel GetEdmModel()
 {
     var builder = new ODataConventionModelBuilder();

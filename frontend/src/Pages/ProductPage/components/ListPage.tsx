@@ -23,7 +23,7 @@ const ListPage = ({ debouce }: Props) => {
             {!isLoading && !debouce ? (
                 <Grid container spacing={{ xs: 1, md: 4 }}>
                     {productList.map((product) => (
-                        <Grid item lg={3} md={4} sm={4} xs={4} key={product.id}>
+                        <Grid item lg={3} md={4} sm={4} xs={6} key={product.id}>
                             <Box
                                 sx={{
                                     borderTopRightRadius: "10px",

@@ -1,5 +1,3 @@
-import ExpandLess from "@mui/icons-material/ExpandLess"
-import ExpandMore from "@mui/icons-material/ExpandMore"
 import { Box, List } from "@mui/material"
 import Collapse from "@mui/material/Collapse"
 import ListItemButton from "@mui/material/ListItemButton"
@@ -46,12 +44,9 @@ export const NestedMenuItem = ({ icon, menu, nestedItemList, to, open, setOpen }
             >
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText primary={menu} />
-                {!!nestedItemList && nestedItemList.length > 0 && (
-                    <>{open ? <ExpandLess /> : <ExpandMore />}</>
-                )}
             </ListItemButton>
             {!!nestedItemList && (
-                <Collapse in={open} timeout="auto" unmountOnExit>
+                <Collapse in={true} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
                         {nestedItemList.map((item, id) => (
                             <RouterLink

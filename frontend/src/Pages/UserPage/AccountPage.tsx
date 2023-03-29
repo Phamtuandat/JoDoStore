@@ -44,7 +44,7 @@ const AccountPage = (props: Props) => {
 
     return (
         <Box sx={{ width: "100%" }}>
-            <Hidden mdDown>
+            <Hidden>
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                         <Tab label="My Profile" {...a11yProps(0)} />

@@ -1,31 +1,12 @@
-import { Box, CardMedia, Typography } from "@mui/material"
+import { Box, Button, CardMedia, Typography } from "@mui/material"
 import Stack from "@mui/material/Stack"
-import PhotoApi from "ApiClients/PhotoApi"
 import { MainLayout } from "components/Layout/MainLayout"
-import { Photo } from "models"
-import { useEffect, useRef, useState } from "react"
-import { useRouteError } from "react-router-dom"
-import buildQuery from "odata-query"
+import { useNavigate, useRouteError } from "react-router-dom"
 
 export default function ErrorPage() {
-    const ignore = useRef(false)
     const error: any = useRouteError()
-    const [errorPhoto, setErrorThumn] = useState<Photo>()
-    useEffect(() => {
-        if (!ignore.current) {
-            ignore.current = true
-            const param = buildQuery({
-                filter: {
-                    title: "Error Page",
-                },
-            })
-            ;(async () => {
-                var result = await PhotoApi.getAll(param)
-                setErrorThumn(result.data[0])
-            })()
-        }
-    }, [])
-
+    const naviagte = useNavigate()
+    console.log(error)
     return (
         <MainLayout>
             <Stack
@@ -35,26 +16,38 @@ export default function ErrorPage() {
                 justifyContent="center"
                 minHeight="60vh"
             >
-                <Box height={300} width={300} mt={{ md: 20, xs: 0, sm: 10 }}>
+                <Box
+                    mt={{ md: 20, xs: 10, sm: 15 }}
+                    sx={{
+                        display: { md: "flex", sm: "block" },
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                    }}
+                >
                     <CardMedia
                         component="img"
-                        image={errorPhoto?.imageUrl}
+                        image="https://res.cloudinary.com/dmzvhnnkh/image/upload/v1680011106/error-removebg-preview_flld10.png"
                         sx={{
-                            height: "100%",
-                            width: "100%",
+                            width: { md: 600, xs: 200, sm: 300 },
                         }}
                     />
+                    <Stack textAlign="center" alignItems="center">
+                        <Box>
+                            <Typography fontSize={120}>{error.status}</Typography>
+                        </Box>
+                        <Typography component="span" variant="h3">
+                            Oops!
+                        </Typography>
+                        <Typography component="span" variant="h3" fontWeight={700}>
+                            {error.status === 404 ? "Page Not Found" : error.data}
+                        </Typography>
+                        <Box>
+                            <Button variant="contained" onClick={() => naviagte(-1)}>
+                                Go Back
+                            </Button>
+                        </Box>
+                    </Stack>
                 </Box>
-
-                <Typography component="span" variant="h3">
-                    Oops!
-                </Typography>
-                <Typography component="span" variant="h6">
-                    Sorry, an unexpected error has occurred.
-                </Typography>
-                <Typography component="span" variant="h3" fontWeight={700}>
-                    {error.data}
-                </Typography>
             </Stack>
         </MainLayout>
     )

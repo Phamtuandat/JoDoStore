@@ -4,6 +4,7 @@ import { productApi } from "ApiClients/ProductApi"
 import { Order, Product } from "models"
 import buildQuery from "odata-query"
 import { useEffect, useRef, useState } from "react"
+import { useTheme } from "@mui/material/styles"
 type Props = {}
 
 const OrderList = (props: Props) => {
@@ -11,6 +12,7 @@ const OrderList = (props: Props) => {
     const [orders, setOrders] = useState<Order[]>([])
     const [products, setProducts] = useState<Product[]>([])
     const [isLoading, setLoading] = useState(false)
+    const theme = useTheme()
 
     useEffect(() => {
         setLoading(true)
@@ -53,7 +55,7 @@ const OrderList = (props: Props) => {
     return (
         <>
             {!isLoading ? (
-                <Stack spacing={1}>
+                <Stack spacing={2}>
                     {orders.map((x) => (
                         <Paper key={x.id} elevation={0}>
                             <Box
@@ -61,12 +63,24 @@ const OrderList = (props: Props) => {
                                 justifyContent="space-between"
                                 display="flex"
                                 alignItems="center"
-                                mx={3}
+                                mx={1}
+                                my={1}
                             >
-                                <Box display="flex" alignItems="end">
-                                    <Typography mr={1}>
-                                        {x.address?.name}, {x.address?.address}, {x.address?.ward}{" "}
-                                        {x.address?.district}, {x.address?.province},
+                                <Box display="flex" flexDirection="column" py={1}>
+                                    <Typography
+                                        fontSize={14}
+                                        sx={{
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            WebkitLineClamp: 1,
+                                            maxWidth: { xs: 150, sm: "fit-content" },
+                                            display: "inline-block",
+                                            whiteSpace: "nowrap",
+                                        }}
+                                    >
+                                        {x.addressBook?.name}, {x.addressBook?.address},{" "}
+                                        {x.addressBook?.ward} {x.addressBook?.district},{" "}
+                                        {x.addressBook?.province}
                                     </Typography>
                                     <Typography color="#4caf50" fontSize={12}>
                                         {convertTime(x.orderDate)}
@@ -75,9 +89,9 @@ const OrderList = (props: Props) => {
                                 <Box
                                     component="span"
                                     sx={{
-                                        bgcolor: "#ecf0f7",
                                         px: 1,
                                         borderRadius: 3,
+                                        boxShadow: theme.shadows[1],
                                     }}
                                 >
                                     Shipped
@@ -103,13 +117,14 @@ const OrderList = (props: Props) => {
                                                     display="flex"
                                                     justifyContent="space-between"
                                                     flexGrow={1}
-                                                    mr={10}
+                                                    mr={{ md: 10, xs: 1 }}
+                                                    flexDirection={{ xs: "column", sm: "row" }}
                                                 >
                                                     <Typography>{product?.name}</Typography>
-                                                    <Typography>$ {product?.salePrice}</Typography>
                                                     <Typography component="span">
                                                         Quantity: {x.quantity}
                                                     </Typography>
+                                                    <Typography>$ {product?.salePrice}</Typography>
                                                 </Box>
                                             </Box>
                                         </Box>

@@ -16,7 +16,7 @@ export type editForm = {
     phoneNumber: string
 }
 export interface Address {
-    id?: number
+    id?: number | string
     district: string
     province: string
     ward: string
@@ -59,7 +59,7 @@ export interface Order {
     orderItems: OrderItem[]
     shippingCash: number
     addressId: number
-    address?: Address
+    addressBook?: Address
     orderDate?: string
     userName?: string
     totalPrice?: string | number

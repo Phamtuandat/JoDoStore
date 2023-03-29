@@ -18,7 +18,6 @@ export type Params = {
     orderBy?: string
 }
 const ProductShopPage = () => {
-    // const theme = useTheme()
     const [isDebouce, setDebouce] = useState(false)
     const navigate = useNavigate()
     const location = useLocation()

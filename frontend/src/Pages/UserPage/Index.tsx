@@ -22,9 +22,9 @@ const UserPage = () => {
     return (
         <MainLayout>
             <Container maxWidth="lg">
-                <Box mt={20}>
+                <Box mt={{ md: 20, xs: 10 }}>
                     <Grid container spacing={2}>
-                        <Hidden smDown>
+                        <Hidden mdDown>
                             <Grid item md={3} lg={3}>
                                 <UserNav />
                             </Grid>

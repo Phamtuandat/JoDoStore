@@ -5,6 +5,8 @@ import MenuItem from "@mui/material/MenuItem"
 import { Avatar, Box, Typography } from "@mui/material"
 import { NavLink } from "react-router-dom"
 import { Link } from "react-router-dom"
+import { useAppSelector } from "app/hooks"
+import { selectCurrentUser } from "features/authenticate/authSlice"
 
 type Props = {
     isLoggedIn: boolean | null
@@ -14,6 +16,7 @@ type Props = {
 export default function BasicMenu({ isLoggedIn, handleLogout }: Props) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
+    const currentUser = useAppSelector(selectCurrentUser)
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget)
     }
@@ -30,7 +33,7 @@ export default function BasicMenu({ isLoggedIn, handleLogout }: Props) {
                 aria-expanded={open ? "true" : undefined}
                 onClick={handleClick}
             >
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                <Avatar alt={currentUser?.firstName || "A"} src="/static/images/avatar/1.jpg" />
             </Button>
             <Menu
                 id="basic-menu"
@@ -44,7 +47,7 @@ export default function BasicMenu({ isLoggedIn, handleLogout }: Props) {
                 <MenuItem onClick={handleClose}>
                     <Typography
                         component={Link}
-                        to="/user"
+                        to="/user/account"
                         sx={{
                             textDecoration: "none",
                             color: "text.primary",
@@ -53,7 +56,18 @@ export default function BasicMenu({ isLoggedIn, handleLogout }: Props) {
                         My account
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={handleClose}>My Orders</MenuItem>
+                <MenuItem onClick={handleClose}>
+                    <Typography
+                        component={Link}
+                        to="/user/customer"
+                        sx={{
+                            textDecoration: "none",
+                            color: "text.primary",
+                        }}
+                    >
+                        My orders
+                    </Typography>
+                </MenuItem>
                 <MenuItem onClick={handleClose}>
                     {!isLoggedIn ? (
                         <Box

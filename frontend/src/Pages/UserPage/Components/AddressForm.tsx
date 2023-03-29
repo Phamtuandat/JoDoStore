@@ -14,6 +14,7 @@ type Props = {
 const AddressForm = ({ onSubmit, editValue }: Props) => {
     const { handleSubmit, control, reset } = useForm<Address>({
         defaultValues: {
+            id: "",
             name: "",
             phoneNumber: "",
             province: "",

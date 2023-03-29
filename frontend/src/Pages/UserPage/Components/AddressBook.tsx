@@ -1,5 +1,5 @@
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
-import { Box, Button, IconButton, Modal } from "@mui/material"
+import { Box, Button, Divider, IconButton, Modal, Stack, Typography } from "@mui/material"
 import Paper from "@mui/material/Paper"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
@@ -12,8 +12,10 @@ import { Address } from "models"
 import { useEffect, useRef, useState } from "react"
 import handleNotify from "utils/Toast-notify"
 import AddressForm from "./AddressForm"
-
+import { useWidth } from "Hooks/width-hook"
+import CloseIcon from "@mui/icons-material/Close"
 export type tableRow = {
+    id?: string | number
     name: string | undefined
     address: string
     province: string
@@ -21,13 +23,14 @@ export type tableRow = {
     ward: string
     phoneNumber: string
 }
-function createData({ name, address, province, ward, phoneNumber, district }: tableRow) {
-    return { name, address, province, ward, phoneNumber, district }
+function createData({ id, name, address, province, ward, phoneNumber, district }: tableRow) {
+    return { id, name, address, province, ward, phoneNumber, district }
 }
 
 type Props = {}
 
 const AddressBook = (props: Props) => {
+    const width = useWidth()
     const [mode, setMode] = useState<"create" | "edit">("create")
     const [open, setOpen] = useState(false)
     const handleClose = () => setOpen(false)
@@ -69,6 +72,7 @@ const AddressBook = (props: Props) => {
     }
     const rows = address.map((x) => {
         return createData({
+            id: x?.id || Math.random().toString(),
             name: x.name,
             address: x.address,
             province: x.province,
@@ -77,41 +81,43 @@ const AddressBook = (props: Props) => {
             phoneNumber: x.phoneNumber,
         })
     })
-    return (
-        <TableContainer
-            component={Paper}
-            elevation={0}
-            sx={{
-                p: 3,
-            }}
-        >
-            <Table sx={{ minWidth: 650, mb: 10 }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Full Name</TableCell>
-                        <TableCell align="left">Address</TableCell>
-                        <TableCell align="left">Ward</TableCell>
-                        <TableCell align="left">District</TableCell>
-                        <TableCell align="left">Province</TableCell>
-                        <TableCell align="left">Phone Number</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
+    if (width === "xs") {
+        return (
+            <Box
+                sx={{
+                    bgcolor: "background.paper",
+                    mx: -2,
+                    height: "85vh",
+                    display: "flex",
+                    flexDirection: "column",
+                }}
+            >
+                <Stack
+                    spacing={1}
+                    sx={{
+                        overflowY: "scroll",
+                    }}
+                >
                     {rows.map((row, i) => (
-                        <TableRow
-                            key={i}
-                            sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                        >
-                            <TableCell component="th" scope="row">
-                                {row.name}
-                            </TableCell>
-                            <TableCell align="left">{row.address}</TableCell>
-                            <TableCell align="left">{row.ward}</TableCell>
-                            <TableCell align="left">{row.district}</TableCell>
-                            <TableCell align="left">{row.province}</TableCell>
-                            <TableCell align="left">{row.phoneNumber}</TableCell>
-                            <TableCell align="left">
-                                <Box display="flex" alignItems="center">
+                        <Box key={row.id}>
+                            <Divider />
+                            <Box display="flex">
+                                <Box
+                                    sx={{
+                                        py: 1,
+                                        px: 2,
+                                    }}
+                                >
+                                    <Stack direction="row" spacing={1} mb={1}>
+                                        <Typography fontWeight={500}>{row.name}</Typography>
+                                        <Divider orientation="vertical" flexItem variant="middle" />
+                                        <Typography fontWeight={500}>{row.phoneNumber}</Typography>
+                                    </Stack>
+                                    <Typography fontSize="14px" sx={{ opacity: 0.8 }}>
+                                        {`${row.address}, ${row.ward}, ${row.district}, ${row.province}.`}
+                                    </Typography>
+                                </Box>
+                                <Box display="flex" alignItems="center" ml="auto">
                                     <IconButton
                                         size="small"
                                         color="warning"
@@ -120,33 +126,242 @@ const AddressBook = (props: Props) => {
                                         <EditOutlinedIcon />
                                     </IconButton>
                                 </Box>
-                            </TableCell>
-                        </TableRow>
+                            </Box>
+                        </Box>
                     ))}
-                </TableBody>
-            </Table>
-            <Box textAlign="right">
-                <Button variant="contained" onClick={() => handleOpen("create")}>
-                    + ADD NEW ADDRESS
-                </Button>
+                    {rows.map((row, i) => (
+                        <Box key={row.id}>
+                            <Divider />
+                            <Box display="flex">
+                                <Box
+                                    sx={{
+                                        py: 1,
+                                        px: 2,
+                                    }}
+                                >
+                                    <Stack direction="row" spacing={1} mb={1}>
+                                        <Typography fontWeight={500}>{row.name}</Typography>
+                                        <Divider orientation="vertical" flexItem variant="middle" />
+                                        <Typography fontWeight={500}>{row.phoneNumber}</Typography>
+                                    </Stack>
+                                    <Typography fontSize="14px" sx={{ opacity: 0.8 }}>
+                                        {`${row.address}, ${row.ward}, ${row.district}, ${row.province}.`}
+                                    </Typography>
+                                </Box>
+                                <Box display="flex" alignItems="center" ml="auto">
+                                    <IconButton
+                                        size="small"
+                                        color="warning"
+                                        onClick={() => handleOpen("edit", row)}
+                                    >
+                                        <EditOutlinedIcon />
+                                    </IconButton>
+                                </Box>
+                            </Box>
+                        </Box>
+                    ))}{" "}
+                    {rows.map((row, i) => (
+                        <Box key={row.id}>
+                            <Divider />
+                            <Box display="flex">
+                                <Box
+                                    sx={{
+                                        py: 1,
+                                        px: 2,
+                                    }}
+                                >
+                                    <Stack direction="row" spacing={1} mb={1}>
+                                        <Typography fontWeight={500}>{row.name}</Typography>
+                                        <Divider orientation="vertical" flexItem variant="middle" />
+                                        <Typography fontWeight={500}>{row.phoneNumber}</Typography>
+                                    </Stack>
+                                    <Typography fontSize="14px" sx={{ opacity: 0.8 }}>
+                                        {`${row.address}, ${row.ward}, ${row.district}, ${row.province}.`}
+                                    </Typography>
+                                </Box>
+                                <Box display="flex" alignItems="center" ml="auto">
+                                    <IconButton
+                                        size="small"
+                                        color="warning"
+                                        onClick={() => handleOpen("edit", row)}
+                                    >
+                                        <EditOutlinedIcon />
+                                    </IconButton>
+                                </Box>
+                            </Box>
+                        </Box>
+                    ))}{" "}
+                    {rows.map((row, i) => (
+                        <Box key={row.id}>
+                            <Divider />
+                            <Box display="flex">
+                                <Box
+                                    sx={{
+                                        py: 1,
+                                        px: 2,
+                                    }}
+                                >
+                                    <Stack direction="row" spacing={1} mb={1}>
+                                        <Typography fontWeight={500}>{row.name}</Typography>
+                                        <Divider orientation="vertical" flexItem variant="middle" />
+                                        <Typography fontWeight={500}>{row.phoneNumber}</Typography>
+                                    </Stack>
+                                    <Typography fontSize="14px" sx={{ opacity: 0.8 }}>
+                                        {`${row.address}, ${row.ward}, ${row.district}, ${row.province}.`}
+                                    </Typography>
+                                </Box>
+                                <Box display="flex" alignItems="center" ml="auto">
+                                    <IconButton
+                                        size="small"
+                                        color="warning"
+                                        onClick={() => handleOpen("edit", row)}
+                                    >
+                                        <EditOutlinedIcon />
+                                    </IconButton>
+                                </Box>
+                            </Box>
+                        </Box>
+                    ))}
+                    {rows.map((row, i) => (
+                        <Box key={row.id}>
+                            <Divider />
+                            <Box display="flex">
+                                <Box
+                                    sx={{
+                                        py: 1,
+                                        px: 2,
+                                    }}
+                                >
+                                    <Stack direction="row" spacing={1} mb={1}>
+                                        <Typography fontWeight={500}>{row.name}</Typography>
+                                        <Divider orientation="vertical" flexItem variant="middle" />
+                                        <Typography fontWeight={500}>{row.phoneNumber}</Typography>
+                                    </Stack>
+                                    <Typography fontSize="14px" sx={{ opacity: 0.8 }}>
+                                        {`${row.address}, ${row.ward}, ${row.district}, ${row.province}.`}
+                                    </Typography>
+                                </Box>
+                                <Box display="flex" alignItems="center" ml="auto">
+                                    <IconButton
+                                        size="small"
+                                        color="warning"
+                                        onClick={() => handleOpen("edit", row)}
+                                    >
+                                        <EditOutlinedIcon />
+                                    </IconButton>
+                                </Box>
+                            </Box>
+                        </Box>
+                    ))}
+                </Stack>
+                <Box mt="auto" mb={5}>
+                    <Button variant="contained" fullWidth onClick={() => handleOpen("create")}>
+                        + ADD NEW ADDRESS
+                    </Button>
+                </Box>
+                <Box>
+                    <Modal open={open} onClose={handleClose}>
+                        <Box
+                            sx={{
+                                position: "absolute" as "absolute",
+                                width: "fit-content",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    position: "absolute",
+                                    top: 0,
+                                    right: 0,
+                                }}
+                            >
+                                <IconButton onClick={() => setOpen(false)}>
+                                    <CloseIcon />
+                                </IconButton>
+                            </Box>
+                            <AddressForm onSubmit={handleSubmit} editValue={editValue} />
+                        </Box>
+                    </Modal>
+                </Box>
             </Box>
-            <Box>
-                <Modal open={open} onClose={handleClose}>
-                    <Box
-                        sx={{
-                            position: "absolute" as "absolute",
-                            width: "fit-content",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                        }}
-                    >
-                        <AddressForm onSubmit={handleSubmit} editValue={editValue} />
-                    </Box>
-                </Modal>
-            </Box>
-        </TableContainer>
-    )
+        )
+    } else {
+        return (
+            <TableContainer
+                component={Paper}
+                elevation={0}
+                sx={{
+                    p: 3,
+                    overflow: "auto",
+                }}
+            >
+                <Table sx={{ minWidth: 650, mb: 10 }} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Full Name</TableCell>
+                            <TableCell align="left">Address</TableCell>
+                            <TableCell align="left">Ward</TableCell>
+                            <TableCell align="left">District</TableCell>
+                            <TableCell align="left">Province</TableCell>
+                            <TableCell align="left">Phone Number</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {rows.map((row, i) => (
+                            <TableRow
+                                key={i}
+                                sx={{
+                                    "&:last-child td, &:last-child th": { border: 0 },
+                                }}
+                            >
+                                <TableCell component="th" scope="row">
+                                    {row.name}
+                                </TableCell>
+                                <TableCell align="left">{row.address}</TableCell>
+                                <TableCell align="left">{row.ward}</TableCell>
+                                <TableCell align="left">{row.district}</TableCell>
+                                <TableCell align="left">{row.province}</TableCell>
+                                <TableCell align="left">{row.phoneNumber}</TableCell>
+                                <TableCell align="left">
+                                    <Box display="flex" alignItems="center">
+                                        <IconButton
+                                            size="small"
+                                            color="warning"
+                                            onClick={() => handleOpen("edit", row)}
+                                        >
+                                            <EditOutlinedIcon />
+                                        </IconButton>
+                                    </Box>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                <Box textAlign="right">
+                    <Button variant="contained" onClick={() => handleOpen("create")}>
+                        + ADD NEW ADDRESS
+                    </Button>
+                </Box>
+                <Box>
+                    <Modal open={open} onClose={handleClose}>
+                        <Box
+                            sx={{
+                                position: "absolute" as "absolute",
+                                width: "fit-content",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                            }}
+                        >
+                            <AddressForm onSubmit={handleSubmit} editValue={editValue} />
+                        </Box>
+                    </Modal>
+                </Box>
+            </TableContainer>
+        )
+    }
 }
 
 export default AddressBook
