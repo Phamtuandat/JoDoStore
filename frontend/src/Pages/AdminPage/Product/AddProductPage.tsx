@@ -67,7 +67,7 @@ const AddProductPage = (props: Props) => {
             </Box>
             <Box width="100%" mx="auto" mt={6}>
                 <Paper
-                    elevation={3}
+                    elevation={1}
                     sx={{
                         py: 3,
                         px: { sm: 2, xs: 0, md: 3 },

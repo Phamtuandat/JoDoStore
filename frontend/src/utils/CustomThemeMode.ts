@@ -43,6 +43,13 @@ export const getDesignTokens = (mode: PaletteMode) => ({
                 },
             },
         },
+        MuiCssBaseline: {
+            styleOverrides: {
+                body: {
+                    overflowX: "hidden",
+                },
+            },
+        },
     },
 
     palette: {

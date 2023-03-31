@@ -106,6 +106,7 @@ export const BanerSlider = () => {
                 sx={{
                     overflow: "hidden",
                     position: "relative",
+                    mt: "60px",
                 }}
             >
                 <Slider {...settings} beforeChange={handleBeforeChange}>

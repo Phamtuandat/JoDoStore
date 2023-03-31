@@ -58,11 +58,7 @@ const NavBarMenu = ({ onClose }: Props) => {
     //     // console.log(local)
     // }
     return (
-        <Box
-            sx={{
-                width: "250px",
-            }}
-        >
+        <Box>
             <List
                 sx={{
                     width: "100%",
@@ -82,7 +78,7 @@ const NavBarMenu = ({ onClose }: Props) => {
                             position: "static",
                         }}
                     >
-                        TechStore Dashboard
+                        JoDo Store Dashboard
                     </ListSubheader>
                 }
             >

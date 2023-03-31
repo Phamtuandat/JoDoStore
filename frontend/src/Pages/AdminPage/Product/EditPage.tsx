@@ -56,7 +56,7 @@ const EditPage = (props: Props) => {
         setHidden(true)
     }
     return (
-        <Box mt={3} px={{ xs: 0, md: 2 }}>
+        <Box mt={3} px={{ xs: 0, md: 2 }} minHeight="100vh">
             <ClickAwayListener onClickAway={handleClickAway}>
                 <Box
                     component="form"

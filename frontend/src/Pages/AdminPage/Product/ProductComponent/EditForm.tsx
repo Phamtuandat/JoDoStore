@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Paper, Typography } from "@mui/material"
+import { Box, Button, Paper, Stack, Typography } from "@mui/material"
 import { brandApi } from "ApiClients/BrandApi"
 import categoryApi from "ApiClients/CategoryApi"
 import { productApi } from "ApiClients/ProductApi"
@@ -137,22 +137,20 @@ const EditForm = () => {
                 </Box>
             </Box>
             <Box width="100%" mt={5} justifyContent="center">
-                <Grid container spacing={1}>
-                    <Grid item sm={12} md={6} lg={4} sx={{ width: "100%", height: "100%" }}>
+                <Paper
+                    sx={{
+                        px: 2,
+                        pt: 3,
+                        pb: 4,
+                        display: "flex",
+                        flexDirection: "column",
+                        height: "100%",
+                    }}
+                >
+                    <Stack direction="column" spacing={1}>
                         <ImageEditForm control={control} product={product} productId={productId} />
-                    </Grid>
-                    <Grid item md={6} lg={8} sm={12} mx="auto" width="100%">
-                        <Paper
-                            sx={{
-                                px: 2,
-                                pt: 3,
-                                pb: 4,
-                                display: "flex",
-                                flexDirection: "column",
-                                height: "100%",
-                            }}
-                        >
-                            <Typography component="span" variant="h6" mx="auto" mb={-2}>
+                        <Box>
+                            <Typography variant="h6" textAlign="center">
                                 Product Information
                             </Typography>
                             {!!product.description && !state.isLoading && (
@@ -163,14 +161,12 @@ const EditForm = () => {
                                     categories={state.categories}
                                 />
                             )}
-                        </Paper>
-                    </Grid>
-                    <Grid item md={12} sm={12} xs={12}>
-                        <Paper sx={{ mt: "10px", py: 1, width: "100%" }} elevation={1}>
-                            <Pricing setValue={setValue} control={control} />
-                        </Paper>
-                    </Grid>
-                </Grid>
+                        </Box>
+                    </Stack>
+                    <Paper sx={{ mt: "10px", py: 1, width: "100%" }} elevation={1}>
+                        <Pricing setValue={setValue} control={control} />
+                    </Paper>
+                </Paper>
             </Box>
         </Box>
     )

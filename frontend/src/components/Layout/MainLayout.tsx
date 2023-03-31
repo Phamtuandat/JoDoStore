@@ -25,9 +25,7 @@ export const MainLayout = (props: IProps) => {
                 theme={theme.palette.mode}
             />
             <Box flexDirection="column" display="flex" color="text.primary">
-                <Box>
-                    <Header />
-                </Box>
+                <Header />
                 <Box>{props.children}</Box>
                 <Box sx={{ position: "fixed", bottom: 0, left: 0, right: 15, zIndex: 100 }}>
                     <BasicSpeedDial label="Actions" />

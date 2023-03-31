@@ -5,7 +5,7 @@ import { Provider } from "react-redux"
 import { PersistGate } from "redux-persist/integration/react"
 import App from "./App"
 import { persistor, store } from "./app/store"
-
+import "./styles.css"
 const container = document.getElementById("root")!
 const root = createRoot(container)
 

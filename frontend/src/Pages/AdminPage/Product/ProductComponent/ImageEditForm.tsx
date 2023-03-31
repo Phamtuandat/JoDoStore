@@ -1,10 +1,10 @@
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore"
 import NavigateNextIcon from "@mui/icons-material/NavigateNext"
-import { Box, Button, CardMedia, CircularProgress, Paper } from "@mui/material"
+import { Box, Button, CardMedia, CircularProgress } from "@mui/material"
 import PhotoApi from "ApiClients/PhotoApi"
 import { ImageFeild } from "components/inputField/ImageFeild"
 import { motion } from "framer-motion"
-import { Product, Photo } from "models"
+import { Photo, Product } from "models"
 import buildQuery from "odata-query"
 import { useEffect, useRef, useState } from "react"
 import { Control } from "react-hook-form"
@@ -77,7 +77,7 @@ const ImageEditForm = ({ product, control, productId }: Props) => {
         }
     }
     return (
-        <Paper
+        <Box
             onMouseEnter={() => setHover((prv) => !prv)}
             onMouseLeave={() => setHover((prv) => !prv)}
             sx={{
@@ -178,7 +178,7 @@ const ImageEditForm = ({ product, control, productId }: Props) => {
                     </Box>
                 </Box>
             </Box>
-        </Paper>
+        </Box>
     )
 }
 const navigate = {

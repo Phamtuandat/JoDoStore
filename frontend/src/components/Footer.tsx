@@ -166,12 +166,12 @@ const Footer = () => {
                         {Item}
                     </Grid>
                 </Box>
-                <CardContent sx={{ display: "flex" }}>
+                <CardContent sx={{ display: "flex", flexDirection: "column", textAlign: "center" }}>
                     <Typography gutterBottom variant="h5" component="div">
                         Support
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        685 Market Street, Las Vegas, LA 95820, United States.
+                        Tap Phuoc, Long Phuoc, Long Thanh, Dong Nai, Viet Nam.
                     </Typography>
                 </CardContent>
             </Box>
