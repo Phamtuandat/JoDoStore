@@ -97,7 +97,7 @@ namespace gearshop_dotnetapp.Controllers
                 {
                     return Unauthorized();
                 }
-                var isUpdateAble = user.Addresses?.FirstOrDefault(x => x.Id == id);
+                var isUpdateAble = user.AddressBook?.FirstOrDefault(x => x.Id == id);
                 if(isUpdateAble == null)
                 {
                     return Unauthorized();

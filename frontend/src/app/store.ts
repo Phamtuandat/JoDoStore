@@ -28,6 +28,7 @@ const persistConfig = {
     storage,
     blacklist: ["product"],
 }
+
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 const sagaMiddleware = createSagaMiddleware()

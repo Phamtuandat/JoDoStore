@@ -10,25 +10,25 @@ export type CartItems = {
 
 export interface ICart {
     cartItems: CartItems[]
-    showMiniCart: boolean
+    processing: boolean
+    error: string | null
 }
 
 const initialState: ICart = {
     cartItems: [],
-    showMiniCart: false,
+    processing: false,
+    error: null,
 }
 
 const cartSlice = createSlice({
     name: "Cart",
     initialState: initialState,
     reducers: {
-        showMiniCart(state) {
-            state.showMiniCart = true
-        },
-        hideMiniCart(state) {
-            state.showMiniCart = false
-        },
         addToCart(state, action: PayloadAction<CartItems>) {
+            state.processing = true
+        },
+        addToCartSuccess(state, action: PayloadAction<CartItems>) {
+            state.processing = false
             const newItem = action.payload
             const index = state.cartItems.findIndex((x) => x.product.id === newItem.product.id)
             if (index >= 0) {
@@ -38,6 +38,19 @@ const cartSlice = createSlice({
             }
             handleNotify.success(`successfully added to cart!`)
         },
+        getCart(state) {
+            state.processing = true
+        },
+        getCartSuccess(state, action: PayloadAction<CartItems[]>) {
+            state.processing = false
+            state.cartItems = action.payload
+        },
+
+        handleReqFailure(state, action: PayloadAction<string>) {
+            state.processing = false
+            state.error = action.payload
+            handleNotify.error("Something went wrong, please try again later!")
+        },
         setQuantity(state, action: PayloadAction<CartItems>) {
             const index = state.cartItems.findIndex(
                 (x) => x.product.id === action.payload.product.id
@@ -46,7 +59,10 @@ const cartSlice = createSlice({
                 state.cartItems[index].quantity = action.payload.quantity
             }
         },
-        removeFromCart(state, action) {
+        removeFromCart(state, action: PayloadAction<string | number>) {
+            state.processing = true
+        },
+        removeSuccess(state, action: PayloadAction<string | number>) {
             const idNeedRemove = action.payload
             state.cartItems = state.cartItems.filter((x) => x.product.id !== idNeedRemove)
         },
@@ -56,8 +72,8 @@ const cartSlice = createSlice({
     },
 })
 
-export const showMiniCartSelector = (state: RootState) => state.cart.showMiniCart
 export const cartSelector = (state: RootState) => state.cart.cartItems
-export const cartAction = cartSlice.actions
+export const cartProcessing = (state: RootState) => state.cart.processing
+export const cartSliceAction = cartSlice.actions
 const cartReducer = cartSlice.reducer
 export default cartReducer

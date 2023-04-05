@@ -1,8 +1,6 @@
-﻿using Castle.Core.Resource;
-using gearshop_dotnetapp;
+﻿using gearshop_dotnetapp;
 using gearshop_dotnetapp.Data;
 using gearshop_dotnetapp.Models.Identity;
-using gearshop_dotnetapp.Models.OrderModel;
 using gearshop_dotnetapp.Repositories;
 using gearshop_dotnetapp.Services.OrderServices;
 using gearshop_dotnetapp.Services.ProductServices;
@@ -55,7 +53,6 @@ builder.Services.AddDbContext<DataContext>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -91,6 +88,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IAddredssService, AddressService>();
+builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -117,7 +115,6 @@ builder.Services.AddCors(options =>
         });
 });
 
-
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -127,7 +124,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();

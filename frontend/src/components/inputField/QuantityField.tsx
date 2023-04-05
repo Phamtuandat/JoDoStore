@@ -1,14 +1,16 @@
 import AddIcon from "@mui/icons-material/Add"
 import RemoveIcon from "@mui/icons-material/Remove"
 import { Box, Button, TextField } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Control, useController } from "react-hook-form"
 type Props = {
     handleQuantityChange: (value: number) => void
     control: Control<any>
+    disabled?: boolean
+    setValue?: (value: number) => void
 }
 
-const QuantityField = ({ handleQuantityChange, control }: Props) => {
+const QuantityField = ({ handleQuantityChange, control, disabled, setValue }: Props) => {
     const {
         field: { onBlur, onChange, ref, value },
     } = useController({
@@ -16,9 +18,7 @@ const QuantityField = ({ handleQuantityChange, control }: Props) => {
         name: "quantity",
     })
     const [quantity, setQuantity] = useState<number>(value)
-    useEffect(() => {
-        handleQuantityChange(quantity)
-    }, [handleQuantityChange, quantity])
+
     return (
         <Box display="flex" alignItems={"center"} width="100%">
             <Box maxWidth={"30px"}>
@@ -27,9 +27,15 @@ const QuantityField = ({ handleQuantityChange, control }: Props) => {
                     color="secondary"
                     variant="outlined"
                     onClick={() => {
-                        if (quantity > 0) setQuantity(quantity - 1)
+                        if (quantity > 0) {
+                            setQuantity(quantity - 1)
+                            if (setValue) {
+                                setValue(quantity - 1)
+                            }
+                            handleQuantityChange(-1)
+                        }
                     }}
-                    disabled={quantity === 0}
+                    disabled={quantity === 0 || disabled}
                     sx={{
                         minWidth: "0",
                         p: 0,
@@ -48,6 +54,7 @@ const QuantityField = ({ handleQuantityChange, control }: Props) => {
             </Box>
             <Box flex={1}>
                 <TextField
+                    disabled={disabled}
                     ref={ref}
                     variant="outlined"
                     value={value}
@@ -73,6 +80,7 @@ const QuantityField = ({ handleQuantityChange, control }: Props) => {
             </Box>
             <Box maxWidth={"30px"}>
                 <Button
+                    disabled={disabled}
                     fullWidth
                     variant="outlined"
                     sx={{
@@ -90,7 +98,13 @@ const QuantityField = ({ handleQuantityChange, control }: Props) => {
                         borderRadius: "0",
                     }}
                     color="secondary"
-                    onClick={() => setQuantity(quantity + 1)}
+                    onClick={() => {
+                        setQuantity(quantity + 1)
+                        handleQuantityChange(+1)
+                        if (setValue) {
+                            setValue(quantity + 1)
+                        }
+                    }}
                 >
                     <AddIcon />
                 </Button>

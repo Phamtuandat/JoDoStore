@@ -7,5 +7,8 @@ namespace gearshop_dotnetapp.Exceptions
         public ProductNotFoundException(string message) : base(message, HttpStatusCode.NotFound)
         {
         }
+        public ProductNotFoundException() : base("Not Found!", HttpStatusCode.NotFound)
+        {
+        }
     }
 }

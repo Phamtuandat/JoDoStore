@@ -4,6 +4,7 @@ using gearshop_dotnetapp.Models.OrderModel;
 using gearshop_dotnetapp.Models.ProductModel;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace gearshop_dotnetapp.Data
 {
@@ -38,6 +39,8 @@ namespace gearshop_dotnetapp.Data
         }
 
 
+        public HashSet<Cart> Carts { get; set; }
+        public HashSet<CartItem> CartItems { get; set; }
         public HashSet<Product> Products { get; set; }
         public HashSet<Category> Categories { get; set; }
         public HashSet<Brand> Brands { get; set; }
@@ -78,7 +81,12 @@ namespace gearshop_dotnetapp.Data
                 .WithMany(t => t.Thumbnails)
                 .HasForeignKey(t => t.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
+            builder.Entity<User>()
+                .HasOne(u => u.Cart)
+                .WithOne(c => c.User)
+                .HasForeignKey<Cart>(c => c.UserId);
+
         }
     }
 }

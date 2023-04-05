@@ -4,6 +4,7 @@ import ColorModeContext from "Context/ColorModeContext"
 import router from "Routes/routers"
 import { useAppDispatch } from "app/hooks"
 import { AuthSliceAction } from "features/authenticate/authSlice"
+import { cartSliceAction } from "features/cart/cartSlice"
 import { useEffect, useRef } from "react"
 import { RouterProvider } from "react-router-dom"
 import "react-toastify/dist/ReactToastify.css"
@@ -17,6 +18,7 @@ function App() {
         JSON.parse(JSON.parse(localStorage.getItem("persist:root") as string)?.auth).isLoggedIn
     useEffect(() => {
         if (!ignore.current) {
+            dispatch(cartSliceAction.getCart())
             if (isLoggedIn) {
                 ignore.current = true
                 ;(async () => {

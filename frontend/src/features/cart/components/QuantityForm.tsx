@@ -6,9 +6,10 @@ import { useForm } from "react-hook-form"
 type Props = {
     quantity: number
     handleQuantityChange: (quantity: number) => void
+    disabled?: boolean
 }
 
-const QuantityForm = ({ quantity, handleQuantityChange }: Props) => {
+const QuantityForm = ({ quantity, handleQuantityChange, disabled }: Props) => {
     const { control, setValue } = useForm<IFormState>({
         defaultValues: {
             quantity: quantity,
@@ -20,9 +21,10 @@ const QuantityForm = ({ quantity, handleQuantityChange }: Props) => {
             <QuantityField
                 control={control}
                 handleQuantityChange={(value) => {
-                    setValue("quantity", value)
                     handleQuantityChange(value)
                 }}
+                setValue={(value) => setValue("quantity", value)}
+                disabled={disabled}
             />
         </Box>
     )

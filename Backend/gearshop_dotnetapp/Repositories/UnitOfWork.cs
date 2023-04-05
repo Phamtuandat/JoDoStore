@@ -103,6 +103,15 @@ namespace gearshop_dotnetapp.Repositories
                 return adressRepository;
             }
         }
+        private IRepository<Cart> cartRepository;
+        public IRepository<Cart> CartRepository
+        {
+            get
+            {
+                cartRepository ??= new CartRepository(_context);
+                return cartRepository;
+            }
+        }
 
         public async Task CompleteAsync()
         {

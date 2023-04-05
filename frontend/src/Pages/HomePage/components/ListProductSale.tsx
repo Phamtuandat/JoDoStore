@@ -59,9 +59,9 @@ const ListProductSale = (props: Props) => {
     const slidesPerView = (): number => {
         switch (width) {
             case "xs":
-                return 2
+                return 1.5
             case "sm":
-                return 2
+                return 2.5
             case "md":
                 return 3
             default:
@@ -111,21 +111,15 @@ const ListProductSale = (props: Props) => {
                 viewport={{ once: true, amount: 0.1 }}
             >
                 <motion.div variants={cardVariants}>
-                    <Box height={{ xs: "auto", md: "840px" }} mt={4}>
+                    <Box height="auto" mt={4}>
                         <Swiper
-                            style={{
-                                height: "100%",
-                            }}
                             slidesPerView={slidesPerView()}
-                            grid={{
-                                rows: 1,
-                            }}
                             navigation={{
                                 nextEl: nextRef.current,
                                 prevEl: backRef.current,
                             }}
                             spaceBetween={20}
-                            modules={[Navigation, Grid, Pagination]}
+                            modules={[Navigation, Pagination]}
                         >
                             {productList.length !== 0 &&
                                 productList.map((product) => (

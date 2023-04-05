@@ -20,7 +20,7 @@ import { orderApi } from "ApiClients/OrderApi"
 import { useAppDispatch, useAppSelector } from "app/hooks"
 import { MainLayout } from "components/Layout/MainLayout"
 import { cartTotalSelector } from "features/cart/cartSelector"
-import { cartAction, cartSelector } from "features/cart/cartSlice"
+import { cartSliceAction, cartSelector, cartProcessing } from "features/cart/cartSlice"
 import QuantityForm from "features/cart/components/QuantityForm"
 import { Address, Product } from "models"
 import { useEffect, useRef, useState } from "react"
@@ -42,7 +42,7 @@ const OrderPage = (props: Props) => {
     const Subtotal = useAppSelector(cartTotalSelector)
     const dispatch = useAppDispatch()
     const [loading, setLoading] = useState(false)
-
+    const processing = useAppSelector(cartProcessing)
     useEffect(() => {
         if (!ignore.current) {
             ignore.current = true
@@ -55,14 +55,15 @@ const OrderPage = (props: Props) => {
 
     const handleQuantityChange = (product: Product, quantity: number) => {
         dispatch(
-            cartAction.setQuantity({
+            cartSliceAction.addToCart({
                 product,
                 quantity,
             })
         )
+        console.log(product, quantity)
     }
     const handleRemoveCartItem = (id: number) => {
-        dispatch(cartAction.removeFromCart(id))
+        dispatch(cartSliceAction.removeFromCart(id))
     }
     const handleCreateOrder = async () => {
         try {
@@ -77,7 +78,7 @@ const OrderPage = (props: Props) => {
                 shippingCash: 0,
             })
             setLoading(false)
-            dispatch(cartAction.removeAllCartItem())
+            dispatch(cartSliceAction.removeAllCartItem())
             toast(<Msg />)
         } catch (error) {
             handleNotify.error(error as string)
@@ -109,8 +110,12 @@ const OrderPage = (props: Props) => {
                                         </Box>
                                         <Divider />
                                         <Box>
-                                            {carts.map((cart) => (
-                                                <Box key={cart.product.id} display="flex" py={3}>
+                                            {carts.map((cart, i) => (
+                                                <Box
+                                                    key={+cart.product.id + i}
+                                                    display="flex"
+                                                    py={3}
+                                                >
                                                     <Hidden smDown>
                                                         <Box>
                                                             <CardMedia
@@ -210,6 +215,7 @@ const OrderPage = (props: Props) => {
                                                                     ml={{ sx: "0", md: "auto" }}
                                                                 >
                                                                     <QuantityForm
+                                                                        disabled={processing}
                                                                         handleQuantityChange={(
                                                                             quantity: number
                                                                         ) =>

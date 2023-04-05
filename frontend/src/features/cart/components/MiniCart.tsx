@@ -1,22 +1,21 @@
 import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined"
 import { Badge, ClickAwayListener, Drawer, IconButton } from "@mui/material"
-import { useAppDispatch, useAppSelector } from "app/hooks"
-import { useRef } from "react"
-import { cartAction, cartSelector, showMiniCartSelector } from "../cartSlice"
-import CartReview from "./CartReview"
+import { useAppSelector } from "app/hooks"
+import { useRef, useState } from "react"
 import { useLocation } from "react-router-dom"
+import { cartSelector } from "../cartSlice"
+import CartReview from "./CartReview"
 
 function MiniCart() {
     const anchorEl = useRef<HTMLButtonElement>(null)
-    const showMiniCart = useAppSelector(showMiniCartSelector)
+    const [open, setOpen] = useState(false)
     const carts = useAppSelector(cartSelector)
-    const dispatch = useAppDispatch()
     const location = useLocation()
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        dispatch(cartAction.showMiniCart())
+    const handleClick = () => {
+        setOpen(true)
     }
     const handleClose = () => {
-        dispatch(cartAction.hideMiniCart())
+        setOpen(false)
     }
 
     return (
@@ -30,14 +29,14 @@ function MiniCart() {
                             color: "inherit",
                         }}
                     >
-                        <Badge badgeContent={carts.length}>
+                        <Badge badgeContent={carts.length} color="primary">
                             <LocalMallOutlinedIcon />
                         </Badge>
                     </IconButton>
                 )}
                 <Drawer
                     id="basic-menu"
-                    open={showMiniCart && location.pathname !== "/orders"}
+                    open={open && location.pathname !== "/orders"}
                     anchor={"right"}
                     onClose={handleClose}
                 >

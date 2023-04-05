@@ -14,7 +14,7 @@ namespace Backend.Models.Identity
         [MaxLength(50)]
         public string? Province { set; get; }
         [MaxLength(50)]
-        public string Ward { get; set; }
+        public string Ward { get; set; } = string.Empty;
 
         [MaxLength(100)]
         public string? Address { get; set; }
@@ -22,7 +22,7 @@ namespace Backend.Models.Identity
         public bool IsDefault { get; set; } = true;
         public string Name { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
-        public virtual User User { get; set; }
+        public virtual User User { get; set; } 
 
     }
 }

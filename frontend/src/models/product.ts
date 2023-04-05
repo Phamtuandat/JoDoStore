@@ -40,3 +40,20 @@ export interface SaveProductReq {
     thumbnail?: File[] | []
     tags?: Tag[] | []
 }
+
+export type CartItemReq = {
+    id: number
+    quantity: number
+}
+
+export type CartItem = {
+    id: number
+    product: Product
+    quantity: number
+    productId: number
+}
+
+export type CartRes = {
+    id: number | string
+    items: CartItem[]
+}

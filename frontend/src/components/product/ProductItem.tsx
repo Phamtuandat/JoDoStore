@@ -10,7 +10,7 @@ type Props = {
 }
 export const ProductItem = ({ product }: Props) => {
     const theme = useTheme()
-    const [imgIndex, setIndex] = useState<number>(0)
+    const [imgIndex, setIndex] = useState<number>(1)
     const [checked, setCheck] = useState(false)
     const navigate = useNavigate()
 
@@ -35,17 +35,21 @@ export const ProductItem = ({ product }: Props) => {
 
     return (
         <Paper
-            elevation={0}
+            square
             sx={{
                 color: "text.default",
                 width: "auto",
                 cursor: "pointer",
+                transition: "box-shadow .3s",
+                "&:hover": {
+                    boxShadow: theme.shadows[2],
+                },
             }}
             onMouseEnter={() => setCheck((prv) => !prv)}
             onMouseLeave={() => setCheck((prv) => !prv)}
         >
             <Box
-                height={{ xs: "130px", md: "250px" }}
+                height={{ xs: 220, md: 320, sm: 250 }}
                 overflow="hidden"
                 onClick={() => handleClick(product.id)}
                 display="flex"

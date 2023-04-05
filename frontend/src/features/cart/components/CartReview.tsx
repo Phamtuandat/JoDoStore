@@ -9,8 +9,7 @@ import { useAppDispatch, useAppSelector } from "app/hooks"
 import { Product } from "models"
 import { NavLink } from "react-router-dom"
 import { cartTotalSelector } from "../cartSelector"
-import { cartAction, CartItems } from "../cartSlice"
-import QuantityForm from "./QuantityForm"
+import { CartItems, cartSliceAction } from "../cartSlice"
 type Props = {
     carts: CartItems[]
 }
@@ -21,7 +20,7 @@ const CartReview = ({ carts }: Props) => {
     const dispatch = useAppDispatch()
 
     const handleRemoveItem = (product: Product) => {
-        dispatch(cartAction.removeFromCart(product.id))
+        dispatch(cartSliceAction.removeFromCart(product.id))
     }
     return (
         <Box
@@ -56,8 +55,8 @@ const CartReview = ({ carts }: Props) => {
                         },
                     }}
                 >
-                    {carts.map((cart) => (
-                        <Box key={cart.product.id}>
+                    {carts.map((cart, i) => (
+                        <Box key={+cart.product.id + i}>
                             <ListItem>
                                 <Box
                                     display="flex"
@@ -138,34 +137,19 @@ const CartReview = ({ carts }: Props) => {
                                     <Box
                                         display="flex"
                                         flexDirection="column"
-                                        justifyContent="space-between"
                                         width="100px"
+                                        color="secondary"
+                                        fontWeight={700}
+                                        textAlign="center"
                                     >
+                                        <Typography component="span">{cart.quantity}</Typography>
                                         <Typography
-                                            color="secondary"
-                                            variant="h6"
+                                            color={theme.palette.error.light}
                                             fontWeight={700}
-                                            component="span"
-                                            textAlign="center"
+                                            mt={2}
                                         >
                                             ${(cart.product.salePrice || 0) * cart.quantity}
                                         </Typography>
-                                        <Box
-                                            color={theme.palette.secondary.main}
-                                            border={"1px solid"}
-                                        >
-                                            <QuantityForm
-                                                quantity={cart.quantity}
-                                                handleQuantityChange={(quantity) =>
-                                                    dispatch(
-                                                        cartAction.setQuantity({
-                                                            product: cart.product,
-                                                            quantity,
-                                                        })
-                                                    )
-                                                }
-                                            />
-                                        </Box>
                                     </Box>
                                 </Box>
                             </ListItem>
@@ -210,7 +194,6 @@ const CartReview = ({ carts }: Props) => {
                                     textDecoration: "none",
                                     color: theme.palette.primary.contrastText,
                                 }}
-                                onClick={() => dispatch(cartAction.hideMiniCart())}
                             >
                                 Checkout!
                             </Link>

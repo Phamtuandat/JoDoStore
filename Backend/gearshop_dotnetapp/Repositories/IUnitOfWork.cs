@@ -15,6 +15,7 @@ namespace gearshop_dotnetapp.Repositories
         IRepository<Order> OrderRepository { get; }
         IRepository<OrderItem> OrderItemRepository { get; }
         IRepository<AddressBook> AdressRepository { get; }
+        IRepository<Cart> CartRepository { get; }
         Task CompleteAsync();
     }
 }

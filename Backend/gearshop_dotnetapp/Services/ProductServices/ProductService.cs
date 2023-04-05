@@ -28,9 +28,9 @@ namespace gearshop_dotnetapp.Services.ProductServices
         public async Task<ProductRes> CreateAsync(SaveProductResource saveProductResource)
         {
             var existedProduct = _unitOfWork.ProductRepository.Find(p => p.Name == saveProductResource.Name)?.FirstOrDefault();
-            if(existedProduct != null) return new ProductRes("Product name has already existed");
+            if (existedProduct != null) return new ProductRes("Product name has already existed");
 
-            
+
 
             try
             {
@@ -43,7 +43,7 @@ namespace gearshop_dotnetapp.Services.ProductServices
                 }
 
                 var brand = _unitOfWork.BrandRepository.Find(b => b.Name == saveProductResource.Brand.Name)?.FirstOrDefault();
-                if(brand == null)
+                if (brand == null)
                 {
                     brand = new Brand() { Name = saveProductResource.Brand.Name };
                     _unitOfWork.BrandRepository.Add(brand);
@@ -104,15 +104,15 @@ namespace gearshop_dotnetapp.Services.ProductServices
                 }
 
                 var tags = new List<Tag>();
-                if(saveProductResource.Tags != null)
+                if (saveProductResource.Tags != null)
                 {
                     foreach (var item in saveProductResource.Tags)
                     {
                         var tag = _unitOfWork.TagRepository.Find(x => x.Name == item)?.FirstOrDefault();
-                        if(tag == null)
+                        if (tag == null)
                         {
-                           tag = new Tag() { Name = item };
-                           _unitOfWork.TagRepository.Add(tag);
+                            tag = new Tag() { Name = item };
+                            _unitOfWork.TagRepository.Add(tag);
                         }
                         tags.Add(tag);
                     }
@@ -127,10 +127,10 @@ namespace gearshop_dotnetapp.Services.ProductServices
                     Tags = tags,
                     Thumbnails = thumbnails,
                     NormalizedName = saveProductResource.Name.ToUpper(),
-                    CreateAt= DateTime.UtcNow,
-                    SalePrice= saveProductResource.SalePrice,
+                    CreateAt = DateTime.UtcNow,
+                    SalePrice = saveProductResource.SalePrice,
                     Price = saveProductResource.Price,
-                    
+
                 };
                 var product = _unitOfWork.ProductRepository.Add(newProduct);
                 await _unitOfWork.CompleteAsync();
@@ -142,7 +142,7 @@ namespace gearshop_dotnetapp.Services.ProductServices
             {
                 return new ProductRes($"Something went wrong when saving product, \n message: {ex.Message}");
             }
-            
+
         }
 
         public async Task<ProductRes> DeleteAsync(int id)
@@ -173,12 +173,13 @@ namespace gearshop_dotnetapp.Services.ProductServices
             var res = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResource>>(products);
             return res;
         }
-         
+
         public ProductRes GetById(int id)
         {
-            var product = _unitOfWork.ProductRepository.All().FirstOrDefault(x=> x.Id == id);
+            var product = _unitOfWork.ProductRepository.All().FirstOrDefault(x => x.Id == id);
 
-            if (product != null) {
+            if (product != null)
+            {
                 var productResource = _mapper.Map<Product, ProductResource>(product);
                 return new ProductRes(productResource);
             };
@@ -187,7 +188,7 @@ namespace gearshop_dotnetapp.Services.ProductServices
 
         public IEnumerable<ProductResource> FindByName(string name)
         {
-            var products =  _unitOfWork.ProductRepository.Find(x => x.NormalizedName.Contains(name.ToUpper()))?.ToList();
+            var products = _unitOfWork.ProductRepository.Find(x => x.NormalizedName.Contains(name.ToUpper()))?.ToList();
             if (products == null) return new List<ProductResource>();
             var result = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductResource>>(products);
             return result;
@@ -198,10 +199,10 @@ namespace gearshop_dotnetapp.Services.ProductServices
             var existedProduct = _unitOfWork.ProductRepository.Get(id);
             if (existedProduct != null)
             {
-                if(saveProductResource.Brand != null && saveProductResource.Brand.Name != existedProduct.Brand?.Name)
+                if (saveProductResource.Brand != null && saveProductResource.Brand.Name != existedProduct.Brand?.Name)
                 {
                     var updateBrand = _unitOfWork.BrandRepository.Find(x => x.Name == saveProductResource.Brand.Name)?.FirstOrDefault();
-                    if(updateBrand == null)
+                    if (updateBrand == null)
                     {
                         updateBrand = new Brand() { Name = saveProductResource.Brand.Name };
                         _unitOfWork.BrandRepository.Add(updateBrand);
@@ -218,11 +219,11 @@ namespace gearshop_dotnetapp.Services.ProductServices
                         existedProduct.Category = updateCategory;
                     }
                 }
-                existedProduct.Name= saveProductResource.Name;
-                existedProduct.Description= saveProductResource.Description;
+                existedProduct.Name = saveProductResource.Name;
+                existedProduct.Description = saveProductResource.Description;
                 existedProduct.NormalizedName = saveProductResource.Name.ToUpper();
                 existedProduct.SalePrice = saveProductResource.SalePrice;
-                existedProduct.Price= saveProductResource.Price;
+                existedProduct.Price = saveProductResource.Price;
 
                 var result = _unitOfWork.ProductRepository.Update(existedProduct);
                 await _unitOfWork.CompleteAsync();

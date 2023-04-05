@@ -3,13 +3,13 @@ import { Divider } from "@mui/material"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import Rating from "@mui/material/Rating"
-import { styled, useTheme } from "@mui/material/styles"
 import Typography from "@mui/material/Typography"
+import { styled, useTheme } from "@mui/material/styles"
 import { Stack } from "@mui/system"
+import { useWidth } from "Hooks/width-hook"
 import { useAppDispatch } from "app/hooks"
 import QuantityField from "components/inputField/QuantityField"
-import { cartAction } from "features/cart/cartSlice"
-import { useWidth } from "Hooks/width-hook"
+import { cartSliceAction } from "features/cart/cartSlice"
 import { Product } from "models"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
@@ -40,11 +40,11 @@ const ProductContent = ({ product }: Props) => {
     const [value, setStart] = useState<number | null>(4.5)
     const dispatch = useAppDispatch()
     const width = useWidth()
-
+    const [quantity, setQuantity] = useState(0)
     const onSubmit = (value: IFormState) => {
         if (value.quantity > 0) {
             dispatch(
-                cartAction.addToCart({
+                cartSliceAction.addToCart({
                     product: product,
                     quantity: value.quantity,
                 })
@@ -174,12 +174,17 @@ const ProductContent = ({ product }: Props) => {
             >
                 <Box alignSelf="center" mx={2} my={2} maxWidth={100} border="1px solid">
                     <QuantityField
-                        handleQuantityChange={(value) => setValue("quantity", value)}
+                        handleQuantityChange={(value) => {
+                            if (!(quantity < 1 && value < 0)) {
+                                setValue("quantity", quantity + value)
+                                setQuantity(quantity + value)
+                            }
+                        }}
                         control={control}
                     />
                 </Box>
                 <CustomButton fullWidth variant="contained" size="large" type="submit">
-                    BUY NOW!
+                    ADD TO CART!
                 </CustomButton>
             </Box>
             <ProductDesc desc={product.description} />
