@@ -1,6 +1,6 @@
 import MenuIcon from "@mui/icons-material/Menu"
 import SearchIcon from "@mui/icons-material/Search"
-import { Button, Drawer, Hidden } from "@mui/material"
+import { Button, Drawer, Hidden, Stack } from "@mui/material"
 import Box from "@mui/material/Box"
 import IconButton from "@mui/material/IconButton"
 import Typography from "@mui/material/Typography"
@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "app/hooks"
 import SubHeader from "components/SubHeader"
 import ProfileMenu from "components/common/ProfileMenu"
 import { AuthSliceAction } from "features/authenticate/authSlice"
+import { cartSliceAction } from "features/cart/cartSlice"
 import MiniCart from "features/cart/components/MiniCart"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
@@ -21,6 +22,7 @@ const Header = (props: Props) => {
     const dispatch = useAppDispatch()
     const handleLogout = () => {
         dispatch(AuthSliceAction.logout())
+        dispatch(cartSliceAction.removeAllCartItem())
     }
     const [prevScrollPos, setPrevScrollPos] = useState(0)
     const [visible, setVisible] = useState(true)
@@ -28,8 +30,12 @@ const Header = (props: Props) => {
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollPos = window.pageYOffset
-            setVisible(prevScrollPos > currentScrollPos || window.pageYOffset === 0)
-            setPrevScrollPos(currentScrollPos)
+            if (!window.pageYOffset) {
+                setVisible(true)
+            } else {
+                setVisible(prevScrollPos > currentScrollPos)
+                setPrevScrollPos(currentScrollPos)
+            }
         }
 
         window.addEventListener("scroll", handleScroll)
@@ -107,14 +113,17 @@ const Header = (props: Props) => {
                         color: "text.primary",
                     }}
                 >
-                    <IconButton
-                        sx={{
-                            color: "inherit",
-                        }}
-                    >
-                        <SearchIcon />
-                    </IconButton>
-                    <MiniCart />
+                    <Stack direction="row">
+                        <IconButton
+                            sx={{
+                                color: "inherit",
+                                margin: "auto",
+                            }}
+                        >
+                            <SearchIcon />
+                        </IconButton>
+                        <MiniCart />
+                    </Stack>
                     <ProfileMenu isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
                 </Box>
             </Box>

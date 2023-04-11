@@ -2,7 +2,10 @@
 import { call, fork, put, take } from "@redux-saga/core/effects"
 import { PayloadAction } from "@reduxjs/toolkit"
 import authApi from "ApiClients/AuthApi"
-import { LoginRequest, RegisterRequest } from "models"
+import { cartApi } from "ApiClients/CartApi"
+import { AxiosResponse } from "axios"
+import { CartItems, cartSliceAction } from "features/cart/cartSlice"
+import { CartRes, LoginRequest, RegisterRequest } from "models"
 import { Task } from "redux-saga"
 import { cancel, cancelled, race } from "redux-saga/effects"
 import handleNotify from "utils/Toast-notify"
@@ -13,9 +16,18 @@ function* handleLogin(action: PayloadAction<LoginRequest>): any {
         const { response } = yield race({
             response: yield call(authApi.login, action.payload),
         })
-
         yield put(AuthSliceAction.success(response.data))
         yield call(handleNotify.success, "Login is successfully!")
+        try {
+            const result: AxiosResponse<CartRes> = yield call(cartApi.getCart)
+            const carts: CartItems[] = result.data.items.map((x) => ({
+                quantity: x.quantity,
+                product: x.product,
+            }))
+            yield put(cartSliceAction.getCartSuccess(carts))
+        } catch (error) {
+            yield put(cartSliceAction.handleReqFailure(error as string))
+        }
     } catch (error) {
         yield put(AuthSliceAction.failed(error as string))
     } finally {
@@ -31,7 +43,16 @@ function* handleRegister(action: PayloadAction<RegisterRequest>): any {
         const { result } = yield race({
             result: call(authApi.register, action.payload),
         })
-
+        try {
+            const result: AxiosResponse<CartRes> = yield call(cartApi.getCart)
+            const carts: CartItems[] = result.data.items.map((x) => ({
+                quantity: x.quantity,
+                product: x.product,
+            }))
+            yield put(cartSliceAction.getCartSuccess(carts))
+        } catch (error) {
+            yield put(cartSliceAction.handleReqFailure(error as string))
+        }
         yield put(AuthSliceAction.success(result.data))
         yield call(handleNotify.success, "Register is successfully!")
     } catch (error) {
@@ -61,6 +82,7 @@ function* watchLogingFlow() {
             AuthSliceAction.logout.type,
             AuthSliceAction.failed.type,
         ])
+
         if (action === AuthSliceAction.logout.type) {
             yield cancel(task)
         }
@@ -77,6 +99,7 @@ function* watchRegisterFlow() {
             AuthSliceAction.failed.type,
             AuthSliceAction.logout.type,
         ])
+
         if (action === AuthSliceAction.logout.type) {
             yield cancel(task)
         }

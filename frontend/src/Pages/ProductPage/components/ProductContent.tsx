@@ -7,13 +7,16 @@ import Typography from "@mui/material/Typography"
 import { styled, useTheme } from "@mui/material/styles"
 import { Stack } from "@mui/system"
 import { useWidth } from "Hooks/width-hook"
-import { useAppDispatch } from "app/hooks"
+import { useAppDispatch, useAppSelector } from "app/hooks"
 import QuantityField from "components/inputField/QuantityField"
+import { selectLogin } from "features/authenticate/authSlice"
 import { cartSliceAction } from "features/cart/cartSlice"
 import { Product } from "models"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
 import ProductDesc from "./ProductDesc"
+import handleNotify from "utils/Toast-notify"
 type Props = {
     product: Product
 }
@@ -39,9 +42,15 @@ const ProductContent = ({ product }: Props) => {
     const theme = useTheme()
     const [value, setStart] = useState<number | null>(4.5)
     const dispatch = useAppDispatch()
+    const isLogged = useAppSelector(selectLogin)
+    const navigate = useNavigate()
     const width = useWidth()
     const [quantity, setQuantity] = useState(0)
     const onSubmit = (value: IFormState) => {
+        if (!isLogged) {
+            handleNotify.warn("Please login to add products to cart!")
+            return navigate("/auth")
+        }
         if (value.quantity > 0) {
             dispatch(
                 cartSliceAction.addToCart({

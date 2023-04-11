@@ -27,6 +27,7 @@ function MiniCart() {
                         onClick={handleClick}
                         sx={{
                             color: "inherit",
+                            margin: "auto",
                         }}
                     >
                         <Badge badgeContent={carts.length} color="primary">

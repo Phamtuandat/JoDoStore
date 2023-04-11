@@ -36,14 +36,16 @@ const cartSlice = createSlice({
             } else {
                 state.cartItems.push(newItem)
             }
-            handleNotify.success(`successfully added to cart!`)
+            handleNotify.success(`successfully added to cart!`, {})
         },
         getCart(state) {
             state.processing = true
+            state.error = null
         },
         getCartSuccess(state, action: PayloadAction<CartItems[]>) {
             state.processing = false
             state.cartItems = action.payload
+            state.error = null
         },
 
         handleReqFailure(state, action: PayloadAction<string>) {

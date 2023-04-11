@@ -1,13 +1,13 @@
 import { Box, Container, Grid, Hidden } from "@mui/material"
 import { useAppSelector } from "app/hooks"
 import { MainLayout } from "components/Layout/MainLayout"
-import { selectIsLogin } from "features/authenticate/authSlice"
+import { selectLogin } from "features/authenticate/authSlice"
 import { useEffect } from "react"
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import UserNav from "./Components/UserNav"
 
 const UserPage = () => {
-    const isloggIn = useAppSelector(selectIsLogin)
+    const isloggIn = useAppSelector(selectLogin)
     const navigate = useNavigate()
     const location = useLocation()
     useEffect(() => {

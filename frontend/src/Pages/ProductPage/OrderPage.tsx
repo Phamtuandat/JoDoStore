@@ -60,6 +60,7 @@ const OrderPage = (props: Props) => {
                 quantity,
             })
         )
+        toast.dismiss()
         console.log(product, quantity)
     }
     const handleRemoveCartItem = (id: number) => {
@@ -140,10 +141,11 @@ const OrderPage = (props: Props) => {
                                                     >
                                                         <Box display="flex">
                                                             <Hidden smUp>
-                                                                <Box>
+                                                                <Box flexGrow={0}>
                                                                     <CardMedia
                                                                         component="img"
                                                                         height="80px"
+                                                                        width="80px"
                                                                         image={
                                                                             cart.product
                                                                                 .thumbnails[0]
@@ -418,12 +420,12 @@ const OrderPage = (props: Props) => {
                             <Box mt="auto">
                                 <Box
                                     component={Link}
-                                    to="/"
+                                    to="/shop"
                                     sx={{
                                         textDecoration: "none",
                                     }}
                                 >
-                                    <Button variant="outlined">Go to Home Page</Button>
+                                    <Button variant="outlined">Shop Now!</Button>
                                 </Box>
                             </Box>
                         </Box>

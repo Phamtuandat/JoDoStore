@@ -18,9 +18,9 @@ function App() {
         JSON.parse(JSON.parse(localStorage.getItem("persist:root") as string)?.auth).isLoggedIn
     useEffect(() => {
         if (!ignore.current) {
-            dispatch(cartSliceAction.getCart())
             if (isLoggedIn) {
                 ignore.current = true
+                dispatch(cartSliceAction.getCart())
                 ;(async () => {
                     try {
                         var result = (await authApi.refreshCookie()).data
@@ -33,7 +33,6 @@ function App() {
             }
         }
     }, [])
-
     return (
         <ColorModeContext>
             <RouterProvider router={router} />

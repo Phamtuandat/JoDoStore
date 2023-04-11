@@ -55,7 +55,7 @@ const AuthSlice = createSlice({
 export const AuthSliceAction = AuthSlice.actions
 
 //export selector
-export const selectIsLogin = (state: RootState) => state.auth.isLoggedIn
+export const selectLogin = (state: RootState) => state.auth.isLoggedIn
 export const selectIsLogging = (state: RootState) => state.auth.processing
 export const selectCurrentUser = (state: RootState) => state.auth.currentUser
 

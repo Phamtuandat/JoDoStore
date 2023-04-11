@@ -14,7 +14,7 @@ export const MainLayout = (props: IProps) => {
         <Box display="flex" flexDirection="column" bgcolor={theme.palette.background.default}>
             <ToastContainer
                 position="bottom-right"
-                autoClose={2500}
+                autoClose={1000}
                 hideProgressBar={true}
                 newestOnTop={false}
                 closeOnClick
@@ -23,6 +23,7 @@ export const MainLayout = (props: IProps) => {
                 draggable
                 pauseOnHover
                 theme={theme.palette.mode}
+                limit={1}
             />
             <Box flexDirection="column" display="flex" color="text.primary">
                 <Header />

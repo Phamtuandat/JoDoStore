@@ -7,7 +7,7 @@ import Paper from "@mui/material/Paper"
 import { useTheme } from "@mui/material/styles"
 import { useAppDispatch, useAppSelector } from "app/hooks"
 import { Product } from "models"
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import { cartTotalSelector } from "../cartSelector"
 import { CartItems, cartSliceAction } from "../cartSlice"
 type Props = {
@@ -18,6 +18,7 @@ const CartReview = ({ carts }: Props) => {
     const theme = useTheme()
     const subTotal = useAppSelector(cartTotalSelector)
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
 
     const handleRemoveItem = (product: Product) => {
         dispatch(cartSliceAction.removeFromCart(product.id))
@@ -56,7 +57,12 @@ const CartReview = ({ carts }: Props) => {
                     }}
                 >
                     {carts.map((cart, i) => (
-                        <Box key={+cart.product.id + i}>
+                        <Box
+                            key={+cart.product.id + i}
+                            sx={{
+                                cursor: "pointer",
+                            }}
+                        >
                             <ListItem>
                                 <Box
                                     display="flex"
@@ -107,6 +113,9 @@ const CartReview = ({ carts }: Props) => {
                                             borderRadius: "8px",
                                             mr: 1,
                                         }}
+                                        onClick={(e) => {
+                                            navigate(`/product/${cart.product.id}`)
+                                        }}
                                     />
                                     <Box
                                         display="flex"
@@ -116,6 +125,9 @@ const CartReview = ({ carts }: Props) => {
                                             width: { xs: "64px", sm: "240px" },
                                         }}
                                         height="100%"
+                                        onClick={(e) => {
+                                            navigate(`/product/${cart.product.id}`)
+                                        }}
                                     >
                                         <Typography
                                             fontWeight={700}
@@ -177,6 +189,7 @@ const CartReview = ({ carts }: Props) => {
                             variant="contained"
                             color="secondary"
                             sx={{ fontWeight: 700 }}
+                            onClick={(e) => e.preventDefault()}
                         >
                             vewiew cart
                         </Button>
