@@ -124,7 +124,18 @@ const Header = (props: Props) => {
                         </IconButton>
                         <MiniCart />
                     </Stack>
-                    <ProfileMenu isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+                    {isLoggedIn ? (
+                        <ProfileMenu isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+                    ) : (
+                        <Box
+                            component={Link}
+                            to="/auth"
+                            display="flex"
+                            sx={{ textDecoration: "none" }}
+                        >
+                            <Button> Login </Button>
+                        </Box>
+                    )}
                 </Box>
             </Box>
         </Box>

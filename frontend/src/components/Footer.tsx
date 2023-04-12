@@ -9,7 +9,6 @@ import {
     TextField,
     Typography,
     useTheme,
-    Container,
 } from "@mui/material"
 import Grid from "@mui/material/Unstable_Grid2"
 import { useState } from "react"
@@ -67,115 +66,121 @@ const Footer = () => {
         </Grid>
     ))
     return (
-        <Container maxWidth="lg" sx={{ mt: 20 }}>
-            <Box sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
+        <Box
+            sx={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                bgcolor: "background.default",
+                color: "text.primary",
+                pt: 20,
+            }}
+        >
+            <Box
+                sx={{
+                    width: {
+                        lg: "960px",
+                        md: "720px",
+                        sm: "540px",
+                    },
+                }}
+            >
                 <Box
                     sx={{
-                        width: {
-                            lg: "960px",
-                            md: "720px",
-                            sm: "540px",
+                        borderRadius: 3,
+                        backgroundImage:
+                            "url(https://new.axilthemes.com/demo/template/etrade/assets/images/bg/bg-image-5.jpg)",
+                        padding: {
+                            xs: "60px 20px 40px", // theme.breakpoints.up('xs')
+                            md: "80px 30px 65px", // theme.breakpoints.up('sm')
+                            lg: "100px 107px 85px", // theme.breakpoints.up('md')
                         },
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
                     }}
                 >
-                    <Box
-                        sx={{
-                            borderRadius: 3,
-                            backgroundImage:
-                                "url(https://new.axilthemes.com/demo/template/etrade/assets/images/bg/bg-image-5.jpg)",
-                            padding: {
-                                xs: "60px 20px 40px", // theme.breakpoints.up('xs')
-                                md: "80px 30px 65px", // theme.breakpoints.up('sm')
-                                lg: "100px 107px 85px", // theme.breakpoints.up('md')
-                            },
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                        }}
-                    >
-                        <Box display="flex" flexDirection="column" color={"#3577f0"}>
-                            <Box display="flex">
-                                <Box
-                                    sx={{
-                                        borderRadius: "100%",
-                                        backgroundColor: "#3577f0",
-                                        color: "whitesmoke",
-                                        display: "block",
-                                        lineHeight: 0,
-                                        padding: "2px",
-                                    }}
-                                >
-                                    <MailOutlineOutlinedIcon />
-                                </Box>
-                                <Box ml={2} component="span">
-                                    Newsletter
-                                </Box>
+                    <Box display="flex" flexDirection="column" color={"#3577f0"}>
+                        <Box display="flex">
+                            <Box
+                                sx={{
+                                    borderRadius: "100%",
+                                    backgroundColor: "#3577f0",
+                                    color: "whitesmoke",
+                                    display: "block",
+                                    lineHeight: 0,
+                                    padding: "2px",
+                                }}
+                            >
+                                <MailOutlineOutlinedIcon />
                             </Box>
-                            <Typography
-                                variant="h4"
-                                sx={{
-                                    my: 2,
-                                    wordBreak: "break-word",
-                                    lineHeight: 1.3,
-                                    color: "#292930",
-                                }}
-                            >
-                                Get weekly update
-                            </Typography>
-                            <Paper
-                                sx={{
-                                    maxWidth: "390px",
-                                    backgroundColor: "white",
-                                    borderRadius: 2,
-                                    minWidth: "342px",
-                                }}
-                            >
-                                <TextField
-                                    onFocus={() => setState(true)}
-                                    onBlur={() => setState(false)}
-                                    color="primary"
-                                    id="outlined-basic"
-                                    variant="filled"
-                                    size="medium"
-                                    sx={{
-                                        "& > :not(style)": { color: "black" },
-                                    }}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment
-                                                position="start"
-                                                sx={{ color: theme.palette.primary.main }}
-                                            >
-                                                <Box mr={2}>
-                                                    <EmailIcon />
-                                                </Box>
-                                                {!state && (
-                                                    <Box component="span">example@gmail.com</Box>
-                                                )}
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                    fullWidth
-                                />
-                            </Paper>
+                            <Box ml={2} component="span">
+                                Newsletter
+                            </Box>
                         </Box>
+                        <Typography
+                            variant="h4"
+                            sx={{
+                                my: 2,
+                                wordBreak: "break-word",
+                                lineHeight: 1.3,
+                                color: "#292930",
+                            }}
+                        >
+                            Get weekly update
+                        </Typography>
+                        <Paper
+                            sx={{
+                                maxWidth: "390px",
+                                backgroundColor: "white",
+                                borderRadius: 2,
+                                minWidth: "342px",
+                            }}
+                        >
+                            <TextField
+                                onFocus={() => setState(true)}
+                                onBlur={() => setState(false)}
+                                color="primary"
+                                id="outlined-basic"
+                                variant="filled"
+                                size="medium"
+                                sx={{
+                                    "& > :not(style)": { color: "black" },
+                                }}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment
+                                            position="start"
+                                            sx={{ color: theme.palette.primary.main }}
+                                        >
+                                            <Box mr={2}>
+                                                <EmailIcon />
+                                            </Box>
+                                            {!state && (
+                                                <Box component="span">example@gmail.com</Box>
+                                            )}
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                fullWidth
+                            />
+                        </Paper>
                     </Box>
                 </Box>
-
-                <Box sx={{ flexGrow: 2, my: 5 }} width="100%">
-                    <Grid container spacing={1} justifyContent="space-between">
-                        {Item}
-                    </Grid>
-                </Box>
-                <CardContent sx={{ display: "flex", flexDirection: "column", textAlign: "center" }}>
-                    <Typography gutterBottom variant="h5" component="div">
-                        Support
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Tap Phuoc, Long Phuoc, Long Thanh, Dong Nai, Viet Nam.
-                    </Typography>
-                </CardContent>
             </Box>
-        </Container>
+            <Box sx={{ flexGrow: 2, my: 5 }} width="100%">
+                <Grid container spacing={1} justifyContent="space-between">
+                    {Item}
+                </Grid>
+            </Box>
+            <CardContent sx={{ display: "flex", flexDirection: "column", textAlign: "center" }}>
+                <Typography gutterBottom variant="h5" component="div">
+                    Support
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    Tap Phuoc, Long Phuoc, Long Thanh, Dong Nai, Viet Nam.
+                </Typography>
+            </CardContent>
+        </Box>
     )
 }
 

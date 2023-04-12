@@ -17,13 +17,6 @@ import qs from "qs"
 import { useEffect, useMemo, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-type params = {
-    orderBy: string
-    filter?: { [key: string]: any }
-    top: number
-    skip: number
-}
-
 type orderDetail = {
     id: string | number
     customer: string

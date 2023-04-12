@@ -20,7 +20,6 @@ namespace gearshop_dotnetapp.Models.Identity
 #pragma warning restore CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
         public virtual ICollection<Order>? Orders { get; set; }
         public virtual Cart? Cart { get; set; }
-
     }
 
 }

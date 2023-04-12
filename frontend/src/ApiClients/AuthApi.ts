@@ -26,5 +26,9 @@ const authApi = {
         const url = "User/Admin"
         return axiosClient.post(url)
     },
+    confirmEmail() {
+        const url = "User/confirmReq"
+        return axiosClient.post(url)
+    },
 }
 export default authApi

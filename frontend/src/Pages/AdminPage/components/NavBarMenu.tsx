@@ -105,6 +105,13 @@ const NavBarMenu = ({ onClose }: Props) => {
                     menu="UI "
                     nestedItemList={[]}
                 />
+                <Divider />
+                <NestedMenuItem
+                    to="coupon"
+                    icon={<FilterVintageIcon />}
+                    menu="Coupon Management "
+                    nestedItemList={[]}
+                />
             </List>
         </Box>
     )

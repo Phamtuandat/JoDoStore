@@ -7,6 +7,7 @@ export interface AuthenticateInfo {
     phoneNumber?: string
     birthday?: string
     gender?: "Male" | "Female" | "Order"
+    emailConfirmed: boolean
 }
 export type editForm = {
     firstName: string

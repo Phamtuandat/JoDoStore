@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    ButtonBase,
     CircularProgress,
     Divider,
     Grid,
@@ -18,6 +19,8 @@ import { useState } from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { useForm } from "react-hook-form"
+import handleNotify from "utils/Toast-notify"
+import { useTheme } from "@mui/material/styles"
 
 const ManagerProfile = () => {
     const [editMode, setMode] = useState(false)
@@ -25,6 +28,7 @@ const ManagerProfile = () => {
     const dispatch = useAppDispatch()
     const currentUser = useAppSelector(selectCurrentUser)
     const [startDate, setStartDate] = useState(new Date(currentUser?.birthday || ""))
+    const theme = useTheme()
     const { handleSubmit, control, setValue } = useForm<editForm>({
         defaultValues: {
             firstName: currentUser?.firstName,
@@ -53,6 +57,19 @@ const ManagerProfile = () => {
             setMode(false)
         }
         setLoading(false)
+    }
+    const handleConfirm = async (value: string | undefined) => {
+        if (value) {
+            setLoading(true)
+            try {
+                await authApi.confirmEmail()
+                setLoading(false)
+                handleNotify.warn("Please Check your mail to confirm!")
+            } catch (error) {
+                console.log(error)
+                setLoading(false)
+            }
+        }
     }
     return (
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
@@ -131,14 +148,39 @@ const ManagerProfile = () => {
                                     xl={4}
                                     md={4}
                                 >
-                                    <Typography
-                                        sx={{
-                                            opacity: 0.8,
-                                        }}
-                                        variant="caption"
-                                    >
-                                        Email Address
-                                    </Typography>
+                                    <Stack spacing={1} direction="row">
+                                        <Typography
+                                            sx={{
+                                                opacity: 0.8,
+                                            }}
+                                            variant="caption"
+                                        >
+                                            Email Address
+                                        </Typography>
+                                        <Divider orientation="vertical" variant="middle" flexItem />
+                                        {currentUser?.emailConfirmed ? (
+                                            <Typography
+                                                sx={{
+                                                    opacity: 0.8,
+                                                    flexGrow: 1,
+                                                    color: theme.palette.success.main,
+                                                }}
+                                                variant="caption"
+                                            >
+                                                Email Confirmed
+                                            </Typography>
+                                        ) : (
+                                            <ButtonBase
+                                                onClick={() => handleConfirm(currentUser?.email)}
+                                                disabled={loading}
+                                                sx={{
+                                                    color: "red",
+                                                }}
+                                            >
+                                                Confirm
+                                            </ButtonBase>
+                                        )}
+                                    </Stack>
                                     <Typography mt={2}>{currentUser?.email}</Typography>
                                 </Grid>
                                 <Grid

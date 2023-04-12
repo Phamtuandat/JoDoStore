@@ -2,8 +2,10 @@
 using gearshop_dotnetapp.Data;
 using gearshop_dotnetapp.Models.Identity;
 using gearshop_dotnetapp.Repositories;
+using gearshop_dotnetapp.Services.EmailService;
 using gearshop_dotnetapp.Services.OrderServices;
 using gearshop_dotnetapp.Services.ProductServices;
+using gearshop_dotnetapp.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -52,7 +54,10 @@ builder.Services.AddDbContext<DataContext>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+{
+    options.TokenLifespan = TimeSpan.FromDays(1);
+});
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -61,9 +66,11 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
-    options.User.RequireUniqueEmail = true;  
+    options.User.RequireUniqueEmail = true;
     options.SignIn.RequireConfirmedEmail = false;
-}).AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders(); 
+}).AddEntityFrameworkStores<DataContext>()
+.AddDefaultTokenProviders()
+.AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultEmailProvider);
 builder.Services.ConfigureApplicationCookie(options =>
 {
     // Cookie settings
@@ -81,6 +88,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IBrandService, BrandService>();
@@ -88,6 +97,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IAddredssService, AddressService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -109,9 +119,9 @@ builder.Services.AddCors(options =>
             {
                 policy.WithOrigins("http://localhost:3000",
                                     "http://localhost:3000").AllowCredentials().AllowAnyMethod().AllowAnyHeader().AllowCredentials().WithExposedHeaders("X-Pagination-Total-Count");
-}
-                policy.WithOrigins("https://phamtuandat.click",
-                                    "https://phamtuandat.click").AllowCredentials().AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+            }
+            policy.WithOrigins("https://phamtuandat.click",
+                                "https://phamtuandat.click").AllowCredentials().AllowAnyMethod().AllowAnyHeader().AllowCredentials();
         });
 });
 

@@ -3,6 +3,8 @@ using Backend.Extentions;
 using gearshop_dotnetapp.Enums;
 using gearshop_dotnetapp.Models.Identity;
 using gearshop_dotnetapp.Resources;
+using gearshop_dotnetapp.Services.EmailService;
+using MailKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,13 +22,17 @@ namespace gearshop_dotnetapp.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
+        private readonly IWebHostEnvironment _env;
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper, RoleManager<IdentityRole> roleManager, AuthenticatorTokenProvider<User> authenticatorTokenProvider) 
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper, RoleManager<IdentityRole> roleManager, AuthenticatorTokenProvider<User> authenticatorTokenProvider, IEmailService emailService, IWebHostEnvironment env)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;
             _roleManager = roleManager;
+            _emailService = emailService;
+            _env = env;
         }
 
         [HttpPost("login")]
@@ -114,7 +120,7 @@ namespace gearshop_dotnetapp.Controllers
             if (user != null) return Unauthorized("Email has already existed!");
             user = _mapper.Map<RegisterResource, User>(model);
             var result = await _userManager.CreateAsync(user, model.Password);
-            var roleName = "Admin";
+            var roleName = "Customer";
             var roleExists = await _roleManager.RoleExistsAsync(roleName);
 
             if (!roleExists)
@@ -127,6 +133,28 @@ namespace gearshop_dotnetapp.Controllers
                 await _signInManager.SignInAsync(user, isPersistent: true);
                 var userResource = _mapper.Map<User, UserResource>(user);
                 await _userManager.AddToRoleAsync(user, roleName);
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var confirmationLink = string.Empty;
+                if (_env.IsDevelopment())
+                {
+                    confirmationLink = Url.Action("ConfirmEmail", "User",
+                        new { userId = user.Id, token },
+                        protocol: HttpContext.Request.Scheme);
+                }
+                else
+                {
+                    confirmationLink = Url.Action
+                       (
+                           "ConfirmEmail", "User",
+                           new { userId = user.Id, token },
+                           protocol: "https",
+                           host: "phamtuandat.click"
+                       );
+                }
+                if (confirmationLink != null)
+                {
+                    await _emailService.SendEmailAsync(new ConfirmEmailRequest() { ToEmail = user.Email, UserName = user.Email, ComfirmEmailLink = confirmationLink });
+                }
                 return Ok(userResource);
             }
             foreach (var error in result.Errors)
@@ -162,10 +190,10 @@ namespace gearshop_dotnetapp.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Admin()
         {
-            
+
             var userContext = HttpContext.User;
             var user = await _userManager.GetUserAsync(userContext);
-            if(user == null)
+            if (user == null)
             {
                 await _signInManager.SignOutAsync();
                 return Unauthorized();
@@ -177,7 +205,81 @@ namespace gearshop_dotnetapp.Controllers
             }
             return Unauthorized();
         }
+        [HttpPost("confirmReq")]
+        public async Task<IActionResult> SendWelcomeMail()
+        {
+            var userContext = HttpContext.User;
+            var user = await _userManager.GetUserAsync(userContext);
+            if (user == null)
+            {
+                await _signInManager.SignOutAsync();
+                return Unauthorized();
+            }
+            if (_signInManager.IsSignedIn(userContext))
+            {
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
+                var confirmationLink = string.Empty;
+                if (_env.IsDevelopment())
+                {
+                    confirmationLink = Url.Action("ConfirmEmail", "User",
+                        new { userId = user.Id, token },
+                        protocol: HttpContext.Request.Scheme);
+                }
+                else
+                {
+                    confirmationLink = Url.Action
+                       (
+                           "ConfirmEmail", "User",
+                           new { userId = user.Id, token },
+                           protocol: "https",
+                           host: "phamtuandat.click"
+                       );
+                }
+                if (confirmationLink != null)
+                {
+                    await _emailService.SendEmailAsync(new ConfirmEmailRequest() { ToEmail = user.Email, UserName = user.Email, ComfirmEmailLink = confirmationLink });
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            return Unauthorized();
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return BadRequest("User ID or token is missing.");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                string redirectUrl;
+                await _signInManager.SignInAsync(user, isPersistent: true);
+                if (_env.IsDevelopment())
+                {
+                    redirectUrl = "http://localhost:3000/";
+                }
+                else
+                {
+                    redirectUrl = "https://phamtuandat.click/user";
+                }
+                return Redirect(redirectUrl);
+            }
+
+            return BadRequest("Email confirmation failed.");
+        }
 
     }
 }

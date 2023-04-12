@@ -2,10 +2,12 @@ import authApi from "ApiClients/AuthApi"
 import { productApi } from "ApiClients/ProductApi"
 import AdminPage from "Pages/AdminPage/AdminPage"
 import AnalyticsPage from "Pages/AdminPage/Analytics/AnalyticsPage"
+import Coupon from "Pages/AdminPage/Coupon/Coupon"
 import OrderListPage from "Pages/AdminPage/OrderListPage/OrderListPage"
 import ProductPage from "Pages/AdminPage/Product"
 import AddProductPage from "Pages/AdminPage/Product/AddProductPage"
 import EditPage from "Pages/AdminPage/Product/EditPage"
+import ListProduct from "Pages/AdminPage/Product/ListProduct"
 import EditForm from "Pages/AdminPage/Product/ProductComponent/EditForm"
 import UIPage from "Pages/AdminPage/UiPage/UIPage"
 import HomePage from "Pages/HomePage/HomePage"
@@ -115,7 +117,7 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "/admin/product/list",
-                        element: <ProductShopPage />,
+                        element: <ListProduct />,
                     },
                 ],
             },
@@ -132,6 +134,11 @@ const router = createBrowserRouter([
             {
                 path: "/admin/uiPage",
                 element: <UIPage />,
+                children: [],
+            },
+            {
+                path: "/admin/coupon",
+                element: <Coupon />,
                 children: [],
             },
         ],

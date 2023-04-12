@@ -13,6 +13,7 @@ namespace gearshop_dotnetapp.Resources
         public DateOnly Birthday { get; set; }
         public string? Gender { get; set; }
         public CartResource? Cart { get; set; }
+        public bool EmailConfirmed { get; set; }
     }
 
 }
