@@ -13,10 +13,6 @@ namespace gearshop_dotnetapp.Repositories
         {
             return base.All().Include(p => p.Thumbnails).Include(p => p.Category).Include(p => p.Brand).Include(p => p.Tags);
         }
-        public override Product? Get(int id)
-        {
-            return base.Get(id);
-        }
-
+        
     }
 }

@@ -4,13 +4,15 @@ import { Hidden } from "@mui/material"
 import Button from "@mui/material/Button"
 import { styled } from "@mui/material/styles"
 import { Box } from "@mui/system"
-import { useAppDispatch, useAppSelector } from "app/hooks"
-import { ProductItem } from "components/product"
-import { productListSelector, ProductSliceActions } from "features/ListProduct/listProductSlice"
-import { motion, Variants } from "framer-motion"
+import { productApi } from "ApiClients/ProductApi"
 import { useWidth } from "Hooks/width-hook"
-import { useEffect, useRef } from "react"
-import { Grid, Navigation, Pagination } from "swiper"
+import { useAppDispatch } from "app/hooks"
+import { ProductItem } from "components/product"
+import { Variants, motion } from "framer-motion"
+import { Product } from "models"
+import buildQuery, { Filter } from "odata-query"
+import { useEffect, useRef, useState } from "react"
+import { Navigation, Pagination } from "swiper"
 import "swiper/css"
 import "swiper/css/grid"
 import "swiper/css/pagination"
@@ -39,20 +41,23 @@ const ListProductSale = (props: Props) => {
     const dispatch = useAppDispatch()
     const width = useWidth()
     const ignore = useRef(false)
-    const productList = useAppSelector(productListSelector)
+    const [productList, setProductList] = useState<Product[]>([])
 
     useEffect(() => {
         if (!ignore.current) {
             ignore.current = true
-            dispatch(
-                ProductSliceActions.getList({
-                    filter: {
-                        not: {
-                            name: "Banner",
+            ;(async () => {
+                const filter: Filter = {
+                    tags: {
+                        any: {
+                            name: "In Stock",
                         },
                     },
-                })
-            )
+                }
+                const param = buildQuery({ filter })
+                const res = await productApi.getList(param)
+                setProductList(res.data)
+            })()
         }
     }, [dispatch])
 

@@ -1,16 +1,13 @@
 import { Box, Grid } from "@mui/material"
-import { useAppSelector } from "app/hooks"
 import { ListPageProgress, ProductItem } from "components/product"
-import { processingSeclector, productListSelector } from "features/ListProduct/listProductSlice"
+import { Product } from "models"
 
 type Props = {
-    debouce?: boolean
+    productList: Product[]
+    isLoading: boolean
 }
 
-const ListPage = ({ debouce }: Props) => {
-    const productList = useAppSelector(productListSelector)
-    const isLoading = useAppSelector(processingSeclector)
-
+const ListPage = ({ productList, isLoading }: Props) => {
     return (
         <Box
             sx={{
@@ -20,10 +17,10 @@ const ListPage = ({ debouce }: Props) => {
                 mt: { xs: 2, md: 2 },
             }}
         >
-            {!isLoading && !debouce ? (
+            {!isLoading ? (
                 <Grid container spacing={{ xs: 1, md: 4 }}>
                     {productList.map((product) => (
-                        <Grid item lg={3} md={4} sm={4} xs={6} key={product.id}>
+                        <Grid item lg={4} md={4} sm={4} xs={6} key={product.id}>
                             <Box
                                 sx={{
                                     borderTopRightRadius: "10px",

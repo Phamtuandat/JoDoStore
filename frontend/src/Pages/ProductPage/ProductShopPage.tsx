@@ -1,24 +1,29 @@
 import FilterAltIcon from "@mui/icons-material/FilterAlt"
 import { Box, Container, Divider, Drawer, Hidden, IconButton, Stack } from "@mui/material"
+import { productApi } from "ApiClients/ProductApi"
 import { useAppDispatch } from "app/hooks"
 import { MainLayout } from "components/Layout/MainLayout"
-import { ProductSliceActions } from "features/ListProduct/listProductSlice"
+import { debounce } from "lodash"
+import { ListParams, Product } from "models"
+import buildQuery from "odata-query"
 import qs from "qs"
 import { useEffect, useMemo, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
+import handleNotify from "utils/Toast-notify"
 import ListPage from "./components/ListPage"
 import MenuFilterOption from "./components/MenuFilter"
 import ProductSort from "./components/ProductSort"
-import { debounce } from "lodash"
 export type Params = {
     gt: number
     lt: number
     category: { name: { in: string[] } } | undefined
     brand: { name: { in: string[] } } | undefined
     orderBy?: string
+    top: number
 }
 const ProductShopPage = () => {
-    const [isDebouce, setDebouce] = useState(false)
+    const [productList, setProductList] = useState<Product[]>([])
+    const [isLoading, setLoading] = useState(false)
     const navigate = useNavigate()
     const location = useLocation()
     const dispatch = useAppDispatch()
@@ -29,6 +34,7 @@ const ProductShopPage = () => {
         category: { name: { in: [] } },
         brand: { name: { in: [] } },
         orderBy: "salePrice desc",
+        top: 9,
     })
 
     const handleClose = () => {
@@ -47,7 +53,7 @@ const ProductShopPage = () => {
     }, [location.search])
 
     useEffect(() => {
-        setDebouce(true)
+        setLoading(true)
         const param = {
             filter: {
                 category: queryParam.category as { name: { in: string[] } },
@@ -55,6 +61,7 @@ const ProductShopPage = () => {
                 salePrice: { gt: queryParam.gt, lt: queryParam.lt },
             },
             orderBy: queryParam.orderBy as string,
+            top: 9,
         }
         setParams({
             brand: {
@@ -66,18 +73,25 @@ const ProductShopPage = () => {
             gt: param.filter.salePrice?.gt || 30,
             lt: param.filter.salePrice?.lt || 3000,
             orderBy: param.orderBy || "salePrice desc",
+            top: 9,
         })
         const debouncedEffect = debounce(() => {
-            dispatch(ProductSliceActions.getList(param))
-            dispatch(ProductSliceActions.setFilter(param))
-            setDebouce(false)
-        }, 1000)
+            search(param)
+        }, 200)
         debouncedEffect()
         return () => debouncedEffect.cancel()
-        // dispatch(ProductSliceActions.getList(param))
-        // dispatch(ProductSliceActions.setFilter(param))
     }, [queryParam, dispatch])
-
+    const search = async (value: ListParams) => {
+        try {
+            const param = buildQuery(value)
+            const res = await productApi.getList(param)
+            setProductList(res.data)
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            handleNotify.error(error as string)
+        }
+    }
     const handleFilterChange = (value: Params) => {
         const newParam = {
             ...param,
@@ -159,7 +173,7 @@ const ProductShopPage = () => {
                                     boxShadow: "rgba(33, 35, 38, 0.1) 0px 10px 10px -10px",
                                 }}
                             />
-                            <ListPage debouce={isDebouce} />
+                            <ListPage isLoading={isLoading} productList={productList} />
                         </Box>
                     </Stack>
                 </Box>

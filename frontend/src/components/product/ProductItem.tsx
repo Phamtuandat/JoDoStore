@@ -49,7 +49,7 @@ export const ProductItem = ({ product }: Props) => {
             onMouseLeave={() => setCheck((prv) => !prv)}
         >
             <Box
-                height={{ xs: 220, sm: 250 }}
+                height={{ xs: 150, sm: 240, md: 260, lg: 350 }}
                 overflow="hidden"
                 onClick={() => handleClick(product.id)}
                 display="flex"

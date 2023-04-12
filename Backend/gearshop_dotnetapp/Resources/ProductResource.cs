@@ -1,5 +1,4 @@
-﻿using gearshop_dotnetapp.Models.ProductModel;
-
+﻿
 namespace gearshop_dotnetapp.Resources
 {
     public class ProductResource
@@ -12,8 +11,9 @@ namespace gearshop_dotnetapp.Resources
         public ICollection<PhotoResource> Thumbnails { get; set; } = new List<PhotoResource>();
         public int Price { get; set; }
         public int SalePrice { get; set; }
-        public ICollection<Tag> Tags { get; set; } = new List<Tag>();
+        public ICollection<TagResource> Tags { get; set; } = new List<TagResource>();
         public string NormalizedName { get; set; } = string.Empty;
+
         public DateTime CreateAt = DateTime.UtcNow;
     }
 }

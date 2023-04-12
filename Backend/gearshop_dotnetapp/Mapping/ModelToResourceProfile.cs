@@ -23,6 +23,7 @@ namespace gearshop_dotnetapp.Mapping
             CreateMap<Order, OrderResource>().ForMember(dest => dest.Status, opt => opt.MapFrom<OrderValueResolver>()).ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.FirstName + " " + src.User.LastName));
             CreateMap<CartItem, CartItemResource>();
             CreateMap<Cart, CartResource>();
+            CreateMap<Tag, TagResource>();
         }
     }
 }
