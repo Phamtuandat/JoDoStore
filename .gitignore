@@ -368,3 +368,5 @@ FodyWeavers.xsd
 /docker-compose.override.yml
 /docker-compose.yml
 /frontend/.env.production
+/Backend/.dockerignore
+/Backend/gearshop_dotnetapp/appsettings.json
