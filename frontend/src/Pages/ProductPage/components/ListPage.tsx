@@ -11,10 +11,9 @@ const ListPage = ({ productList, isLoading }: Props) => {
     return (
         <Box
             sx={{
-                width: "100%",
-                height: "100%",
                 p: { xs: 0, md: 2 },
-                mt: { xs: 2, md: 2 },
+                mt: 2,
+                mb: 6,
             }}
         >
             {!isLoading ? (

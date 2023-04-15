@@ -1,5 +1,14 @@
 import FilterAltIcon from "@mui/icons-material/FilterAlt"
-import { Box, Container, Divider, Drawer, Hidden, IconButton, Stack } from "@mui/material"
+import {
+    Box,
+    Container,
+    Divider,
+    Drawer,
+    Hidden,
+    IconButton,
+    Pagination,
+    Stack,
+} from "@mui/material"
 import { productApi } from "ApiClients/ProductApi"
 import { useAppDispatch } from "app/hooks"
 import { MainLayout } from "components/Layout/MainLayout"
@@ -7,7 +16,7 @@ import { debounce } from "lodash"
 import { ListParams, Product } from "models"
 import buildQuery from "odata-query"
 import qs from "qs"
-import { useEffect, useMemo, useState } from "react"
+import { ChangeEvent, useEffect, useMemo, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import handleNotify from "utils/Toast-notify"
 import ListPage from "./components/ListPage"
@@ -20,21 +29,24 @@ export type Params = {
     brand: { name: { in: string[] } } | undefined
     orderBy?: string
     top: number
+    page: number
 }
 const ProductShopPage = () => {
     const [productList, setProductList] = useState<Product[]>([])
+    const [count, setCount] = useState<number>(1)
     const [isLoading, setLoading] = useState(false)
     const navigate = useNavigate()
     const location = useLocation()
     const dispatch = useAppDispatch()
     const [opentFilter, setOpentFilter] = useState(false)
-    const [param, setParams] = useState<Params>({
+    const [params, setParams] = useState<Params>({
         gt: 30,
         lt: 3000,
         category: { name: { in: [] } },
         brand: { name: { in: [] } },
         orderBy: "salePrice desc",
         top: 9,
+        page: 0,
     })
 
     const handleClose = () => {
@@ -49,6 +61,7 @@ const ProductShopPage = () => {
             gt: Number(params["gt"]) || 30,
             lt: Number(params.lt) || 3000,
             orderBy: params.orderBy,
+            page: params.page as string,
         }
     }, [location.search])
 
@@ -62,6 +75,7 @@ const ProductShopPage = () => {
             },
             orderBy: queryParam.orderBy as string,
             top: 9,
+            skip: ((+queryParam.page || 1) - 1) * 9,
         }
         setParams({
             brand: {
@@ -74,6 +88,7 @@ const ProductShopPage = () => {
             lt: param.filter.salePrice?.lt || 3000,
             orderBy: param.orderBy || "salePrice desc",
             top: 9,
+            page: +queryParam.page || 1,
         })
         const debouncedEffect = debounce(() => {
             search(param)
@@ -81,11 +96,13 @@ const ProductShopPage = () => {
         debouncedEffect()
         return () => debouncedEffect.cancel()
     }, [queryParam, dispatch])
+
     const search = async (value: ListParams) => {
         try {
             const param = buildQuery(value)
             const res = await productApi.getList(param)
             setProductList(res.data)
+            setCount(Math.ceil(+res.headers["x-pagination-total-count"] / 9))
             setLoading(false)
         } catch (error) {
             setLoading(false)
@@ -94,7 +111,7 @@ const ProductShopPage = () => {
     }
     const handleFilterChange = (value: Params) => {
         const newParam = {
-            ...param,
+            ...params,
             ...value,
         }
 
@@ -106,7 +123,7 @@ const ProductShopPage = () => {
     }
     const handleSortChange = (value: "salePrice desc" | "salePrice asc") => {
         const newParam = {
-            ...param,
+            ...params,
             orderBy: value,
         }
         setParams(newParam)
@@ -115,6 +132,19 @@ const ProductShopPage = () => {
             search: qs.stringify(newParam),
         })
     }
+    function handlePageChange(event: ChangeEvent<unknown>, page: number): void {
+        const newParam = {
+            ...params,
+            page,
+        }
+
+        setParams(newParam)
+        navigate({
+            pathname: location.pathname,
+            search: qs.stringify(newParam),
+        })
+    }
+
     return (
         <MainLayout>
             <Container
@@ -129,7 +159,7 @@ const ProductShopPage = () => {
                             <Box width={300} p={2} pt={5}>
                                 <MenuFilterOption
                                     handleFilterChange={handleFilterChange}
-                                    param={param}
+                                    param={params}
                                     queryParam={queryParam}
                                 />
                             </Box>
@@ -138,7 +168,7 @@ const ProductShopPage = () => {
                             <Box width="360px">
                                 <MenuFilterOption
                                     handleFilterChange={handleFilterChange}
-                                    param={param}
+                                    param={params}
                                     queryParam={queryParam}
                                 />
                             </Box>
@@ -173,7 +203,20 @@ const ProductShopPage = () => {
                                     boxShadow: "rgba(33, 35, 38, 0.1) 0px 10px 10px -10px",
                                 }}
                             />
-                            <ListPage isLoading={isLoading} productList={productList} />
+                            <Stack minHeight="100vh">
+                                <ListPage isLoading={isLoading} productList={productList} />
+                                <Pagination
+                                    sx={{
+                                        mt: "auto",
+                                        mx: "auto",
+                                    }}
+                                    count={count}
+                                    variant="outlined"
+                                    color="primary"
+                                    onChange={handlePageChange}
+                                    page={+params.page}
+                                />
+                            </Stack>
                         </Box>
                     </Stack>
                 </Box>

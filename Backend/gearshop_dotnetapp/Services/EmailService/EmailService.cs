@@ -1,5 +1,4 @@
-﻿using gearshop_dotnetapp.Models.Identity;
-using gearshop_dotnetapp.Resources;
+﻿using gearshop_dotnetapp.Resources;
 using gearshop_dotnetapp.Settings;
 using MailKit.Net.Smtp;
 using MailKit.Security;

@@ -45,8 +45,19 @@ const AccountPage = (props: Props) => {
     return (
         <Box sx={{ width: "100%" }}>
             <Hidden>
-                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Box
+                    sx={{
+                        borderBottom: 1,
+                        borderColor: "divider",
+                    }}
+                >
+                    <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        variant="scrollable"
+                        scrollButtons
+                        allowScrollButtonsMobile
+                    >
                         <Tab label="My Profile" {...a11yProps(0)} />
                         <Tab label="Address Books" {...a11yProps(1)} />
                         <Tab label="My Payment Options" {...a11yProps(2)} />

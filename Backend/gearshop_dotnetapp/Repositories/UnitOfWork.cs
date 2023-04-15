@@ -94,13 +94,13 @@ namespace gearshop_dotnetapp.Repositories
                 return orderItemRepository;
             }
         }
-        private IRepository<AddressBook> adressRepository;
-        public IRepository<AddressBook> AdressRepository
+        private IRepository<AddressBook> addressRepository;
+        public IRepository<AddressBook> AddressRepository
         {
             get
             {
-                adressRepository ??= new AddressRepository(_context);
-                return adressRepository;
+                addressRepository ??= new AddressRepository(_context);
+                return addressRepository;
             }
         }
         private IRepository<Cart> cartRepository;

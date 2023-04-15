@@ -8,7 +8,7 @@ import TableContainer from "@mui/material/TableContainer"
 import TableHead from "@mui/material/TableHead"
 import TableRow from "@mui/material/TableRow"
 import { addressApi } from "ApiClients/AddressApi"
-import { Address } from "models"
+import { Address, SaveAddress } from "models"
 import { useEffect, useRef, useState } from "react"
 import handleNotify from "utils/Toast-notify"
 import AddressForm from "./AddressForm"
@@ -54,14 +54,14 @@ const AddressBook = (props: Props) => {
         setMode(mode)
         setEditValue(row)
     }
-    const handleSubmit = async (value: Address) => {
+    const handleSubmit = async (value: SaveAddress) => {
         try {
             if (mode === "create") {
                 await addressApi.create(value)
                 const res = await addressApi.getAll()
                 setAddress(res.data)
             } else {
-                await addressApi.update(value)
+                await addressApi.update(value, +value.id)
                 const res = await addressApi.getAll()
                 setAddress(res.data)
             }
@@ -90,6 +90,9 @@ const AddressBook = (props: Props) => {
                     height: "85vh",
                     display: "flex",
                     flexDirection: "column",
+                    "&::-webkit-scrollbar": {
+                        display: "none",
+                    },
                 }}
             >
                 <Stack
@@ -98,130 +101,6 @@ const AddressBook = (props: Props) => {
                         overflowY: "scroll",
                     }}
                 >
-                    {rows.map((row, i) => (
-                        <Box key={row.id}>
-                            <Divider />
-                            <Box display="flex">
-                                <Box
-                                    sx={{
-                                        py: 1,
-                                        px: 2,
-                                    }}
-                                >
-                                    <Stack direction="row" spacing={1} mb={1}>
-                                        <Typography fontWeight={500}>{row.name}</Typography>
-                                        <Divider orientation="vertical" flexItem variant="middle" />
-                                        <Typography fontWeight={500}>{row.phoneNumber}</Typography>
-                                    </Stack>
-                                    <Typography fontSize="14px" sx={{ opacity: 0.8 }}>
-                                        {`${row.address}, ${row.ward}, ${row.district}, ${row.province}.`}
-                                    </Typography>
-                                </Box>
-                                <Box display="flex" alignItems="center" ml="auto">
-                                    <IconButton
-                                        size="small"
-                                        color="warning"
-                                        onClick={() => handleOpen("edit", row)}
-                                    >
-                                        <EditOutlinedIcon />
-                                    </IconButton>
-                                </Box>
-                            </Box>
-                        </Box>
-                    ))}
-                    {rows.map((row, i) => (
-                        <Box key={row.id}>
-                            <Divider />
-                            <Box display="flex">
-                                <Box
-                                    sx={{
-                                        py: 1,
-                                        px: 2,
-                                    }}
-                                >
-                                    <Stack direction="row" spacing={1} mb={1}>
-                                        <Typography fontWeight={500}>{row.name}</Typography>
-                                        <Divider orientation="vertical" flexItem variant="middle" />
-                                        <Typography fontWeight={500}>{row.phoneNumber}</Typography>
-                                    </Stack>
-                                    <Typography fontSize="14px" sx={{ opacity: 0.8 }}>
-                                        {`${row.address}, ${row.ward}, ${row.district}, ${row.province}.`}
-                                    </Typography>
-                                </Box>
-                                <Box display="flex" alignItems="center" ml="auto">
-                                    <IconButton
-                                        size="small"
-                                        color="warning"
-                                        onClick={() => handleOpen("edit", row)}
-                                    >
-                                        <EditOutlinedIcon />
-                                    </IconButton>
-                                </Box>
-                            </Box>
-                        </Box>
-                    ))}{" "}
-                    {rows.map((row, i) => (
-                        <Box key={row.id}>
-                            <Divider />
-                            <Box display="flex">
-                                <Box
-                                    sx={{
-                                        py: 1,
-                                        px: 2,
-                                    }}
-                                >
-                                    <Stack direction="row" spacing={1} mb={1}>
-                                        <Typography fontWeight={500}>{row.name}</Typography>
-                                        <Divider orientation="vertical" flexItem variant="middle" />
-                                        <Typography fontWeight={500}>{row.phoneNumber}</Typography>
-                                    </Stack>
-                                    <Typography fontSize="14px" sx={{ opacity: 0.8 }}>
-                                        {`${row.address}, ${row.ward}, ${row.district}, ${row.province}.`}
-                                    </Typography>
-                                </Box>
-                                <Box display="flex" alignItems="center" ml="auto">
-                                    <IconButton
-                                        size="small"
-                                        color="warning"
-                                        onClick={() => handleOpen("edit", row)}
-                                    >
-                                        <EditOutlinedIcon />
-                                    </IconButton>
-                                </Box>
-                            </Box>
-                        </Box>
-                    ))}{" "}
-                    {rows.map((row, i) => (
-                        <Box key={row.id}>
-                            <Divider />
-                            <Box display="flex">
-                                <Box
-                                    sx={{
-                                        py: 1,
-                                        px: 2,
-                                    }}
-                                >
-                                    <Stack direction="row" spacing={1} mb={1}>
-                                        <Typography fontWeight={500}>{row.name}</Typography>
-                                        <Divider orientation="vertical" flexItem variant="middle" />
-                                        <Typography fontWeight={500}>{row.phoneNumber}</Typography>
-                                    </Stack>
-                                    <Typography fontSize="14px" sx={{ opacity: 0.8 }}>
-                                        {`${row.address}, ${row.ward}, ${row.district}, ${row.province}.`}
-                                    </Typography>
-                                </Box>
-                                <Box display="flex" alignItems="center" ml="auto">
-                                    <IconButton
-                                        size="small"
-                                        color="warning"
-                                        onClick={() => handleOpen("edit", row)}
-                                    >
-                                        <EditOutlinedIcon />
-                                    </IconButton>
-                                </Box>
-                            </Box>
-                        </Box>
-                    ))}
                     {rows.map((row, i) => (
                         <Box key={row.id}>
                             <Divider />
@@ -349,7 +228,6 @@ const AddressBook = (props: Props) => {
                         <Box
                             sx={{
                                 position: "absolute" as "absolute",
-                                width: "fit-content",
                                 top: "50%",
                                 left: "50%",
                                 transform: "translate(-50%, -50%)",

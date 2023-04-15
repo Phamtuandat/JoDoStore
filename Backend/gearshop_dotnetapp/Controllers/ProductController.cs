@@ -48,11 +48,13 @@ namespace gearshop_dotnetapp.Controllers
             return BadRequest(result.Message);
         }
 
-        [EnableQuery(PageSize = 10)]
+        [EnableQuery(PageSize = 9)]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var result = await _mediatr.Send(new GetAllProductQuery() { });
+            var totalCount = result.Count();
+            HttpContext.Response.Headers.Add("X-Pagination-Total-Count", totalCount.ToString());
             return Ok(result);
         }
 

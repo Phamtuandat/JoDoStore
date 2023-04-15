@@ -27,6 +27,7 @@ function App() {
                         dispatch(AuthSliceAction.success(result))
                     } catch (error) {
                         dispatch(AuthSliceAction.logout())
+                        dispatch(cartSliceAction.removeAllCartItem)
                         handleNotify.error(error as string)
                     }
                 })()

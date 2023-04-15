@@ -1,17 +1,13 @@
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined"
-import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined"
 import {
     Box,
     Button,
     CardMedia,
-    CircularProgress,
     Divider,
     Grid,
     Hidden,
     IconButton,
     Paper,
-    Stack,
-    TextField,
     Typography,
 } from "@mui/material"
 import { Container } from "@mui/system"
@@ -20,18 +16,19 @@ import { orderApi } from "ApiClients/OrderApi"
 import { useAppDispatch, useAppSelector } from "app/hooks"
 import { MainLayout } from "components/Layout/MainLayout"
 import { cartTotalSelector } from "features/cart/cartSelector"
-import { cartSliceAction, cartSelector, cartProcessing } from "features/cart/cartSlice"
+import { cartProcessing, cartSelector, cartSliceAction } from "features/cart/cartSlice"
 import QuantityForm from "features/cart/components/QuantityForm"
 import { Address, Product } from "models"
 import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import { toast } from "react-toastify"
 import handleNotify from "utils/Toast-notify"
+import OrderInfo from "./components/OrderInfo"
 type Props = {}
 
 const Msg = () => (
     <div>
-        <Typography color="red">Successfully Order!</Typography>
+        <Typography color="text.primary"> Order Successfully !</Typography>
         <Link to="/">Go To HomePage</Link>
     </div>
 )
@@ -43,6 +40,13 @@ const OrderPage = (props: Props) => {
     const dispatch = useAppDispatch()
     const [loading, setLoading] = useState(false)
     const processing = useAppSelector(cartProcessing)
+    const [address, setAddress] = useState<Address | undefined>()
+    function handleAddresChange(value: number) {
+        const add = addressList.find((x) => x.id === value)
+        if (add) {
+            setAddress(add)
+        }
+    }
     useEffect(() => {
         if (!ignore.current) {
             ignore.current = true
@@ -73,14 +77,16 @@ const OrderPage = (props: Props) => {
                 productId: +item.product.id,
                 quantity: item.quantity,
             }))
-            await orderApi.create({
-                addressId: +(addressList[0].id || 1),
-                orderItems: orders,
-                shippingCash: 0,
-            })
-            setLoading(false)
-            dispatch(cartSliceAction.removeAllCartItem())
-            toast(<Msg />)
+            if (address) {
+                await orderApi.create({
+                    addressId: +address.id,
+                    orderItems: orders,
+                    shippingCash: 0,
+                })
+                setLoading(false)
+                dispatch(cartSliceAction.removeAllCartItem())
+                toast(<Msg />)
+            }
         } catch (error) {
             handleNotify.error(error as string)
             setLoading(false)
@@ -259,147 +265,15 @@ const OrderPage = (props: Props) => {
                                 </Paper>
                             </Grid>
                             <Grid item md={4} xs={12}>
-                                <Stack>
-                                    <Paper elevation={0} square>
-                                        <Box p={2}>
-                                            <Typography color="text.secondary">Location</Typography>
-                                            <Box display="flex" fontSize={14} my={2}>
-                                                <FmdGoodOutlinedIcon
-                                                    sx={{
-                                                        opacity: 0.6,
-                                                    }}
-                                                />
-                                                {addressList.length !== 0 && (
-                                                    <Box>
-                                                        <Typography component="span">
-                                                            {addressList[0].address},
-                                                        </Typography>{" "}
-                                                        <Typography component="span">
-                                                            {addressList[0].ward},
-                                                        </Typography>{" "}
-                                                        <Typography component="span">
-                                                            {addressList[0].district},
-                                                        </Typography>{" "}
-                                                        <Typography component="span">
-                                                            {addressList[0].province}
-                                                        </Typography>
-                                                    </Box>
-                                                )}
-                                            </Box>
-                                        </Box>
-                                    </Paper>
-                                    <Divider />
-                                    <Paper elevation={0} square>
-                                        <Stack
-                                            sx={{
-                                                p: 2,
-                                            }}
-                                            spacing={2}
-                                        >
-                                            <Typography variant="h6">Order Summary</Typography>
-                                            <Box
-                                                display="flex"
-                                                justifyContent="space-between"
-                                                sx={{
-                                                    opacity: 0.8,
-                                                }}
-                                            >
-                                                <Typography component="span">
-                                                    Subtotal {`(${carts.length} items)`}
-                                                </Typography>
-                                                <Typography component="span">
-                                                    $ {Subtotal}
-                                                </Typography>
-                                            </Box>
-                                            <Box
-                                                display="flex"
-                                                justifyContent="space-between"
-                                                sx={{
-                                                    opacity: 0.8,
-                                                }}
-                                            >
-                                                <Typography component="span">
-                                                    Shipping Fee
-                                                </Typography>
-                                                <Box display="flex">
-                                                    <Typography
-                                                        component="span"
-                                                        mr={1}
-                                                        sx={{
-                                                            textDecoration:
-                                                                "line-through #0000006e",
-                                                        }}
-                                                    >
-                                                        - $ 3
-                                                    </Typography>
-                                                    <Typography>Free</Typography>
-                                                </Box>
-                                            </Box>
-                                            <Box
-                                                display="flex"
-                                                justifyContent="center"
-                                                sx={{
-                                                    height: "40px",
-                                                    my: 3,
-                                                }}
-                                            >
-                                                <TextField
-                                                    label="Enter Voucher Code"
-                                                    variant="outlined"
-                                                    autoComplete="new-password"
-                                                    sx={{
-                                                        height: "100%",
-                                                        "& input": {
-                                                            py: 1,
-                                                        },
-                                                    }}
-                                                />
-                                                <Box mx={1}>
-                                                    <Button
-                                                        fullWidth
-                                                        variant="contained"
-                                                        sx={{
-                                                            height: "100%",
-                                                        }}
-                                                        color="secondary"
-                                                    >
-                                                        Apply
-                                                    </Button>
-                                                </Box>
-                                            </Box>
-                                            <Box textAlign="right">
-                                                <Box display="flex" justifyContent="space-between">
-                                                    <Typography>Total</Typography>
-                                                    <Typography color="primary">
-                                                        $ {Subtotal}
-                                                    </Typography>
-                                                </Box>
-                                                <Typography variant="caption">
-                                                    VAT included, where applicable
-                                                </Typography>
-                                            </Box>
-                                            <Box>
-                                                <Button
-                                                    fullWidth
-                                                    variant="contained"
-                                                    onClick={handleCreateOrder}
-                                                    disabled={loading}
-                                                    disableElevation
-                                                    startIcon={
-                                                        loading && (
-                                                            <CircularProgress
-                                                                color="secondary"
-                                                                size={20}
-                                                            />
-                                                        )
-                                                    }
-                                                >
-                                                    CONFIRM CART{`(${carts.length})`}
-                                                </Button>
-                                            </Box>
-                                        </Stack>
-                                    </Paper>
-                                </Stack>
+                                <OrderInfo
+                                    handleAddresChange={handleAddresChange}
+                                    Subtotal={Subtotal}
+                                    addressList={addressList}
+                                    carts={carts}
+                                    handleCreateOrder={handleCreateOrder}
+                                    loading={loading}
+                                    address={address ? address : addressList[0]}
+                                />
                             </Grid>
                         </Grid>
                     </Box>

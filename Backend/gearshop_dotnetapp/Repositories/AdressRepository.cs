@@ -9,10 +9,5 @@ namespace gearshop_dotnetapp.Repositories
         public AddressRepository(DataContext context) : base(context)
         {
         }
-
-        public override IEnumerable<AddressBook> Find(Expression<Func<AddressBook, bool>> predicate)
-        {
-            return base.Find(predicate);
-        }
     }
 }

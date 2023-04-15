@@ -86,7 +86,7 @@ namespace gearshop_dotnetapp.Controllers
         }
         [HttpPatch("{id:int}")]
         [Authorize(Roles = "Admin, Customer")]
-        public async Task<IActionResult> UpdateAsync (int id, [FromBody] SaveAddressResource model)
+        public async Task<ActionResult> UpdateAsync (int id, [FromBody] SaveAddressResource model)
         {
             try
             {
@@ -97,14 +97,9 @@ namespace gearshop_dotnetapp.Controllers
                 {
                     return Unauthorized();
                 }
-                var isUpdateAble = user.AddressBook?.FirstOrDefault(x => x.Id == id);
-                if(isUpdateAble == null)
-                {
-                    return Unauthorized();
-                }
-                var list = _adressService.UpdateAddressAsync(id, model);
-                if (list == null) return NotFound();
-                return Ok(list);
+                var address = await _adressService.UpdateAddressAsync(id, model, user.Id);
+                if (address == null) return NotFound();
+                return Ok(address);
             }
             catch (Exception ex)
             {

@@ -10,8 +10,8 @@ export const addressApi = {
         const url = "/Address"
         return axiosClient.post(url, param)
     },
-    update(param: Address): Promise<ListResponse<Address>> {
-        const url = "/Address"
+    update(param: Address, id: number): Promise<ListResponse<Address>> {
+        const url = `/Address/${id}`
         return axiosClient.patch(url, param)
     },
 }

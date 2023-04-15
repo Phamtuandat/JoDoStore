@@ -1,18 +1,18 @@
 import { Button, Typography } from "@mui/material"
 import Box from "@mui/material/Box"
 import { InputField } from "components/inputField"
-import { Address } from "models"
+import { SaveAddress } from "models"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { tableRow } from "./AddressBook"
-import { useEffect } from "react"
 
 type Props = {
-    onSubmit: (value: Address) => void
+    onSubmit: (value: SaveAddress) => void
     editValue?: tableRow
 }
 
 const AddressForm = ({ onSubmit, editValue }: Props) => {
-    const { handleSubmit, control, reset } = useForm<Address>({
+    const { handleSubmit, control, reset } = useForm<SaveAddress>({
         defaultValues: {
             id: "",
             name: "",

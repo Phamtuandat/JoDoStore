@@ -42,7 +42,7 @@ namespace gearshop_dotnetapp.Services.OrderServices
                     orderItems.Add(orderItem);
                     _unitOfWork.OrderItemRepository.Add(orderItem);
                 }
-                var address = _unitOfWork.AdressRepository.Get(model.AddressId);
+                var address = _unitOfWork.AddressRepository.Get(model.AddressId);
                 if (address == null)
                 {
                     throw new Exception($"address with id {model.AddressId} not found.");
@@ -123,7 +123,7 @@ namespace gearshop_dotnetapp.Services.OrderServices
                 {
                     throw new OrderNotFoundException($"could not find orderId {id} please try again!");
                 }
-                var address = _unitOfWork.AdressRepository.Get(id);
+                var address = _unitOfWork.AddressRepository.Get(id);
                 if (address == null)
                 {
                     throw new Exception(" address could not found");

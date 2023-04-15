@@ -28,7 +28,7 @@ namespace gearshop_dotnetapp.Services.OrderServices
                     Ward = address.Ward,
                     PhoneNumber = address.PhoneNumber,
                 };
-                _unitOfWork.AdressRepository.Add(newAddress);
+                _unitOfWork.AddressRepository.Add(newAddress);
                 await _unitOfWork.CompleteAsync();
                 return newAddress;
             }
@@ -42,9 +42,9 @@ namespace gearshop_dotnetapp.Services.OrderServices
         {
             try
             {
-                var address = _unitOfWork.AdressRepository.Get(id);
+                var address = _unitOfWork.AddressRepository.Get(id);
                 if (address != null) throw new Exception("could not found address");
-                _unitOfWork.AdressRepository.Delete(address);
+                _unitOfWork.AddressRepository.Delete(address);
                 await _unitOfWork.CompleteAsync();
             }
             catch (Exception ex)
@@ -57,7 +57,7 @@ namespace gearshop_dotnetapp.Services.OrderServices
         {
             try
             {
-                var address = _unitOfWork.AdressRepository.Get(id);
+                var address = _unitOfWork.AddressRepository.Get(id);
                 if (address == null) throw new Exception("could not found address");
                 return address;
             }
@@ -70,14 +70,14 @@ namespace gearshop_dotnetapp.Services.OrderServices
 
         public IEnumerable<AddressResource>? GetAddressByUserIdAsync(string userId)
         {
-            var list = _unitOfWork.AdressRepository.Find(addr => addr.User.Id == userId)?.ToList();
-            if(list == null) return null;
+            var list = _unitOfWork.AddressRepository.Find(addr => addr.User.Id == userId)?.ToList();
+            if (list == null) return null;
             IEnumerable<AddressResource> addressList = list.Select(a => new AddressResource()
             {
                 District = a.District,
                 Province = a.Province,
-                Ward= a.Ward,
-                Id= a.Id,
+                Ward = a.Ward,
+                Id = a.Id,
                 Address = a.Address,
                 Name = a.Name,
                 PhoneNumber = a.PhoneNumber,
@@ -87,19 +87,21 @@ namespace gearshop_dotnetapp.Services.OrderServices
 
         }
 
-        public async Task<AddressBook> UpdateAddressAsync(int id, SaveAddressResource mode)
+        public async Task<AddressBook> UpdateAddressAsync(int id, SaveAddressResource mode, string userId)
         {
             try
             {
-                var address = _unitOfWork.AdressRepository.Get(id);
+                var address = _unitOfWork.AddressRepository.All().FirstOrDefault(x => x.Id == id);
                 if (address == null) throw new Exception("Could not found address");
+                var isEditale = address.User.Id == userId;
+                if (!isEditale) throw new Exception("You can not update address!");
                 address.Province = mode.Province;
                 address.Address = mode.Address;
                 address.District = mode.District;
                 address.Name = mode.Name;
-                address.Ward = address.Ward;
-                address.PhoneNumber= mode.PhoneNumber;
-                var addressUpdated = _unitOfWork.AdressRepository.Update(address);
+                address.Ward = mode.Ward;
+                address.PhoneNumber = mode.PhoneNumber;
+                var addressUpdated = _unitOfWork.AddressRepository.Update(address);
                 await _unitOfWork.CompleteAsync();
                 return address;
             }

@@ -17,7 +17,7 @@ export type editForm = {
     phoneNumber: string
 }
 export interface Address {
-    id?: number | string
+    id: number | string
     district: string
     province: string
     ward: string
@@ -26,7 +26,16 @@ export interface Address {
     name: string
     phoneNumber: string
 }
-
+export interface SaveAddress {
+    id: number | string
+    district: string
+    province: string
+    ward: string
+    address: string
+    isDefault?: boolean
+    name: string
+    phoneNumber: string
+}
 export interface UserInfor {
     id: number | string
     firstName: string

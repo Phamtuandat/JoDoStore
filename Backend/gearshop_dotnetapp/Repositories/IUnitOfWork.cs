@@ -14,7 +14,7 @@ namespace gearshop_dotnetapp.Repositories
         IRepository<Tag> TagRepository { get; }
         IRepository<Order> OrderRepository { get; }
         IRepository<OrderItem> OrderItemRepository { get; }
-        IRepository<AddressBook> AdressRepository { get; }
+        IRepository<AddressBook> AddressRepository { get; }
         IRepository<Cart> CartRepository { get; }
         Task CompleteAsync();
     }
