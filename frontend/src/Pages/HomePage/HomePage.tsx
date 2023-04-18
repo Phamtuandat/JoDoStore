@@ -1,7 +1,7 @@
-import { Button, CardMedia, Container, Hidden, IconButton, Stack, Typography } from "@mui/material"
+import { Button, CardMedia, Container, Hidden, Stack, Typography } from "@mui/material"
 import Box from "@mui/material/Box/Box"
 import { MainLayout } from "components/Layout/MainLayout"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Slider, { Settings } from "react-slick"
 import "slick-carousel/slick/slick-theme.css"
 import "slick-carousel/slick/slick.css"
@@ -14,8 +14,12 @@ const settings: Settings = {
     autoplaySpeed: 5000,
     autoplay: true,
     fade: true,
+    dots: false,
+    arrows: false,
 }
+
 export default function HomePage() {
+    const navigate = useNavigate()
     return (
         <MainLayout>
             <Box>
@@ -24,13 +28,14 @@ export default function HomePage() {
                     sx={{
                         pt: 10,
                     }}
+                    maxWidth="xl"
                 >
                     <FlashDeal />
-                    <Box mt={15}>
+                    <Box my={{ md: 20, xs: 10 }}>
                         <Typography fontWeight={700}>Up to 40% Off</Typography>
                         <ListProductSale />
                     </Box>
-                    <Stack mt={15}>
+                    <Stack my={{ md: 20, xs: 10 }}>
                         <Typography my={2} fontSize="24px">
                             Just in
                         </Typography>
@@ -101,8 +106,8 @@ export default function HomePage() {
                         </Box>
                     </Stack>
 
-                    <Stack mt={15}>
-                        <Typography my={2} fontSize="24px">
+                    <Stack my={{ md: 20, xs: 10 }}>
+                        <Typography mb={2} fontSize="24px">
                             The Latest
                         </Typography>
                         <Hidden mdDown>
@@ -168,19 +173,93 @@ export default function HomePage() {
                                     <Box
                                         sx={{
                                             position: "absolute",
-                                            top: 300,
+                                            top: 250,
                                             left: 0,
+                                            p: 2,
                                         }}
                                     >
-                                        <Typography zIndex={100}>
+                                        <Typography
+                                            zIndex={100}
+                                            sx={{
+                                                textShadow: "1px 1px #grey",
+                                                color: "white",
+                                            }}
+                                        >
                                             As a Nike Member, you have access to benefits and
                                             services that make your shopping worry-free.
                                         </Typography>
-                                        <IconButton>Read Now</IconButton>
+                                        <Button
+                                            color="inherit"
+                                            variant="contained"
+                                            sx={{ color: "black" }}
+                                        >
+                                            Read Now
+                                        </Button>
                                     </Box>
                                 </Box>
                             </Slider>
                         </Hidden>
+                    </Stack>
+                    <Typography variant="h4" my={2}>
+                        The Essentials
+                    </Typography>
+                    <Stack
+                        spacing={2}
+                        direction={{ xs: "column", md: "row" }}
+                        sx={{
+                            "&>div": {
+                                position: "relative",
+                                "&>button": {
+                                    position: "absolute",
+                                    bottom: 30,
+                                    left: 20,
+                                    color: "#000",
+                                },
+                            },
+                        }}
+                    >
+                        <Box>
+                            <CardMedia
+                                component="img"
+                                height="100%"
+                                image="https://static.nike.com/a/images/f_auto/dpr_3.5,cs_srgb/h_500,c_limit/d320bfb2-9b9a-453c-96f4-bad7e12fdffe/nike-just-do-it.png"
+                            />
+                            <Button
+                                onClick={() => navigate("/shop")}
+                                color="inherit"
+                                variant="contained"
+                            >
+                                Men's
+                            </Button>
+                        </Box>
+                        <Box>
+                            <CardMedia
+                                component="img"
+                                height="100%"
+                                image="https://static.nike.com/a/images/f_auto/dpr_1.3,cs_srgb/h_540,c_limit/dc62b322-5c3f-4508-b21c-950683ed460f/nike-just-do-it.png"
+                            />
+                            <Button
+                                onClick={() => navigate("/shop")}
+                                color="inherit"
+                                variant="contained"
+                            >
+                                Women's
+                            </Button>
+                        </Box>
+                        <Box>
+                            <CardMedia
+                                component="img"
+                                height="100%"
+                                image="https://static.nike.com/a/images/f_auto/dpr_1.3,cs_srgb/h_540,c_limit/58359474-a0de-4329-959c-55d1652d0912/nike-just-do-it.png"
+                            />
+                            <Button
+                                onClick={() => navigate("/shop")}
+                                color="inherit"
+                                variant="contained"
+                            >
+                                KID's
+                            </Button>
+                        </Box>
                     </Stack>
                 </Container>
             </Box>

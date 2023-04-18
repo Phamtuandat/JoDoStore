@@ -66,6 +66,7 @@ const ProductShopPage = () => {
     }, [location.search])
 
     useEffect(() => {
+        window.scrollTo(0, 0)
         setLoading(true)
         const param = {
             filter: {

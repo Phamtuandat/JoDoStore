@@ -13,6 +13,7 @@ import { cartSliceAction } from "features/cart/cartSlice"
 import MiniCart from "features/cart/components/MiniCart"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
+import MobileSubheader from "./MobileSubheader"
 type Props = {}
 
 const Header = (props: Props) => {
@@ -80,7 +81,7 @@ const Header = (props: Props) => {
                     </Box>
                     <Drawer open={isOpen} anchor="left" onClose={() => setOpen(false)}>
                         <Box role="presentation" sx={{ width: 300 }}>
-                            <SubHeader />
+                            <MobileSubheader />
                         </Box>
                     </Drawer>
                 </Hidden>
@@ -102,9 +103,7 @@ const Header = (props: Props) => {
                     </Typography>
                 </Box>
                 <Hidden mdDown>
-                    <Box>
-                        <SubHeader />
-                    </Box>
+                    <SubHeader />
                 </Hidden>
                 <Box
                     display="flex"

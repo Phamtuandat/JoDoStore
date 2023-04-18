@@ -3,35 +3,19 @@ import { useTheme } from "@mui/material/styles"
 import { motion } from "framer-motion"
 import { Product } from "models"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 type Props = {
     product: Product
 }
 export const ProductItem = ({ product }: Props) => {
     const theme = useTheme()
-    const [imgIndex, setIndex] = useState<number>(1)
     const [checked, setCheck] = useState(false)
     const navigate = useNavigate()
 
     const handleClick = (id: string | number | null) => {
         if (id) navigate(`/product/${id}`)
     }
-
-    useEffect(() => {
-        if (checked === true) {
-            setIndex((prev) => {
-                if (prev < product.thumbnails.length - 1) {
-                    return prev + 1
-                } else {
-                    return 0
-                }
-            })
-        } else {
-            setIndex(0)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [checked])
 
     return (
         <Paper
@@ -60,7 +44,7 @@ export const ProductItem = ({ product }: Props) => {
                     component={motion.div}
                     sx={{
                         pb: "100%",
-                        backgroundImage: ` url(${product.thumbnails[imgIndex]?.imageUrl})`,
+                        backgroundImage: ` url(${product.thumbnails[0]?.imageUrl})`,
                         backgroundPosition: "center",
                         backgroundSize: "cover",
                         backgroundRepeat: "no-repeat",

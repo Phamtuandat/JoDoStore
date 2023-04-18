@@ -25,7 +25,9 @@ export default function BasicSpeedDial({ label }: IProp) {
             icon={<SpeedDialIcon />}
         >
             <SpeedDialAction
-                onClick={colorMode.toggleColorMode}
+                onClick={() => {
+                    colorMode.toggleColorMode()
+                }}
                 icon={theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
                 tooltipTitle={theme.palette.mode}
             />

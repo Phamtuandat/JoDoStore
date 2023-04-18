@@ -1,9 +1,8 @@
 import EastIcon from "@mui/icons-material/East"
 import HeadsetMicOutlinedIcon from "@mui/icons-material/HeadsetMicOutlined"
-import { Box, Paper, Typography } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import { styled, useTheme } from "@mui/material/styles"
 import Grid from "@mui/material/Unstable_Grid2"
-import { motion } from "framer-motion"
 import { useWidth } from "Hooks/width-hook"
 import { Link } from "react-router-dom"
 type Props = {}
@@ -17,6 +16,7 @@ const CustomBtn = styled("button")(({ theme }) => ({
     width: "200px",
     height: "60px",
     justifyContent: "center",
+    border: "1px solid #ccc",
     color: theme.palette.text.primary,
     "&>span>svg": {
         marginLeft: "10px",
@@ -33,14 +33,22 @@ const FlashDeal = (props: Props) => {
     const theme = useTheme()
     const width = useWidth()
     return (
-        <Paper
-            elevation={3}
+        <Box
             sx={{
+                backgroundSize: "cover",
                 mt: width === "xs" ? 5 : 25,
-                p: 4,
+                backgroundImage: {
+                    md: "url(https://static.nike.com/a/images/f_auto/dpr_1.3,cs_srgb/w_1406,c_limit/8127cdb2-6a27-4d27-96a4-dfc7cf5e6cdb/nike-just-do-it.jpg)",
+                    xs: "url(https://static.nike.com/a/images/f_auto/dpr_1.3,cs_srgb/h_713,c_limit/a1cc9ddb-92d7-47b2-973f-1a17bbd17ff2/nike-just-do-it.jpg)",
+                },
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                justifyContent: "center",
+                height: 600,
+                display: "flex",
             }}
         >
-            <Grid container spacing={2}>
+            <Grid container spacing={2} flexGrow={1}>
                 <Grid
                     xs={12}
                     md={6}
@@ -49,6 +57,7 @@ const FlashDeal = (props: Props) => {
                         flexDirection: "column",
                         textAlign: "center",
                         justifyContent: "center",
+                        color: "white",
                     }}
                 >
                     <Box>
@@ -71,6 +80,7 @@ const FlashDeal = (props: Props) => {
                         sx={{
                             fontWeight: "700",
                             mt: "15px",
+                            textShadow: " 2px 1px grey",
                         }}
                     >
                         <Typography textAlign="center" variant="h3">
@@ -79,6 +89,7 @@ const FlashDeal = (props: Props) => {
                     </Box>
                     <Box
                         display="flex"
+                        color="text.primary"
                         sx={{
                             justifyContent: "center",
                             my: 5,
@@ -137,166 +148,8 @@ const FlashDeal = (props: Props) => {
                         </CustomBtn>
                     </Box>
                 </Grid>
-                <Grid xs={12} md={6} sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-                    <Box
-                        component={motion.div}
-                        sx={{
-                            backgroundImage:
-                                "url(https://new.axilthemes.com/demo/template/etrade/assets/images/product/poster/poster-03.png) ",
-                            mt: { lg: "-160px", md: 0, sx: 50 },
-                            backgroundSize: "contain",
-                            backgroundRepeat: "no-repeat",
-                            backgroundPosition: "center",
-                            p: { xs: "156px", md: "240px" },
-                            position: "relative",
-                        }}
-                    >
-                        <Box
-                            position="absolute"
-                            sx={{
-                                display: "block",
-                                top: "48%",
-                                left: "44%",
-                                width: { xs: "60px", md: "100px" },
-                                height: { xs: "60px", md: "100px" },
-                                transform: "rotate(-100deg)",
-                            }}
-                        >
-                            <Box
-                                component={motion.span}
-                                sx={{
-                                    position: "absolute",
-                                    zIndex: 100,
-                                    display: "block",
-                                    width: "100%",
-                                    height: "100%",
-                                    bottom: 0,
-                                    left: 0,
-                                    borderColor: "secondary.main",
-                                    borderStyle: "solid",
-                                    borderWidth: "1px 4px 0 0",
-                                    borderRadius: "0 100% 0 0",
-                                    opacity: 0,
-                                }}
-                                animate={{
-                                    opacity: 1,
-                                }}
-                                transition={{
-                                    delay: 0.8,
-                                    duration: 3,
-                                    ease: "easeOut",
-                                    repeat: Infinity,
-                                }}
-                            />
-                            <Box
-                                component={motion.span}
-                                sx={{
-                                    position: "absolute",
-                                    zIndex: 100,
-                                    display: "block",
-                                    width: "80%",
-                                    height: "80%",
-                                    bottom: 0,
-                                    left: 0,
-                                    borderColor: "secondary.main",
-                                    borderStyle: "solid",
-                                    borderWidth: "1px 4px 0 0",
-                                    borderRadius: "0 100% 0 0",
-                                    opacity: 0,
-                                }}
-                                animate={{
-                                    opacity: 1,
-                                }}
-                                transition={{
-                                    delay: 0.6,
-                                    duration: 3,
-                                    ease: "easeOut",
-                                    repeat: Infinity,
-                                }}
-                            />
-                            <Box
-                                component={motion.span}
-                                sx={{
-                                    position: "absolute",
-                                    zIndex: 100,
-                                    display: "block",
-                                    width: "60%",
-                                    height: "60%",
-                                    bottom: 0,
-                                    left: 0,
-                                    borderColor: "secondary.main",
-                                    borderStyle: "solid",
-                                    borderWidth: "1px 4px 0 0",
-                                    borderRadius: "0 100% 0 0",
-                                    opacity: 0,
-                                }}
-                                animate={{
-                                    opacity: 1,
-                                }}
-                                transition={{
-                                    delay: 0.4,
-                                    duration: 3,
-                                    repeat: Infinity,
-                                    ease: "easeOut",
-                                }}
-                            />
-                            <Box
-                                component={motion.span}
-                                sx={{
-                                    position: "absolute",
-                                    zIndex: 100,
-                                    display: "block",
-                                    width: "40%",
-                                    height: "40%",
-                                    bottom: 0,
-                                    left: 0,
-                                    borderColor: "secondary.main",
-                                    borderStyle: "solid",
-                                    borderWidth: "1px 4px 0 0",
-                                    borderRadius: "0 100% 0 0",
-                                    opacity: 0,
-                                }}
-                                animate={{
-                                    opacity: 1,
-                                }}
-                                transition={{
-                                    delay: 0.2,
-                                    duration: 3,
-                                    repeat: Infinity,
-                                    ease: "easeOut",
-                                }}
-                            />
-                            <Box
-                                component={motion.span}
-                                sx={{
-                                    position: "absolute",
-                                    zIndex: 100,
-                                    display: "block",
-                                    width: "20%",
-                                    height: "20%",
-                                    bottom: 0,
-                                    left: 0,
-                                    borderColor: "secondary.main",
-                                    borderStyle: "solid",
-                                    borderWidth: "1px 4px 0 0",
-                                    borderRadius: "0 100% 0 0",
-                                    opacity: 0,
-                                }}
-                                animate={{
-                                    opacity: 1,
-                                }}
-                                transition={{
-                                    delay: 0,
-                                    ease: "easeOut",
-                                    duration: 3,
-                                    repeat: Infinity,
-                                }}
-                            />
-                        </Box>
-                    </Box>
-                </Grid>
             </Grid>
-        </Paper>
+        </Box>
     )
 }
 
