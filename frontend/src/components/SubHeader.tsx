@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Typography, useMediaQuery } from "@mui/material"
 import { useTheme } from "@mui/material/styles"
 import { useState } from "react"
@@ -143,18 +144,20 @@ const fakeCategories = [
         ],
     },
 ]
+type Drops = {
+    [key: string]: boolean
+}
 const SubHeader = () => {
     const obj = subHeaderList.reduce((o, key) => Object.assign(o, { [key]: false }), {})
-    const [drop, setDrop] = useState<{
-        [key: string]: any
-    }>(obj)
+    const [drop, setDrop] = useState<Drops>(obj)
     const theme = useTheme()
     const mathes = useMediaQuery(theme.breakpoints.up("sm"))
-    const handleDropMenu = (item: string, isDrop: boolean) => {
-        setDrop({
-            [item]: isDrop,
-        })
+    const handleDropMenu = (drop : Drops) => {
+        setDrop(drop)
     }
+
+  
+    
     return (
         <Box
             height={60}
@@ -182,19 +185,23 @@ const SubHeader = () => {
                         },
                         display: "flex",
                     }}
+                    
+                    onMouseLeave={() => {
+                        handleDropMenu(obj)
+                    }}
                 >
                     <Box
                         justifyContent="center"
                         p={1}
                         display="flex"
-                        onMouseEnter={() => {
-                            handleDropMenu(item, true)
-                        }}
-                        onMouseLeave={() => {
-                            handleDropMenu(item, false)
-                        }}
+                        
                     >
-                        <Typography my="auto" component={Link} to="/shop">
+                        <Typography my="auto" component={Link} to="/shop" onMouseEnter={() => {
+                        handleDropMenu({
+                            ...drop,
+                            [item]: true
+                        })
+                    }}>
                             {item}
                         </Typography>
                         <SubHeaderItem
