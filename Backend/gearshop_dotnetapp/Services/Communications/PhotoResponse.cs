@@ -5,8 +5,8 @@ namespace gearshop_dotnetapp.Services.Communications
 {
     public class PhotoResponse : BaseResponse
     {
-        public Photo Thumbnail { get; protected set; }
-        public PhotoResponse(bool success, string message, Photo thumbnail) : base(success, message)
+        public Photo? Thumbnail { get; protected set; }
+        public PhotoResponse(bool success, string message, Photo? thumbnail) : base(success, message)
         {
             Thumbnail = thumbnail;
         }

@@ -184,6 +184,7 @@ const MobileSubheader = (props: Props) => {
                     {subHeaderList.map((item) => (
                         <Box
                             key={item}
+                            onClick={() => handleDropMenu(item)}
                             sx={{
                                 cursor: "pointer",
                                 my: 2,
@@ -198,7 +199,7 @@ const MobileSubheader = (props: Props) => {
                                 justifyContent: "space-between",
                             }}
                         >
-                            <Box p={1} display="flex" onClick={() => handleDropMenu(item)}>
+                            <Box p={1} display="flex">
                                 <Typography my="auto">{item}</Typography>
                             </Box>
                             <ArrowForwardIosIcon />

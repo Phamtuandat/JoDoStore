@@ -10,9 +10,9 @@ namespace gearshop_dotnetapp.Models.OrderModel
         public int Quantity { get; set; }
         [ForeignKey("Order")]
         public int OrderId { get; set; }
-        public virtual Order Order { get; set; }
+        public virtual Order Order { get; set; } = new Order();        
         public int ProductId { get; set; }
-        public virtual Product Product { get; set; }  // navigation property
+        public virtual Product Product { get; set; } = new Product();
 
         public decimal TotalPrice
         {

@@ -10,7 +10,7 @@ namespace gearshop_dotnetapp.Models.OrderModel
         public DateTime OrderDate { get; set; }
         public decimal TotalPrice { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
-        public virtual User? User { get; set; }
+        public virtual User User { get; set; } = new User();
         public AddressBook AddressBook { get; set; } = new AddressBook();
         public decimal ShippingCash { get; set; } = 0;
         public decimal SubtotalPrice { get; set; }

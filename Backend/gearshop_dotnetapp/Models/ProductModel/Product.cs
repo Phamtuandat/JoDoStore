@@ -15,8 +15,8 @@ namespace gearshop_dotnetapp.Models.ProductModel
         public string Name { get; set; } = string.Empty;
         public string NormalizedName { set; get; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public Category Category { get; set; }
-        public Brand Brand { get; set; }
+        public Category Category { get; set; } = new Category();
+        public Brand Brand { get; set; } = new Brand();
         public ICollection<Tag> Tags { get; set; }
         public ICollection<Photo> Thumbnails { get; set; }
         public int Price { get; set; }

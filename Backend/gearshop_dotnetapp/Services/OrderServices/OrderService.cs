@@ -108,7 +108,7 @@ namespace gearshop_dotnetapp.Services.OrderServices
 
         public IEnumerable<OrderResource> GetOrdersByUser(User user)
         {
-            var list = _unitOfWork.OrderRepository.All().Where(o => o.User.Id == user.Id)?.ToList();
+            var list = _unitOfWork.OrderRepository.All().Where(o => o.User.Id == user.Id).ToList();
             var result = _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResource>>(list);
             return result;
         }

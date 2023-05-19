@@ -25,6 +25,8 @@ namespace gearshop_dotnetapp.Services.ProductServices
             _cloudinary = new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL"));
             _cloudinary.Api.Secure = true;
         }
+
+
         public async Task<ProductRes> CreateAsync(SaveProductResource saveProductResource)
         {
             var existedProduct = _unitOfWork.ProductRepository.Find(p => p.Name == saveProductResource.Name)?.FirstOrDefault();

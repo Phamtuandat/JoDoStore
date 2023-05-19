@@ -11,7 +11,7 @@ namespace gearshop_dotnetapp.Resources
         public virtual AddressBook? Address { get; set; }
         public string PhoneNumber { get; set; } = string.Empty;
         public DateOnly Birthday { get; set; }
-        public string? Gender { get; set; }
+        public string Gender { get; set; } = string.Empty;
         public CartResource? Cart { get; set; }
         public bool EmailConfirmed { get; set; }
     }

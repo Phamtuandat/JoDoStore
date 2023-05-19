@@ -148,7 +148,7 @@ namespace gearshop_dotnetapp.Controllers
                            "ConfirmEmail", "User",
                            new { userId = user.Id, token },
                            protocol: "https",
-                           host: "phamtuandat.click"
+                           host: "diyDevBlog.com"
                        );
                 }
                 if (confirmationLink != null)
@@ -233,7 +233,7 @@ namespace gearshop_dotnetapp.Controllers
                            "ConfirmEmail", "User",
                            new { userId = user.Id, token },
                            protocol: "https",
-                           host: "phamtuandat.click"
+                           host: "diyDevBlog.com"
                        );
                 }
                 if (confirmationLink != null)
@@ -273,7 +273,7 @@ namespace gearshop_dotnetapp.Controllers
                 }
                 else
                 {
-                    redirectUrl = "https://phamtuandat.click/user";
+                    redirectUrl = "https://diyDevBlog.com/user";
                 }
                 return Redirect(redirectUrl);
             }

@@ -17,6 +17,6 @@ namespace gearshop_dotnetapp.Resources
         public string Name { get; set; } = string.Empty;
         [FromBody]
         public string PhoneNumber { get; set; } = string.Empty;
-        public string Ward { get; set; }
+        public string Ward { get; set; } = string.Empty;
     }
 }

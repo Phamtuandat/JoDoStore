@@ -43,7 +43,7 @@ namespace gearshop_dotnetapp.Services.OrderServices
             try
             {
                 var address = _unitOfWork.AddressRepository.Get(id);
-                if (address != null) throw new Exception("could not found address");
+                if (address == null) throw new Exception("could not found address");
                 _unitOfWork.AddressRepository.Delete(address);
                 await _unitOfWork.CompleteAsync();
             }

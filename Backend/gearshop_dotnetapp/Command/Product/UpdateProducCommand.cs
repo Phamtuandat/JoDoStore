@@ -6,7 +6,7 @@ namespace gearshop_dotnetapp.Command.Product
 {
     public class UpdateProducCommand : IRequest<ProductRes>
     {
-        public SaveProductResource SaveProductResource { get; set; }
+        public SaveProductResource? SaveProductResource { get; set; }
         public int Id { get; set; }
 
         public class UpdateProducCommandHandler : IRequestHandler<UpdateProducCommand, ProductRes>
@@ -19,7 +19,10 @@ namespace gearshop_dotnetapp.Command.Product
 
             public async Task<ProductRes> Handle(UpdateProducCommand request, CancellationToken cancellationToken)
             {
-                return await _productService.UpdateAsync(request.SaveProductResource, request.Id);
+                if(request.SaveProductResource != null) {
+                    return await _productService.UpdateAsync(request.SaveProductResource, request.Id);
+                }
+                return new ProductRes("product id is require!");
             }
         }
     }

@@ -5,8 +5,8 @@ namespace gearshop_dotnetapp.Services.Communications
 {
     public class BrandRes : BaseResponse
     {
-        public BrandResource BrandResource { get; protected set; }
-        public BrandRes(bool success, string message, BrandResource brandResource) : base(success, message)
+        public BrandResource? BrandResource { get; protected set; }
+        public BrandRes(bool success, string message, BrandResource? brandResource) : base(success, message)
         {
             BrandResource = brandResource;
         }
@@ -14,7 +14,7 @@ namespace gearshop_dotnetapp.Services.Communications
         {
 
         }
-        public BrandRes(bool success) :this(success, string.Empty, null)
+        public BrandRes(bool success) : this(success, string.Empty, null)
         {
 
         }

@@ -4,7 +4,6 @@ using gearshop_dotnetapp.Models.OrderModel;
 using gearshop_dotnetapp.Models.ProductModel;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace gearshop_dotnetapp.Data
 {

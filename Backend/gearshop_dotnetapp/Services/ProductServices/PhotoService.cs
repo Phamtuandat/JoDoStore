@@ -54,12 +54,13 @@ namespace gearshop_dotnetapp.Services.ProductServices
                 };
                 var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
+                var imageUrl = uploadResult.SecureUrl.ToString();
 
                 var newThumb = new Photo()
                 {
                     Title = model.Title,
                     ImageCollections = collections,
-                    ImageUrl = uploadResult.SecureUri?.ToString(),
+                    ImageUrl = imageUrl,
                     Description = model.Description,
                     ProductId = model.ProductId,
                     PublicId = uploadResult.PublicId,

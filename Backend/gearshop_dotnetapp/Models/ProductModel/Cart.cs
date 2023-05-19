@@ -6,7 +6,7 @@ namespace gearshop_dotnetapp.Models.ProductModel
     {
         public int Id { get; set; }
         public string UserId { get; set; } = string.Empty;
-        public virtual User? User { get; set; }
+        public virtual User User { get; set; } = new User();
         public ICollection<CartItem> Items { get; set; } = new List<CartItem>();
     }
 }

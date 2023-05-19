@@ -1,5 +1,4 @@
-﻿using gearshop_dotnetapp.Resources;
-using gearshop_dotnetapp.Services.Communications;
+﻿using gearshop_dotnetapp.Services.Communications;
 using gearshop_dotnetapp.Services.ProductServices;
 using MediatR;
 
@@ -17,10 +16,10 @@ namespace gearshop_dotnetapp.Queries
                 _productService = productService;
             }
 
-            public async Task<ProductRes> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
+            public Task<ProductRes> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
             {
-                var result =  _productService.GetById(request.Id);
-                return result;
+                var result =    _productService.GetById(request.Id);
+                return Task.FromResult(result);
             }
         }
     }
