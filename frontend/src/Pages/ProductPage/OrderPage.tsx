@@ -128,10 +128,7 @@ const OrderPage = (props: Props) => {
                                                             <CardMedia
                                                                 component="img"
                                                                 height="80px"
-                                                                image={
-                                                                    cart.product.thumbnails[0]
-                                                                        .imageUrl
-                                                                }
+                                                                
                                                             />
                                                         </Box>
                                                     </Hidden>
@@ -152,11 +149,6 @@ const OrderPage = (props: Props) => {
                                                                         component="img"
                                                                         height="80px"
                                                                         width="80px"
-                                                                        image={
-                                                                            cart.product
-                                                                                .thumbnails[0]
-                                                                                .imageUrl
-                                                                        }
                                                                     />
                                                                 </Box>
                                                             </Hidden>

@@ -1,5 +1,5 @@
 import { Autocomplete, Box, TextField } from "@mui/material"
-import { Category, Tag } from "models"
+import { Category, Option } from "models"
 import { Control, useController } from "react-hook-form"
 
 export interface PasswordFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -7,7 +7,7 @@ export interface PasswordFieldProps extends React.InputHTMLAttributes<HTMLInputE
     control: Control<any>
     label?: string
     disabled: boolean
-    options: Category[] | Tag[]
+    options: Option[]
     isMutiple: boolean
     setValue: (value: string) => void
 }

@@ -1,10 +1,8 @@
 import EastIcon from "@mui/icons-material/East"
 import { Box, Hidden, Skeleton, Typography } from "@mui/material"
 import { styled } from "@mui/material/styles"
-import PhotoApi from "ApiClients/PhotoApi"
 import { useWidth } from "Hooks/width-hook"
 import { motion, useAnimationControls, useMotionValue } from "framer-motion"
-import { Photo } from "models"
 import buildQuery from "odata-query"
 import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
@@ -45,9 +43,11 @@ export const BanerSlider = () => {
     const btnStyles = {
         opacity: useMotionValue(1),
     }
+    const [images, setEmail] = useState<string[]>([
+        "https://static.diydevblog.com/Image/band.webp?_t=1686147469",
+    ])
     const textCtrl = useAnimationControls()
     const btnCtrl = useAnimationControls()
-    const [images, setImages] = useState<Photo[] | []>()
     const [currentSlide, setCurrentSlide] = useState<number>(0)
     const handleBeforeChange = (oldIndex: number, newIndex: number) => {
         textCtrl.set({
@@ -70,6 +70,7 @@ export const BanerSlider = () => {
         dots: true,
         draggable: true,
     }
+
     useEffect(() => {
         if (!ignore.current) {
             ignore.current = true
@@ -81,9 +82,6 @@ export const BanerSlider = () => {
                         },
                     },
                 })
-
-                const list = await (await PhotoApi.getAll(param)).data
-                setImages(list)
             })()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -112,9 +110,9 @@ export const BanerSlider = () => {
                 <Slider {...settings} beforeChange={handleBeforeChange}>
                     {images?.map((slide) => (
                         <Box
-                            key={slide.id}
+                            key={slide}
                             sx={{
-                                backgroundImage: `url(${slide.imageUrl})`,
+                                backgroundImage: `url(${slide})`,
                                 backgroundSize: "contain",
                                 backgroundPosition: "top center",
                                 paddingBottom: "57%",

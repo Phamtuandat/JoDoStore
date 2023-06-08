@@ -2,7 +2,7 @@ import * as React from "react"
 import Button from "@mui/material/Button"
 import Menu from "@mui/material/Menu"
 import MenuItem from "@mui/material/MenuItem"
-import { Avatar, Box, Typography } from "@mui/material"
+import { Avatar, Box, Typography, Link as MuiLink } from "@mui/material"
 import { NavLink } from "react-router-dom"
 import { Link } from "react-router-dom"
 import { useAppSelector } from "app/hooks"
@@ -45,16 +45,11 @@ export default function BasicMenu({ isLoggedIn, handleLogout }: Props) {
                 }}
             >
                 <MenuItem onClick={handleClose}>
-                    <Typography
-                        component={Link}
-                        to="/user/account"
-                        sx={{
-                            textDecoration: "none",
-                            color: "text.primary",
-                        }}
+                    <MuiLink
+                       href="https://account.diydevblog.com/index"
                     >
                         My account
-                    </Typography>
+                    </MuiLink>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
                     <Typography

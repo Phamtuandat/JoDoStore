@@ -19,10 +19,6 @@ const variants = {
         zIndex: 1,
         opacity: 1,
     },
-    exit: {
-        zIndex: 0,
-        opacity: 0,
-    },
 }
 
 const ProductMediaCard = ({ product }: Props) => {
@@ -57,8 +53,7 @@ const ProductMediaCard = ({ product }: Props) => {
                     <AnimatePresence initial={false}>
                         <Box
                             component={motion.img}
-                            key={imgPath}
-                            src={product.thumbnails[imgPath]?.imageUrl}
+                            key={product.imagePaths[imgPath]}
                             variants={variants}
                             initial="enter"
                             animate="center"
@@ -69,6 +64,7 @@ const ProductMediaCard = ({ product }: Props) => {
                                     easings: theme.transitions.getAutoHeightDuration,
                                 },
                             }}
+                            src={product.imagePaths[imgPath]}
                             sx={{
                                 width: "100%",
                             }}
@@ -84,11 +80,12 @@ const ProductMediaCard = ({ product }: Props) => {
                     p={1}
                     slidesPerView={width === "xs" ? 3 : 5}
                 >
-                    {product.thumbnails.map((media, idx) => (
-                        <SwiperSlide key={media.imageUrl} onClick={() => handleChangeImage(idx)}>
+                    {product.imagePaths.map((media, idx) => (
+                        <SwiperSlide key={media} onClick={() => handleChangeImage(idx)}>
                             <Box sx={{}}>
                                 <CardMedia
                                     component="img"
+                                    image={media}
                                     sx={{
                                         objectFit: "contain",
                                         borderRadius: "3px",
@@ -101,7 +98,6 @@ const ProductMediaCard = ({ product }: Props) => {
                                                 ? `${theme.palette.secondary.main} 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset`
                                                 : "none",
                                     }}
-                                    image={media.imageUrl}
                                 />
                             </Box>
                         </SwiperSlide>

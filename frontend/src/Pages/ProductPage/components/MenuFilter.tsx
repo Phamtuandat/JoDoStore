@@ -38,18 +38,16 @@ export default function MenuFilterOption({ handleFilterChange, param, queryParam
             ;(async () => {
                 try {
                     const categoryList = (await categoryApi.getAll()).data
-                    const brandList = (await brandApi.getAll()).data
                     const categoryQs =
                         (queryParam.category as { name: { in: string[] } })?.name.in || []
-                    const brandQs = (queryParam.brand as { name: { in: string[] } })?.name.in || []
                     setCategoryCheck(mapArrayTopObj(categoryList, categoryQs))
-                    setBrandCheck(mapArrayTopObj(brandList, brandQs))
                 } catch (error) {}
             })()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     const mapArrayTopObj = (paramList: Array<Category | Brand>, queryParam: string[]) => {
+        console.log(paramList)
         const keyList = paramList.map((p) => p.name)
         const obj = keyList.reduce((accumulator, value) => {
             return { ...accumulator, [value]: queryParam.includes(value) }

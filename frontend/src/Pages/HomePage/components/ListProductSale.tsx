@@ -47,13 +47,7 @@ const ListProductSale = (props: Props) => {
         if (!ignore.current) {
             ignore.current = true
             ;(async () => {
-                const filter: Filter = {
-                    tags: {
-                        any: {
-                            name: "In Stock",
-                        },
-                    },
-                }
+                const filter: Filter = {}
                 const param = buildQuery({ filter })
                 const res = await productApi.getList(param)
                 setProductList(res.data)

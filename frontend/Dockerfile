@@ -18,6 +18,11 @@ RUN yarn run build
 FROM nginx:alpine
 # Copy config nginx
 COPY --from=build /app/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/.nginx/admin.conf /etc/nginx/conf.d/admin.conf
+COPY --from=build /app/.nginx/account.conf /etc/nginx/conf.d/account.conf
+COPY --from=build /app/.nginx/static.conf /etc/nginx/conf.d/static.conf
+
+
 
 WORKDIR /usr/share/nginx/html
 COPY .env.production .
@@ -33,3 +38,4 @@ RUN rm -rf ./*
 COPY --from=build /app/build .
 # Containers run nginx with global directives and daemon off
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
+

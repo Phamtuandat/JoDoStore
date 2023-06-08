@@ -30,9 +30,6 @@ const ProductDetailPage = (props: Props) => {
             dispath(
                 ProductSliceActions.getList({
                     filter: {
-                        category: {
-                            or: [{ id: product.category?.id }],
-                        },
                         not: {
                             id: product.id,
                         },

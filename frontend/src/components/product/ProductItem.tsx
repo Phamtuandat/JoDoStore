@@ -44,8 +44,8 @@ export const ProductItem = ({ product }: Props) => {
                     component={motion.div}
                     sx={{
                         pb: "100%",
-                        backgroundImage: ` url(${product.thumbnails[0]?.imageUrl})`,
                         backgroundPosition: "center",
+                        backgroundImage: `url(${product.thumbnail})`,
                         backgroundSize: "cover",
                         backgroundRepeat: "no-repeat",
                         bgcolor: theme.palette.background.paper,

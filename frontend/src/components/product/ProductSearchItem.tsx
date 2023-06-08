@@ -40,7 +40,7 @@ const ProductSearchList = ({ products, handleClickEdit }: Props) => {
                         }}
                     >
                         <ListItemAvatar>
-                            <Avatar alt={product.name} src={product.thumbnails[0].imageUrl} />
+                            {/* <Avatar alt={product.name} src={product.thumbnails[0].imageUrl} /> */}
                         </ListItemAvatar>
                         <ListItemText
                             primary={product.name}

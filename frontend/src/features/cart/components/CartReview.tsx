@@ -106,7 +106,6 @@ const CartReview = ({ carts }: Props) => {
                                         </IconButton>
                                     </Box>
                                     <CardMedia
-                                        image={cart.product.thumbnails[0].imageUrl}
                                         sx={{
                                             width: "80px",
                                             height: "80px",

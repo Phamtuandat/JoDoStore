@@ -18,6 +18,11 @@ export interface ListParams {
     [key: string]: any
 }
 
+export interface Option {
+    id: number
+    name: string
+}
+
 export interface AuthResponse<T> {
     data: T
 }

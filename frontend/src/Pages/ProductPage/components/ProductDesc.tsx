@@ -1,7 +1,6 @@
 import { Box, Typography } from "@mui/material"
 import React from "react"
 import { useTheme } from "@mui/material/styles"
-import convert from "Hooks/useConvert"
 type Props = {
     desc: string | null
 }
@@ -29,7 +28,7 @@ const ProductDesc = ({ desc }: Props) => {
             ) : (
                 <Box
                     dangerouslySetInnerHTML={{
-                        __html: convert.convertToHtml(desc),
+                        __html: desc,
                     }}
                 />
             )}

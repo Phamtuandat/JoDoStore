@@ -1,15 +1,5 @@
 import authApi from "ApiClients/AuthApi"
 import { productApi } from "ApiClients/ProductApi"
-import AdminPage from "Pages/AdminPage/AdminPage"
-import AnalyticsPage from "Pages/AdminPage/Analytics/AnalyticsPage"
-import Coupon from "Pages/AdminPage/Coupon/Coupon"
-import OrderListPage from "Pages/AdminPage/OrderListPage/OrderListPage"
-import ProductPage from "Pages/AdminPage/Product"
-import AddProductPage from "Pages/AdminPage/Product/AddProductPage"
-import EditPage from "Pages/AdminPage/Product/EditPage"
-import ListProduct from "Pages/AdminPage/Product/ListProduct"
-import EditForm from "Pages/AdminPage/Product/ProductComponent/EditForm"
-import UIPage from "Pages/AdminPage/UiPage/UIPage"
 import HomePage from "Pages/HomePage/HomePage"
 import OrderPage from "Pages/ProductPage/OrderPage"
 import ProductDetailPage from "Pages/ProductPage/ProductDetailPage"
@@ -76,73 +66,7 @@ const router = createBrowserRouter([
                 element: <AccountPage />,
             },
         ],
-    },
-    {
-        path: "/admin",
-        loader: async () => {
-            return await authApi.adminValidate().catch(() => {
-                throw new Response("Unauthorize!", { status: 400 })
-            })
-        },
-        element: <AdminPage />,
-        errorElement: <ErrorPage />,
-
-        children: [
-            {
-                path: "/admin/Analytics",
-                element: <AnalyticsPage />,
-            },
-            {
-                path: "/admin/product",
-                element: <ProductPage />,
-                children: [
-                    {
-                        path: "/admin/product/new",
-                        element: <AddProductPage />,
-                    },
-                    {
-                        path: "/admin/product/edit",
-                        element: <EditPage />,
-                        children: [
-                            {
-                                path: "/admin/product/edit/:productId",
-                                loader: async ({ params }) => {
-                                    if (params.productId) {
-                                        return (await productApi.getById(+params.productId)).data
-                                    }
-                                },
-                                element: <EditForm />,
-                            },
-                        ],
-                    },
-                    {
-                        path: "/admin/product/list",
-                        element: <ListProduct />,
-                    },
-                ],
-            },
-            {
-                path: "/admin/Ecommerce",
-                element: <ProductShopPage />,
-                children: [],
-            },
-            {
-                path: "/admin/orders",
-                element: <OrderListPage />,
-                children: [],
-            },
-            {
-                path: "/admin/uiPage",
-                element: <UIPage />,
-                children: [],
-            },
-            {
-                path: "/admin/coupon",
-                element: <Coupon />,
-                children: [],
-            },
-        ],
-    },
+    }
 ])
 
 export default router

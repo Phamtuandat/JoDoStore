@@ -15,8 +15,8 @@ import { Product } from "models"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
-import ProductDesc from "./ProductDesc"
 import handleNotify from "utils/Toast-notify"
+import ProductDesc from "./ProductDesc"
 type Props = {
     product: Product
 }
@@ -132,10 +132,10 @@ const ProductContent = ({ product }: Props) => {
             >
                 <Box display="flex" mt={1} flexDirection="column">
                     {product.tags?.map((tag) => (
-                        <Box display="flex" key={tag.id}>
+                        <Box display="flex" key={tag}>
                             <CheckIcon />
                             <Typography variant="button" component="span" mx={1}>
-                                {tag.name}
+                                {tag}
                             </Typography>
                         </Box>
                     ))}

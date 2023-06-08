@@ -12,7 +12,6 @@ export default function CheckboxesForm({ filterState, handleChange }: Props) {
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         handleChange(event)
     }
-
     return (
         <Box sx={{ display: "flex" }}>
             <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">

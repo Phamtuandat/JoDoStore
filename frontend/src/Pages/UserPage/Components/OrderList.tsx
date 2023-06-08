@@ -106,7 +106,6 @@ const OrderList = (props: Props) => {
                                             <Box display="flex">
                                                 <CardMedia
                                                     component="img"
-                                                    image={product?.thumbnails[0].imageUrl}
                                                     sx={{
                                                         height: 80,
                                                         width: 80,
