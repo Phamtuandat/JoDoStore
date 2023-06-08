@@ -1,0 +1,54 @@
+@model EditExtraProfileModel
+@{
+    ViewData["Title"] = "Personal profile";
+}
+
+<div class="personal-profle container-sm mt-5  ">
+    <partial name="_AlertMessage" />
+    <div class="row">
+        <div class=" personal-profle-content bg-light col-lg-6">
+            <h4>@ViewData["Title"]</h4>
+            <div class="col-md-12">
+                <form class="user" id="profile-form" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="UserName"></label>
+                        <input class="form-control form-control-user" asp-for="UserName" class="form-control"
+                            disabled />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="UserEmail"></label>
+                        <input class="form-control form-control-user" asp-for="UserEmail" class="form-control"
+                            disabled />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="PhoneNumber"></label>
+                        <input class="form-control form-control-user" asp-for="PhoneNumber" class="form-control"
+                            disabled />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="HomeAdress"></label>
+                        <textarea class="form-control form-control-user" asp-for="HomeAdress"
+                            class="form-control"></textarea>
+                        <span asp-validation-for="HomeAdress" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="BirthDate"></label>
+                        <input class="form-control form-control-user" asp-for="BirthDate" class="form-control" />
+                        <span asp-validation-for="BirthDate" class="text-danger"></span>
+                    </div>
+
+                    <button id="update-profile-button" type="submit"
+                        class="btn btn-primary btn-user btn-block">Save</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-6 d-none d-lg-block bg-personal-image"></div>
+
+    </div>
+</div>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}

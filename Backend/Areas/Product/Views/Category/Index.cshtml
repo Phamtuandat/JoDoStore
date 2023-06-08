@@ -1,0 +1,78 @@
+@model IEnumerable<App.Models.ProductModel.Category>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<partial name="_AlertMessage" />
+<div class="d-flex justify-content-between">
+    <h1>Index</h1>
+    <div>
+        <a asp-action="Create" class="btn btn-info">Create <i class="fa-duotone fa-plus"></i></a>
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Slug)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ParentCategory)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            await RenderCategoryAsync(item, 0);
+
+        }
+    </tbody>
+</table>
+
+
+@{
+    async Task RenderCategoryAsync(Category category, int level)
+    {
+        var prefix = string.Concat(Enumerable.Repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", level));
+        <tr>
+            <td>
+                <a asp-action="Edit" asp-route-id="@category.Id"> @Html.Raw(prefix) @Html.DisplayFor(modelItem =>
+            category.Name)</a>
+            </td>
+            <td>
+                @Html.Raw(category.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => category.Slug)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => category.ParentCategory.Name)
+            </td>
+            <td>
+                <a asp-action="Delete" asp-route-id="@category.Id">Delete</a>
+            </td>
+        </tr>
+        if (category.ChildCategories?.Count > 0)
+        {
+            foreach (var child in category.ChildCategories)
+            {
+                await RenderCategoryAsync(child, level + 1);
+
+            }
+        }
+    }
+}
+
+
+@section Sidebar {
+@Html.Raw(_menuAdminProvider.RenderHtml())
+}

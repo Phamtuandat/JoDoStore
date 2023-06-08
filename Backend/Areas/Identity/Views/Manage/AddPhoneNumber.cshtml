@@ -1,0 +1,39 @@
+﻿@model AddPhoneNumberViewModel
+@{
+
+    ViewData["Title"] = "Add Phone Number";
+}
+
+<div class="container">
+    <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="row phone">
+            <div class="col-lg-6 d-none d-lg-block bg-personal-image"></div>
+            <div class="col-lg-6 phone-form">
+                <div class="phone-form-header">
+                    <h4 class="m-2">Add Phone Number</h4>
+                    <hr />
+                </div>
+                <div class="phone-form-input">
+                    <form asp-controller="Manage" asp-action="AddPhoneNumber" method="post" class="user" role="form">
+                        <div class="form-group">
+                            <div>
+                                <input placeholder="Phone Number..." class="form-control form-control-user"
+                                    asp-for="PhoneNumber" />
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2">
+                                <button type="submit" class="btn btn-primary btn-block">Sent code</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

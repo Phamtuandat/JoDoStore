@@ -1,0 +1,74 @@
+@model IEnumerable<ProductDto>
+
+<p>
+      <a asp-action="Create">Create New</a>
+</p>
+<partial name="_AlertMessage" />
+<table class="table">
+      <thead>
+            <tr>
+                  <th>
+                        @Html.DisplayNameFor(model => model.Id)
+                  </th>
+                  <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                  </th>
+                  <th>
+                        @Html.DisplayNameFor(model => model.Price)
+                  </th>
+
+                  <th>
+                        @Html.DisplayNameFor(model => model.Brand.Name)
+                  </th>
+
+
+                  <th>
+                        @Html.DisplayNameFor(model => model.SalePrice)
+                  </th>
+            </tr>
+      </thead>
+      <tbody>
+            @foreach (var item in Model)
+            {
+                  <tr>
+                        <td>
+                              @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                              <a class="text-decoration-none" asp-action="Edit"
+                              asp-route-id="@item.Id">@Html.DisplayFor(modelItem
+                              => item.Name)</a>
+                              <br>
+                              <small>
+                                    @if (item.ProductCategories?.Count > 0)
+                                    {
+                                          string.Join(", ", item.ProductCategories.Select(pc => pc.Category.Name));
+                                    }
+                              </small>
+                        </td>
+                        <td>
+                              @Html.DisplayFor(modelItem => item.Brand.Name)
+                        </td>
+                        <td>
+                              @Html.DisplayFor(modelItem => item.Price)
+
+                        </td>
+                        <td>
+                              @Html.DisplayFor(modelItem => item.SalePrice)
+
+                        </td>
+                        <td>
+                              <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                  </tr>
+            }
+      </tbody>
+</table>
+@* <partial name="_PagingXTL" model="@ViewBag.pagingmodel" /> *@
+@{
+      @* _menuAdminProvider.SetActive("Post", "Index", "Blog"); *@
+}
+
+@section Sidebar{
+@Html.Raw(_menuAdminProvider.RenderHtml())
+}

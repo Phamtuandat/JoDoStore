@@ -1,0 +1,130 @@
+@using Newtonsoft.Json
+@inject IWebHostEnvironment _env;
+@model App.Models.Elfinder
+@{
+      var images = (ViewData["images"] as string[]);
+
+}
+
+@if (Model.LoadLib)
+{
+
+      <link rel="stylesheet" href="~/lib/summernote/summernote-bs5.min.css">
+      <link rel="stylesheet" href="~/lib/jqueryui/themes/base/theme.css" />
+      <link rel="stylesheet" href="~/lib/jqueryui/themes/base/jquery-ui.css" />
+      <link rel="stylesheet" href="~/lib/elfinder/css/elfinder.full.css" />
+      <link rel="stylesheet" href="~/lib/elfinder/css/theme.min.css" />
+      <link rel="stylesheet" href="~/css/elfinder-material-theme/Material/css/theme-gray.css" />
+      <script src="~/vendor/jquery/jquery.min.js"></script>
+      <script src="~/lib/jquery-easing/jquery.easing.min.js"></script>
+
+      <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
+      <script src="~/lib/elfinder/js/elfinder.min.js"></script>
+      <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+      <script src="~/lib/summernote/summernote-bs5.min.js"></script>
+
+}
+
+<script>
+      $(document).ready(function () {
+            function sanitizeUrl(url) {
+                  // List of special characters and their encoded equivalents
+                  var specialCharacters = {
+                        '(': '%28',
+                        ')': '%29',
+
+                  };
+
+                  // Replace special characters with their encoded equivalents
+                  var sanitizedUrl = url.replace(/[()]/g, function (match) {
+                        return specialCharacters[match];
+                  });
+
+                  return sanitizedUrl;
+            }
+            (function renderOption() {
+                  var jsonArray = @Html.Raw(Json.Serialize(images));
+                  var selectedFile = $('@Model.InputId').val();
+                  if (jsonArray?.length > 0) {
+                        for (var i = 0; i < jsonArray.length; i++) {
+                              var imageUrl = jsonArray[i];
+                              var imageElement = $('<div>').addClass("imageItem").attr("key", imageUrl)
+                                    .append($("<img>").attr("src", imageUrl).addClass("d-block"))
+                                    .append($("<button>").attr("key", imageUrl).addClass("btn btn-outline-warning closeBtn").append('X').attr("type", "button"));
+                              var option = `<option value=${imageUrl}></option>`;
+                              $('@Model.InputId').append(option)
+                              $('@Model.InputId option').prop("selected", true)
+                              $('@Model.ImageListId').append(imageElement);
+                        }
+                        $('.closeBtn').click(function (e) {
+                              var parentKey = $(this).parent().attr('key');
+                              $('@Model.InputId option').filter(function () {
+                                    return $(this).val() === parentKey;
+                              }).remove();
+                              var parentImageItem = $(this).closest('.imageItem');
+                              parentImageItem.remove();
+                        });
+
+                  }
+            })();
+            $('@Model.ElfinderId').click(function () {
+                  elfinderDialog();
+            });
+            function elfinderDialog() {
+                  $('<div/>').dialogelfinder({
+                        baseUrl: "@Url.Action("Connector", "FIle", new {area = "File"})",
+                        url: "@Url.Action("Connector", "FIle", new {area = "File"})",
+                        lang: '@Model.Lang',
+                        width: '@Model.Width',
+                        height: '@Model.Hieght',
+                        destroyOnClose: true,
+                        getFileCallback: function (files, fm) {
+                              if (files.length > 0) {
+                                    var selectedFile = $('@Model.InputId').val();
+                                    for (var i = 0; i < files.length; i++) {
+                                          var imageUrl;
+                                          if (`@_env.IsProduction()` === 'True') {
+                                                imageUrl = sanitizeUrl(files[i].url
+                                                      .replace("http://admin.diydevblog.com/contents", "https://static.diydevblog.com")
+                                                      .replace(""))
+                                          } else {
+                                                imageUrl = sanitizeUrl(files[i].url)
+                                          };
+
+                                          if (!selectedFile.includes(imageUrl)) {
+                                                var imageElement = $('<div>').addClass("imageItem").attr("key", imageUrl)
+                                                      .append($("<img>").attr("src", imageUrl).addClass("d-block"))
+                                                      .append($("<button>").attr("key", imageUrl).addClass("btn btn-outline-warning closeBtn").append('X').attr("type", "button"));
+                                                var option = `<option value=${files[i].url}></option>`;
+                                                $('@Model.InputId').append(option)
+                                                $('@Model.InputId option').prop("selected", true)
+                                                $('@Model.ImageListId').append(imageElement);
+                                          }
+                                    }
+                                    $('.closeBtn').click(function (e) {
+                                          var parentKey = $(this).parent().attr('key');
+                                          $('@Model.InputId option').filter(function () {
+                                                return $(this).val() === parentKey;
+                                          }).remove();
+                                          var parentImageItem = $(this).closest('.imageItem');
+                                          parentImageItem.remove();
+                                    });
+                              } else {
+                                    var imageUrl = files.url.replace("http://admin.diydevblog.com/contents", "https://static.diydevblog.com")
+                                    $('@Model.InputId').val(sanitizeUrl(imageUrl))
+                              }
+                        },
+                        commandsOptions: {
+                              getfile: {
+                                    oncomplete: 'close',
+                                    folders: false,
+                                    multiple: @Model.IsMutiple
+                              }
+                        }
+                  }).dialogelfinder('instance');
+            }
+
+      });
+
+
+</script>

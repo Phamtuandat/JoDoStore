@@ -1,0 +1,22 @@
+﻿@model DisplayRecoveryCodesViewModel
+@{
+    ViewData["Title"] = "Recovery Codes";
+}
+
+<h1>@ViewData["Title"].</h1>
+<p class="text-success">@ViewData["StatusMessage"]</p>
+
+<div>
+    <h4>This are restore codes</h4>
+    <p>Save there code to two-fatory verify</p>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Codes:</dt>
+        @foreach (var code in Model.Codes)
+        {
+            <dd>
+                <text>@code</text>
+            </dd>
+        }
+    </dl>
+</div>

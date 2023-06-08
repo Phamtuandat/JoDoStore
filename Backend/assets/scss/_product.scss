@@ -1,0 +1,25 @@
+.image-list{
+      display: flex;
+      img{
+            height: 150px;
+      };
+      padding: 20px;
+      min-height: 200px;
+      border-radius: 5px;
+      border: 1px solid rgba(0, 0, 0, .1);
+      overflow: auto;
+      .imageItem{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-right: 10px;
+            .closeBtn{
+                  padding: 2px !important;
+                  display: block;
+                  width: 60%;
+                  margin-top: 2px;
+                  margin-right: auto;
+                  margin-left: auto;
+            }
+      }
+}

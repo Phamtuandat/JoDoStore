@@ -1,0 +1,76 @@
+@using App.Areas.Identity.Models.UserViewModels
+
+@model AddUserRoleModel
+@{
+    ViewData["Title"] = "Add role";
+}
+
+<partial name="_AlertMessage" />
+
+<div class="row">
+    <div class="col-md-6">
+        <form id="set-password-form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="RoleNames"></label>
+                @Html.ListBoxFor(m => m.RoleNames, (IEnumerable<SelectListItem>)ViewBag.allRoles, new {
+                id = "id-select-roles",
+                @class = "w-100"
+                })
+                <span asp-validation-for="RoleNames" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Edit</button>
+            <a class="btn btn-primary" asp-action="Index">List of users</a>
+        </form>
+        <hr>
+        <p>claim role:</p>
+        @if (Model.claimsInUserClaim.Count > 0)
+        {
+                <ul>
+                @foreach (var claim in Model.claimsInUserClaim)
+                {
+                            <li>@claim.Id : @claim.ClaimValue</li>
+                }
+                </ul>
+        }
+        <hr>
+        <p>Personal claim:
+            <a asp-action="AddClaim" asp-route-userid="@Model.user.Id">+ Add Personal claim</a>
+        </p>
+        @if (Model.claimsInUserClaim.Count > 0)
+        {
+                <ul>
+                @foreach (var claim in Model.claimsInUserClaim)
+                {
+                            <li>
+                                <a asp-action="EditClaim" asp-route-claimid="@claim.Id">@claim.ClaimType : @claim.ClaimValue</a>
+                            </li>
+                }
+                </ul>
+        }
+
+    </div>
+</div>
+
+<script src="~/lib/multiple-select/multiple-select.min.js"></script>
+<link rel="stylesheet" href="~/lib/multiple-select/multiple-select.min.css" />
+
+<script>
+    $("#id-select-roles").multipleSelect({
+        selectAll: false,
+        keepOpen: false,
+        isOpen: false,
+    });
+</script>
+
+<partial name="_ValidationScriptsPartial" />
+
+@{
+    _adminMenuService.SetActive("User", "AddRole", "Identity");
+}
+
+@section Sidebar{
+@Html.Raw(_adminMenuService.RenderHtml());
+}

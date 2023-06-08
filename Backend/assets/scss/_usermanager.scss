@@ -1,0 +1,64 @@
+.personal-profle{
+    border-radius: 20px;
+    overflow: hidden;
+    h4{
+        color: black;
+        padding: 10px;
+       
+    }
+    .personal-profle-content{
+        padding: 20px;
+    }
+    
+}
+.bg-personal-image {
+    background: url("/Contents/Image/personal.jpg");
+    background-position: center;
+    background-size: cover;
+    padding-right: -1.5rem;
+  }
+.account{
+    h1{
+        color: black;
+    }
+    padding: 20px;
+}
+.phone{
+    padding: 0 10px;
+    min-height: 600px;
+    .phone-form{
+        padding-top: 50px;
+        padding-bottom: 50px;
+        display: flex;
+        flex-direction: column;
+        .phone-form-header{
+            flex: 1;
+        }
+        .phone-form-input{
+            flex: 2;
+        }
+    }
+}
+.connection{
+    padding: 0 10px;
+    min-height: 600px;
+}
+.bg-connection-image {
+    background: url("/Contents/Image/connection.webp");
+    background-position: center;
+    background-size: cover;
+}
+.repassword{
+    padding: 20px 20px !important;
+    min-height: 600px;
+}
+.bg-repassword-image {
+    background: url("/Contents/Image/lock.webp");
+    background-position: center;
+    background-size: cover;
+}
+.bg-register-image, .bg-login-image {
+    background: url("/Contents/Image/lock.webp") !important;
+    background-position: center;
+    background-size: cover;
+}

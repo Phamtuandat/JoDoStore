@@ -1,0 +1,37 @@
+@using Microsoft.AspNetCore.Identity
+
+@model IdentityRole
+@{
+    ViewData["Title"] = "Delete Role";
+}
+<h2>@ViewData["Title"]</h2>
+<partial name="_AlertMessage"></partial>
+
+<hr>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <p>Do you want to delete <strong>@Model.Name</strong></p>
+            <div class="form-group mt-3">
+                <input type="submit" value="Đồng ý" class="btn btn-danger" />
+                <a class="btn btn-primary" asp-action="Index">List of role</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+@{
+    _adminMenuService.SetActive("Role", "Delete", "Identity");
+}
+
+@section Sidebar{
+@Html.Raw(_adminMenuService.RenderHtml());
+}

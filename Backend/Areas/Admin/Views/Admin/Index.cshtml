@@ -1,0 +1,19 @@
+@using App.Models;
+<h1>
+      Admin Pages
+</h1>
+
+<input type="text" id="input-me">
+<button id="elfinder">
+      Click me!
+</button>
+
+@{
+      var elfinder1 = new Elfinder("#elfinder", "#input-me");
+}
+
+<partial name="_ElfinderDialog" model="@elfinder1" />
+
+@section Sidebar{
+@Html.Raw(_appbarService.RenderHtml())
+}

@@ -1,0 +1,46 @@
+@using App.Areas.Identity.Models.RoleViewModels
+
+@model List<RoleModel>
+@{
+    ViewData["Title"] = "List of Roles";
+}
+<h2>@ViewData["Title"]</h2>
+
+<partial name="_AlertMessage"></partial>
+
+
+<div class="mb-2">
+    <a class="btn btn-secondary" asp-action="Create">Create a role</a>
+    <a class="btn btn-secondary" asp-action="Index" asp-controller="User">User management</a>
+</div>
+
+<table class="table">
+    <tr>
+        <th>Role</th>
+        <th>Task</th>
+    </tr>
+    @foreach (var role in Model)
+    {
+            <tr>
+                <td>
+                    <p>@role.Name</p>
+                @foreach (var claim in @role.Claims)
+                {
+                            <small>@claim</small><br>
+                }
+                </td>
+                <td>
+                    <a class="btn btn-success btn-sm" asp-action="Edit" asp-route-roleid="@role.Id">Update</a>
+                    <a class="btn btn-success btn-sm" asp-action="Delete" asp-route-roleid="@role.Id">Delete</a>
+                </td>
+            </tr>
+    }
+</table>
+
+@{
+    _adminMenuService.SetActive("Role", "Index", "Identity");
+}
+
+@section Sidebar{
+@Html.Raw(_adminMenuService.RenderHtml());
+}

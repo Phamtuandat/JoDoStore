@@ -1,0 +1,70 @@
+@{
+      var connect = _context.Database.GetDbConnection();
+      var dbName = connect.Database;
+      var canconnect = _context.Database.CanConnect();
+}
+<partial name="_AlertMessage" />
+
+<p>
+      -Database name: @dbName
+</p>
+<p>
+      -Database connection status: @connect.State
+</p>
+@if (!canconnect)
+{
+      <p class="alert alert-danger">Could not connect to database</p>
+}
+<hr>
+<h3>
+      Migrations:
+</h3>
+<ul class="list-group">
+      @foreach (var item in _context.Database.GetAppliedMigrations())
+      {
+            <li class="list-group-item">
+                  @item <span class="text-success">
+                        (Applied)
+                  </span>
+            </li>
+      }
+</ul>
+<ul class="list-group">
+      @foreach (var item in _context.Database.GetPendingMigrations())
+      {
+            <li class="list-group-item">
+                  @item <span class="text-warning">
+                        (Pending)
+                  </span>
+            </li>
+      }
+</ul>
+@if (_context.Database.GetPendingMigrations().Any())
+{
+      <form method="post">
+            <button class="btn btn-primary mt-2" type="submit" asp-action="Migration">Update Migration</button>
+      </form>
+}
+
+@if (canconnect)
+{
+      <h2 class="accept-policy">
+            Tables
+      </h2>
+      await _context.Database.OpenConnectionAsync();
+      var tables = _context.Database.GetDbConnection().GetSchema("Tables");
+      <ul class="list-group">
+            @foreach (System.Data.DataRow row in tables.Rows)
+            {
+                  <li class="list-group-item">@row["TABLE_NAME"]</li>
+            }
+      </ul>
+      <a class="btn btn-danger mt-2" asp-action="DeleteDb">Delete Database: @dbName</a>
+      <a class="btn btn-outline-success mt-2" asp-action="SeedData">Seed Data</a>
+}
+@{
+      _menuServiceProvider.SetActive("Database", "Index", "Database");
+}
+@section Sidebar {
+@Html.Raw(_menuServiceProvider.RenderHtml())
+}

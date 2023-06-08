@@ -1,0 +1,35 @@
+
+
+.categorySlugs{
+      ul, li {
+            list-style: none;
+            padding-left: 10px;
+      };
+      a{
+            overflow: hidden;
+            display: block;
+            clear: both;
+            white-space: nowrap;
+            width: 100%;
+            text-overflow: ellipsis;
+            text-decoration: none;
+            &:hover{
+                  color: rgb(201, 75, 75);
+            };
+            &.active {
+                  color: rgb(201, 75, 75);
+                  font-weight: 500,
+
+            }
+      };
+      h3{
+            border-bottom: 1px solid;
+            text-transform: uppercase;
+            font-size: 1.3em;
+            padding: 6px
+      };
+      >ul>li>a{
+            font-weight: 700;
+      }
+      
+}

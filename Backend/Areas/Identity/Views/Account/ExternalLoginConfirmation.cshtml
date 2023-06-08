@@ -1,0 +1,39 @@
+﻿@using App.Areas.Identity.Models.AccountViewModels
+@model ExternalLoginConfirmationViewModel
+@{
+
+    ViewData["Title"] = "Register";
+}
+
+
+<div class="bg-light my-5 p-3 o-hidden">
+    <h1>@ViewData["Title"].</h1>
+    <h3>Link to asocial Account @ViewData["ProviderDisplayName"].</h3>
+
+    <form class="user" asp-controller="Account" asp-action="ExternalLoginConfirmation"
+        asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
+        <h4>Infomation</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <p class="text-info">
+            linked to <strong>@ViewData["ProviderDisplayName"]</strong>.
+        </p>
+        <div class="form-group">
+            <label asp-for="Email" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input class="form-control form-control-user" asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

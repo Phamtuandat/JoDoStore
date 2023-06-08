@@ -1,0 +1,78 @@
+@model App.Models.ProductModel.Category
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Category</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="ParentCategoryId" class="control-label"></label>
+                <select asp-for="ParentCategoryId" class="form-control" asp-items="ViewBag.ParentCategoryId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Slug" class="control-label"></label>
+                <input asp-for="Slug" class="form-control" />
+                <span asp-validation-for="Slug" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+@{
+    var summernote = new Summernote("#Description");
+
+
+
+}
+
+<partial name="_summernote" model="summernote" />
+
+
+@section Sidebar {
+@Html.Raw(_menuAdminProvider.RenderHtml())
+}
+
+
+@section Scripts {
+
+<script src="~/lib/multiple-select/multiple-select.min.js"></script>
+<link rel="stylesheet" href="~/lib/multiple-select/multiple-select.min.css" />
+
+<script>
+    $("#CategoryIDs").multipleSelect({
+        selectAll: false,
+        keepOpen: false,
+        isOpen: false,
+
+    });
+</script>
+
+<partial name="_ValidationScriptsPartial" />
+}

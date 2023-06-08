@@ -1,0 +1,20 @@
+@{
+      ViewData["Title"] = "Delete Database";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p class="alert alert-danger">Do you want to delete database</p>
+<a class="btn btn-light" asp-action="Index"> Manage Database </a>
+<hr>
+<form method="post">
+      <button class="btn btn-danger">Delete Database</button>
+</form>
+
+
+@{
+      _menuServiceProvider.SetActive("Database", "Index", "Database");
+}
+@section Sidebar {
+@Html.Raw(_menuServiceProvider.RenderHtml())
+}
