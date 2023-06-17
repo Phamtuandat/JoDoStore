@@ -33,7 +33,8 @@ JoDo Store
 ![Product Detail Page](/Asset/productDetail.JPG)
 
 - ✔️ Admin management
-- ![Product Admin Page](/Asset/admin.jpg)
+- MVC dasdboard admin.
+  
 
 # About
 
@@ -54,7 +55,7 @@ JoDo Store
 
 **✔️ 2. E-Commerce media storage**
 
-- Storage image of website in cloudinary
+- Storage image of website in server storage,
 
 ---
 
