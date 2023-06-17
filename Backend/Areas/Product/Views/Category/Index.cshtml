@@ -45,7 +45,8 @@
         var prefix = string.Concat(Enumerable.Repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", level));
         <tr>
             <td>
-                <a asp-action="Edit" asp-route-id="@category.Id"> @Html.Raw(prefix) @Html.DisplayFor(modelItem =>
+                <a class="text-decoration-none" asp-action="Edit" asp-route-id="@category.Id"> @Html.Raw(prefix)
+                    @Html.DisplayFor(modelItem =>
             category.Name)</a>
             </td>
             <td>

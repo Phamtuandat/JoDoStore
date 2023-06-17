@@ -1,23 +1,40 @@
 import { AxiosHeaders } from "axios"
-import { Filter } from "odata-query"
 
-interface headers extends AxiosHeaders {
-    "x-pagination-total-count": string
-}
 export interface ListResponse<T> {
     data: T[]
     headers: headers
 }
+
+interface headers extends AxiosHeaders {
+    "x-pagination": string
+}
+export interface PaginationMetadata {
+    currentPage: number
+    pageSize: number
+    totalItems: number
+    totalPages: number
+}
 export interface ListParams {
-    top?: number
+    pageSize?: number
     orderBy?: string
-    filter?: IFilter
-    levels?: number | "max"
-    skip?: number
-    count?: boolean | Filter
+    name?: string
+    currentPage?: number
+    categoryIds?: number[]
+    iconId?: number[]
+    maxPrice?: number
+    minPrice?: number
     [key: string]: any
 }
-
+/**
+ public string? Name { get; set; }
+            public decimal? MinPrice { get; set; }
+            public decimal? MaxPrice { get; set; }
+            public int[]? CategoryIds { get; set; }
+            public string? OrderBy { get; set; }
+            public int? IConId { get; set; }
+            public int PageSize { get; set; } = 50;
+            public int CurrentPage { get; set; }
+ */
 export interface Option {
     id: number
     name: string
@@ -25,18 +42,4 @@ export interface Option {
 
 export interface AuthResponse<T> {
     data: T
-}
-
-export interface IFilter {
-    category?:
-        | { name?: string | undefined | { in?: string[] }; id?: string | number | undefined }
-        | { [key: string]: any }
-    brand?:
-        | { name?: string | undefined | { in?: string[] }; id?: string | number | undefined }
-        | { [key: string]: any }
-    salePrice?: {
-        gt?: number | undefined
-        lt?: number | undefined
-    }
-    [key: string]: any
 }

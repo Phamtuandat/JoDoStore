@@ -1,9 +1,9 @@
 export interface Category {
     id: number | string
     name: string
-    childCategories: []
+    childCategories: Category[] | []
     description: string
-    parentCategory: null | Category[]
+    parentCategory: undefined | Category
     parentCategoryId: Category
     slug: string
 }

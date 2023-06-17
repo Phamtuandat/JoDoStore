@@ -1,6 +1,5 @@
 import { Box, Grid, List, ListItem, Paper, Typography } from "@mui/material"
 import { Variants, motion } from "framer-motion"
-import { useEffect } from "react"
 import { Link } from "react-router-dom"
 
 const variants: Variants = {
@@ -21,10 +20,6 @@ type Props = {
 }
 
 const SubHeaderItem = ({ isOpen, categoryList }: Props) => {
-    useEffect(() => {
-        return () => console.log('rendered')
-    },[])
-    
     return (
         <Box
             component={motion.div}

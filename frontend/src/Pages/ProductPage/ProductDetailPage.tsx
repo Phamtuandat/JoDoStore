@@ -43,9 +43,16 @@ const ProductDetailPage = (props: Props) => {
         <MainLayout>
             <Container maxWidth="xl">
                 <Box pt={20} px={2} mb={10}>
-                    <Grid container spacing={5}>
+                    <Grid container spacing={5} sx={{ position: "relative" }}>
                         <Grid item lg={6} md={6} sm={12} xs={12} textAlign="center">
-                            <ProductMediaCard product={product} />
+                            <Box
+                                sx={{
+                                    position: "relative",
+                                    height: "100%",
+                                }}
+                            >
+                                <ProductMediaCard product={product} />
+                            </Box>
                         </Grid>
                         <Grid item lg={6} md={6} sm={12} xs={12}>
                             <ProductContent product={product} />

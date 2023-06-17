@@ -13,8 +13,7 @@ import { productApi } from "ApiClients/ProductApi"
 import { useAppDispatch } from "app/hooks"
 import { MainLayout } from "components/Layout/MainLayout"
 import { debounce } from "lodash"
-import { ListParams, Product } from "models"
-import buildQuery from "odata-query"
+import { ListParams, PaginationMetadata, Product } from "models"
 import qs from "qs"
 import { ChangeEvent, useEffect, useMemo, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
@@ -22,15 +21,7 @@ import handleNotify from "utils/Toast-notify"
 import ListPage from "./components/ListPage"
 import MenuFilterOption from "./components/MenuFilter"
 import ProductSort from "./components/ProductSort"
-export type Params = {
-    gt: number
-    lt: number
-    category: { name: { in: string[] } } | undefined
-    brand: { name: { in: string[] } } | undefined
-    orderBy?: string
-    top: number
-    page: number
-}
+
 const ProductShopPage = () => {
     const [productList, setProductList] = useState<Product[]>([])
     const [count, setCount] = useState<number>(1)
@@ -39,14 +30,13 @@ const ProductShopPage = () => {
     const location = useLocation()
     const dispatch = useAppDispatch()
     const [opentFilter, setOpentFilter] = useState(false)
-    const [params, setParams] = useState<Params>({
-        gt: 30,
-        lt: 3000,
-        category: { name: { in: [] } },
-        brand: { name: { in: [] } },
+    const [params, setParams] = useState<ListParams>({
+        minPrice: 30,
+        maxPrice: 3000,
+        categoryIds: [],
         orderBy: "salePrice desc",
-        top: 9,
-        page: 0,
+        pageSize: 9,
+        currentPage: 0,
     })
 
     const handleClose = () => {
@@ -56,10 +46,10 @@ const ProductShopPage = () => {
     const queryParam = useMemo(() => {
         const params = qs.parse(location.search.slice(1))
         return {
-            brand: params.brand,
-            category: params.category,
-            gt: Number(params["gt"]) || 30,
-            lt: Number(params.lt) || 3000,
+            iconId: params.iconId,
+            categoryIds: params.categoryIds,
+            minPrice: Number(params["minPrice"]) || 30,
+            maxPrice: Number(params.maxPrice) || 3000,
             orderBy: params.orderBy,
             page: params.page as string,
         }
@@ -69,24 +59,19 @@ const ProductShopPage = () => {
         window.scrollTo(0, 0)
         setLoading(true)
         const param = {
-            filter: {
-                category: queryParam.category as { name: { in: string[] } },
-                brand: queryParam.brand as { name: { in: string[] } },
-                salePrice: { gt: queryParam.gt, lt: queryParam.lt },
-            },
+            categoryIds: (queryParam.categoryIds as string[])?.map(Number),
+            iconId: (queryParam.iconId as string[])?.map(Number),
+            minPrice: queryParam.minPrice as number,
+            maxPrice: queryParam.maxPrice as number,
             orderBy: queryParam.orderBy as string,
             top: 9,
             skip: ((+queryParam.page || 1) - 1) * 9,
         }
         setParams({
-            brand: {
-                name: param.filter.brand?.name || { in: [] },
-            },
-            category: {
-                name: param.filter.category?.name || { in: [] },
-            },
-            gt: param.filter.salePrice?.gt || 30,
-            lt: param.filter.salePrice?.lt || 3000,
+            iconId: params.iconId,
+            categoryIds: param.categoryIds,
+            minPrice: param.minPrice || 30,
+            maxPrice: param.maxPrice || 3000,
             orderBy: param.orderBy || "salePrice desc",
             top: 9,
             page: +queryParam.page || 1,
@@ -100,23 +85,23 @@ const ProductShopPage = () => {
 
     const search = async (value: ListParams) => {
         try {
-            const param = buildQuery(value)
-            const res = await productApi.getList(param)
+            const queryString = qs.stringify(value)
+            const res = await productApi.getList(queryString)
+            const pagination = JSON.parse(res.headers["x-pagination"]) as PaginationMetadata
             setProductList(res.data)
-            setCount(Math.ceil(+res.headers["x-pagination-total-count"] / 9))
+            setCount(pagination.totalItems)
             setLoading(false)
         } catch (error) {
             setLoading(false)
             handleNotify.error(error as string)
         }
     }
-    const handleFilterChange = (value: Params) => {
+    const handleFilterChange = (value: ListParams) => {
         const newParam = {
             ...params,
             ...value,
         }
 
-        setParams(newParam)
         navigate({
             pathname: location.pathname,
             search: qs.stringify(newParam),
@@ -215,7 +200,7 @@ const ProductShopPage = () => {
                                     variant="outlined"
                                     color="primary"
                                     onChange={handlePageChange}
-                                    page={+params.page}
+                                    page={params.currentPage || 0}
                                 />
                             </Stack>
                         </Box>

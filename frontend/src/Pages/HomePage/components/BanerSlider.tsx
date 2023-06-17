@@ -45,6 +45,7 @@ export const BanerSlider = () => {
     }
     const [images, setEmail] = useState<string[]>([
         "https://static.diydevblog.com/Image/band.webp?_t=1686147469",
+        "https://static.diydevblog.com/Image/band2.webp?_t=1686393871",
     ])
     const textCtrl = useAnimationControls()
     const btnCtrl = useAnimationControls()

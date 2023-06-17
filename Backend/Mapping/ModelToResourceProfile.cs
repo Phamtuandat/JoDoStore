@@ -15,7 +15,6 @@ namespace App.Mapping
                   CreateMap<User, UserResource>();
                   CreateMap<Category, CategoryDto>();
                   CreateMap<Product, ProductDto>();
-                  CreateMap<Brand, BrandDto>();
                   CreateMap<OrderItem, OrderItemDto>();
                   CreateMap<Order, OrderDto>();
                   CreateMap<CartItem, CartItemResource>();
@@ -25,6 +24,11 @@ namespace App.Mapping
                   CreateMap<CreateProducViewModel, Product>();
                   CreateMap<ProductDto, EditProductViewModel>();
                   CreateMap<RegisterModel, User>();
+                  CreateMap<Icon, CreateIconViewModel>();
+                  CreateMap<ProductCategory, ProductCategoryDto>();
+                  CreateMap<Icon, IconDto>();
+
+
             }
       }
 }

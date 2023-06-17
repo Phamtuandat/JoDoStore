@@ -1,7 +1,6 @@
-﻿using App.Queries;
-using App.Services.ProductServices;
-using MediatR;
+﻿using App.Services.ProductServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.Controllers
 {
@@ -17,10 +16,10 @@ namespace App.Controllers
             }
 
             [HttpGet]
-            public IActionResult GetAll()
+            public async Task<IActionResult> GetAll()
             {
-                  var result = _categoryService.GetAll();
-                  return Ok(result);
+                  var categories = await _categoryService.GetAll().ToListAsync();
+                  return Ok(categories);
             }
       }
 }

@@ -19,5 +19,7 @@ namespace App.Areas.Products.Models
             public string[] ImagePaths { set; get; }
             public int BrandId { get; set; }
             public string Thumbnail { set; get; }
+            public int IconId { set; get; }
+            public string Technology { set; get; }
       }
 }

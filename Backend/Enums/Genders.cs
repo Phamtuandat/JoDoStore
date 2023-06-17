@@ -3,19 +3,13 @@ using App.Enums;
 using App.Models.Identity;
 using App.Dtos;
 
-namespace App.Enums
+namespace App.Data
 {
-      public enum Gender
+      public class Gender
       {
-            Male,
-            Female,
-            Other
-      }
-}
-public class GenderValueResolver : IValueResolver<User, UserResource, string>
-{
-      public string Resolve(User source, UserResource destination, string destMember, ResolutionContext context)
-      {
-            return source.Gender.ToString();
+            public const string Male = "Male";
+            public const string Female = "Female";
+            public const string Unisex = "Unisex";
+            public const string Kids = "Kids";
       }
 }

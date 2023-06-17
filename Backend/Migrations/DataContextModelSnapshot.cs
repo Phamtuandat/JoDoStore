@@ -150,9 +150,6 @@ namespace App.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Gender")
-                        .HasColumnType("integer");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -269,27 +266,6 @@ namespace App.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("App.Models.ProductModel.Brand", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Brands");
-                });
-
             modelBuilder.Entity("App.Models.ProductModel.Cart", b =>
                 {
                     b.Property<int>("Id")
@@ -321,6 +297,9 @@ namespace App.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<string>("Gender")
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -339,7 +318,27 @@ namespace App.Migrations
 
                     b.HasIndex("Slug");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("App.Models.ProductModel.Icon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Icons");
                 });
 
             modelBuilder.Entity("App.Models.ProductModel.Product", b =>
@@ -350,15 +349,15 @@ namespace App.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BrandId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("IconId")
+                        .HasColumnType("integer");
 
                     b.Property<string[]>("ImagePaths")
                         .IsRequired()
@@ -386,6 +385,10 @@ namespace App.Migrations
                         .IsRequired()
                         .HasColumnType("text[]");
 
+                    b.Property<string>("Technology")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Thumbnail")
                         .IsRequired()
                         .HasColumnType("text");
@@ -395,7 +398,7 @@ namespace App.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BrandId");
+                    b.HasIndex("IconId");
 
                     b.HasIndex("Slug")
                         .IsUnique();
@@ -630,13 +633,13 @@ namespace App.Migrations
 
             modelBuilder.Entity("App.Models.ProductModel.Product", b =>
                 {
-                    b.HasOne("App.Models.ProductModel.Brand", "Brand")
+                    b.HasOne("App.Models.ProductModel.Icon", "Icon")
                         .WithMany("Products")
-                        .HasForeignKey("BrandId")
+                        .HasForeignKey("IconId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Brand");
+                    b.Navigation("Icon");
                 });
 
             modelBuilder.Entity("App.Models.ProductModel.ProductCategory", b =>
@@ -723,11 +726,6 @@ namespace App.Migrations
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("App.Models.ProductModel.Brand", b =>
-                {
-                    b.Navigation("Products");
-                });
-
             modelBuilder.Entity("App.Models.ProductModel.Cart", b =>
                 {
                     b.Navigation("Items");
@@ -738,6 +736,11 @@ namespace App.Migrations
                     b.Navigation("ChildCategories");
 
                     b.Navigation("ProductCategories");
+                });
+
+            modelBuilder.Entity("App.Models.ProductModel.Icon", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("App.Models.ProductModel.Product", b =>

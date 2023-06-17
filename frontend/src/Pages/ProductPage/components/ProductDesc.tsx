@@ -27,6 +27,12 @@ const ProductDesc = ({ desc }: Props) => {
                 </Typography>
             ) : (
                 <Box
+                    color="primary !important"
+                    sx={{
+                        "& p,ul,li,a,span": {
+                            color: theme.palette.text.primary + "!important",
+                        },
+                    }}
                     dangerouslySetInnerHTML={{
                         __html: desc,
                     }}

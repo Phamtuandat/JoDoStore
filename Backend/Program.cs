@@ -96,13 +96,13 @@ builder.Services.AddLogging(loggingBuilder =>
           loggingBuilder.AddDebug(); // Example: Add the debug logger
                                      // Add other logging providers as needed
     });
-
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IBrandService, BrandService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IIconService, IConService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ICartService, CartService>();
+
 builder.Services.AddTransient<AppbarService>();
 builder.Services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
@@ -131,17 +131,17 @@ if (builder.Environment.IsProduction())
 builder.Services.AddCors(options =>
 {
       options.AddDefaultPolicy(
-          policy =>
-          {
-                if (builder.Environment.IsDevelopment())
-                {
-                      policy.WithOrigins("http://localhost:3000",
+            policy =>
+            {
+                  if (builder.Environment.IsDevelopment())
+                  {
+                        policy.WithOrigins("http://localhost:3000",
 
-                                        "http://localhost:3000").AllowCredentials().AllowAnyMethod().AllowAnyHeader().AllowCredentials().WithExposedHeaders("X-Pagination-Total-Count");
-                }
-                policy.WithOrigins("https://phamtuandat.click",
-                                  "https://phamtuandat.click").AllowCredentials().AllowAnyMethod().AllowAnyHeader().AllowCredentials();
-          });
+                                          "http://localhost:3000").AllowCredentials().AllowAnyMethod().AllowAnyHeader().AllowCredentials().WithExposedHeaders("X-Pagination");
+                  }
+                  policy.WithOrigins("https://phamtuandat.click",
+                                    "https://phamtuandat.click").AllowCredentials().AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+            });
 });
 
 builder.Services.AddControllers();

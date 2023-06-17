@@ -10,11 +10,6 @@ namespace App.Models.ProductModel
             public string Name { get; set; } = string.Empty;
             public string NormalizedName { set; get; } = string.Empty;
             public string Description { get; set; } = string.Empty;
-            [Display(Name = "Brand")]
-            public int BrandId { get; set; }
-            [ForeignKey("BrandId")]
-
-            public Brand Brand { get; set; } = new Brand();
             public string Thumbnail { get; set; }
             public string[] ImagePaths { get; set; }
             public string[] Tags { get; set; }
@@ -23,7 +18,11 @@ namespace App.Models.ProductModel
             public int Price { get; set; }
             public int SalePrice { get; set; }
             public DateTime CreateAt { get; set; }
-            public ICollection<ProductCategory> ProductCategories { get; set; }
+            public virtual List<ProductCategory> ProductCategories { get; set; }
+            public int IconId { get; set; }
+            [ForeignKey("IconId")]
+            public Icon Icon { get; set; }
             public DateTime UpdateAt { get; set; }
+            public string Technology { get; set; }
       }
 }

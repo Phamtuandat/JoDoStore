@@ -60,11 +60,7 @@ namespace App.Controllers
             [Authorize]
             public async Task<ActionResult> EditAsync(EditUserResource model)
             {
-                  Gender gender;
-                  if (!Enum.TryParse(model.Gender, out gender))
-                  {
-                        return BadRequest("Invalid gender value.");
-                  }
+
                   if (!ModelState.IsValid)
                   {
                         return Unauthorized(ModelState.GetErrorMessages());
@@ -77,7 +73,6 @@ namespace App.Controllers
                         return Unauthorized();
                   }
                   var dateOnly = DateOnly.FromDateTime(model.Birthday);
-                  user.Gender = gender;
                   user.FirstName = model.FirstName;
                   user.LastName = model.LastName;
                   user.Birthday = dateOnly;

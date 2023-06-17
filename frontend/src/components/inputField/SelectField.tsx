@@ -1,5 +1,5 @@
 import { Autocomplete, Box, TextField } from "@mui/material"
-import { Category, Option } from "models"
+import { Option } from "models"
 import { Control, useController } from "react-hook-form"
 
 export interface PasswordFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {

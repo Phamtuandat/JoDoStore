@@ -1,36 +1,56 @@
-﻿using App.Queries;
-using MediatR;
+﻿using System.Collections.Specialized;
+using System.Text.Json;
+using System.Web;
+using App.Models;
+using App.Models.ProductModel;
+using App.Services.ProductServices;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OData.Query;
 
 namespace App.Controllers
 {
       [Route("api/[controller]")]
-      [EnableQuery]
       [ApiController]
       public class ProductController : ControllerBase
       {
-            private readonly IMediator _mediatr;
+            private readonly ILogger<ProductController> _logger;
+            private readonly IProductService _productService;
 
-            public ProductController(IMediator mediatr)
+            public ProductController(ILogger<ProductController> logger, IProductService productService)
             {
-                  _mediatr = mediatr;
+                  _logger = logger;
+                  _productService = productService;
+            }
+
+            [HttpGet("/api/products")]
+            public async Task<IActionResult> GetAll([FromQuery] ProductQs query)
+            {
+                  var result = await _productService.GetAllAsync(query);
+                  var paginationMetadata = new PaginationMetadata()
+                  {
+                        CurrentPage = query.CurrentPage,
+                        PageSize = query.PageSize,
+                        TotalItems = result.Count(),
+                  };
+                  var stringJson = JsonSerializer.Serialize(paginationMetadata);
+                  HttpContext.Response.Headers.Add("X-Pagination", stringJson);
+                  return Ok(result);
             }
             [HttpGet]
             public async Task<IActionResult> GetAll()
             {
-                  var result = await _mediatr.Send(new GetAllProductQuery() { });
+                  var result = _productService.GetAllAsync();
                   var totalCount = result.Count();
                   HttpContext.Response.Headers.Add("X-Pagination-Total-Count", totalCount.ToString());
                   return Ok(result.ToList());
             }
+
 
             [HttpGet("{id:int}")]
             public async Task<IActionResult> GetById(int id)
             {
                   try
                   {
-                        var result = await _mediatr.Send(new GetProductByIdQuery() { Id = id });
+                        var result = _productService.GetById(id);
                         return Ok(result);
                   }
                   catch (Exception ex)

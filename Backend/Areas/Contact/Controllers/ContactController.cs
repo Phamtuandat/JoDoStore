@@ -8,7 +8,7 @@ namespace App.Areas.Contacts.Controllers
       [Authorize(Roles = RoleNames.Administrator)]
       [Area("Contact")]
       [Route("Contact/[action]")]
-
+      [ApiExplorerSettings(IgnoreApi = true)]
       public class ContactController : Controller
       {
             private readonly DataContext _context;

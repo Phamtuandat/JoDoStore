@@ -15,111 +15,132 @@ namespace App.Services
                   _logger = logger;
                   urlHelper = factory.GetUrlHelper(action.ActionContext);
                   items = new List<SidebarItem>(){
-                new SidebarItem()
-                {
-                    Title = "Database Management",
-                    FontAwesomeIcon = "fa-duotone fa-database",
-                    Action = "Index",
-                    Controller = "Database",
-                    Type= SidebarItemType.NavItem,
-                    Area = "Database",
-                },
-                new SidebarItem()
-                {
-                    Title = "Contacts Management",
-                    FontAwesomeIcon = "fa-duotone fa-mailbox",
-                    Action = "Index",
-                    Controller = "Contact",
-                    Type= SidebarItemType.NavItem,
-                    Area = "Contact",
-                },
-                new SidebarItem()
-                {
-                    Title = "File management",
-                    Action = "Index",
-                    Controller = "File",
-                    Type= SidebarItemType.NavItem,
-                    Area="File",
-                    FontAwesomeIcon="fa-duotone fa-folder-open"
-                },
-                new SidebarItem()
-                {
-                    Title = "User management",
-                    Type= SidebarItemType.NavItem,
-                    FontAwesomeIcon= "fa-thin fa-people-roof" ,
-                    collapseId= "userManageId",
-                    Items = new List<SidebarItem>(){
-                        new SidebarItem()
-                        {
-                            Title = "Role Management",
-                            FontAwesomeIcon ="fa-solid fa-users-between-lines",
-                            Action = "Index",
-                            Controller = "Role",
-                            Area="Identity",
-                            Type= SidebarItemType.NavItem,
-                        },
-                        new SidebarItem()
-                        {
-                            Title = "User Management",
-                            FontAwesomeIcon ="fa-solid fa-users",
-                            Action = "Index",
-                            Controller = "User",
-                            Area="Identity",
-                            Type= SidebarItemType.NavItem,
-                        }
-                    }
-                },
-                new SidebarItem()
-                        {
-                            Title = "Account Management",
-                            FontAwesomeIcon ="fa-solid fa-users-between-lines",
-                            Action = "Index",
-                            Controller = "Manage",
-                            Area="Identity",
-                            Type= SidebarItemType.NavItem,
-                        },
                   new SidebarItem()
-                {
-                    Title = "Product Management",
-                    Type= SidebarItemType.NavItem,
-                    Area = "Product",
-                    FontAwesomeIcon="fa-brands fa-product-hunt",
-                    collapseId="ProductManagement",
-                    Items= new List<SidebarItem>(){
+                  {
+                        Title = "Database Management",
+                        FontAwesomeIcon = "fa-duotone fa-database",
+                        Action = "Index",
+                        Controller = "Database",
+                        Type= SidebarItemType.NavItem,
+                        Area = "Database",
+                  },
+                  new SidebarItem()
+                  {
+                        Title = "Contacts Management",
+                        FontAwesomeIcon = "fa-duotone fa-mailbox",
+                        Action = "Index",
+                        Controller = "Contact",
+                        Type= SidebarItemType.NavItem,
+                        Area = "Contact",
+                  },
+                  new SidebarItem()
+                  {
+                        Title = "File management",
+                        Action = "Index",
+                        Controller = "File",
+                        Type= SidebarItemType.NavItem,
+                        Area="File",
+                        FontAwesomeIcon="fa-duotone fa-folder-open"
+                  },
+                  new SidebarItem()
+                  {
+                        Title = "User management",
+                        Type= SidebarItemType.NavItem,
+                        FontAwesomeIcon= "fa-thin fa-people-roof" ,
+                        collapseId= "userManageId",
+                        Items = new List<SidebarItem>(){
+                              new SidebarItem()
+                              {
+                              Title = "Role Management",
+                              FontAwesomeIcon ="fa-solid fa-users-between-lines",
+                              Action = "Index",
+                              Controller = "Role",
+                              Area="Identity",
+                              Type= SidebarItemType.NavItem,
+                              },
+                              new SidebarItem()
+                              {
+                              Title = "User Management",
+                              FontAwesomeIcon ="fa-solid fa-users",
+                              Action = "Index",
+                              Controller = "User",
+                              Area="Identity",
+                              Type= SidebarItemType.NavItem,
+                              }
+                        }
+                  },
+                  new SidebarItem()
+                              {
+                              Title = "Account Management",
+                              FontAwesomeIcon ="fa-solid fa-users-between-lines",
+                              Action = "Index",
+                              Controller = "Manage",
+                              Area="Identity",
+                              Type= SidebarItemType.NavItem,
+                              },
                         new SidebarItem()
-                        {
-                            Title = "List of Product",
-                            Action = "Index",
-                            Controller = "Product",
-                            Area="Product",
-                            Type= SidebarItemType.NavItem,
-                        },
-                        new SidebarItem()
-                        {
-                            Title = "Create Product",
-                            Action = "Create",
-                            Controller = "Product",
-                            Area="Product",
-                            Type= SidebarItemType.NavItem,
-                        },
-                        new SidebarItem()
-                        {
-                            Title = "Categories",
-                            Action = "Index",
-                            Controller = "Category",
-                            Area="Product",
-                            Type= SidebarItemType.NavItem,
-                        },
-                        new SidebarItem()
-                        {
-                            Title = "Create Category",
-                            Action = "Create",
-                            Controller = "Category",
-                            Area="Product",
-                            Type= SidebarItemType.NavItem,
-                        },
-                    }
-                },
+                  {
+                        Title = "Product Management",
+                        Type= SidebarItemType.NavItem,
+                        Area = "Product",
+                        FontAwesomeIcon="fa-brands fa-product-hunt",
+                        collapseId="ProductManagement",
+                        Items= new List<SidebarItem>(){
+                              new SidebarItem()
+                              {
+                              Title = "List of Product",
+                              Action = "Index",
+                              Controller = "Product",
+                              Area="Product",
+                              Type= SidebarItemType.NavItem,
+                              },
+                              new SidebarItem()
+                              {
+                              Title = "Create Product",
+                              Action = "Create",
+                              Controller = "Product",
+                              Area="Product",
+                              Type= SidebarItemType.NavItem,
+                              },
+                              new SidebarItem()
+                              {
+                              Title = "Categories",
+                              Action = "Index",
+                              Controller = "Category",
+                              Area="Product",
+                              Type= SidebarItemType.NavItem,
+                              },
+                              new SidebarItem()
+                              {
+                              Title = "Create Category",
+                              Action = "Create",
+                              Controller = "Category",
+                              Area="Product",
+                              Type= SidebarItemType.NavItem,
+                              },
+                        }
+                  },
+                  new SidebarItem()
+                              {
+                              Title = "Icons Management",
+                              Type= SidebarItemType.NavItem,
+                              FontAwesomeIcon = "fa-duotone fa-symbols",
+                              collapseId="IconsManagement",
+                              Items= new List<SidebarItem>(){
+                                    new SidebarItem(){
+                                          Title = "Icons List",
+                                          Action = "Index",
+                                          Controller = "Icon",
+                                          Area="Product",
+                                    },
+                                    new SidebarItem(){
+                                          Title = "Create",
+                                          Action = "Create",
+                                          Controller = "Icon",
+                                          Area="Product",
+                                    }
+                              }
+                              },
 
             };
             }

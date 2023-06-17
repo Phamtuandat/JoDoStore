@@ -5,31 +5,33 @@ import ListItemText from "@mui/material/ListItemText"
 import AddIcon from "@mui/icons-material/Add"
 import RemoveIcon from "@mui/icons-material/Remove"
 import Typography from "@mui/material/Typography"
-import { Brand, Category } from "models"
+import { Icon, Category, ListParams } from "models"
 import { useEffect, useRef, useState } from "react"
-import { Params } from "../ProductShopPage"
 import CheckboxesForm from "./CheckboxesForm"
 import categoryApi from "ApiClients/CategoryApi"
-import { brandApi } from "ApiClients/BrandApi"
+import { brandApi as iconApi } from "ApiClients/IconApi"
+import Categories from "./Categories"
 
 type Props = {
-    handleFilterChange: (value: Params) => void
-    param: Params
+    handleFilterChange: (value: ListParams) => void
+    param: ListParams
     queryParam: any
 }
 
 export default function MenuFilterOption({ handleFilterChange, param, queryParam }: Props) {
     const ignore = useRef(false)
+    const [icons, setIcon] = useState<Icon[]>([])
+    const [categories, setCategories] = useState<Category[]>([])
     const [open, setOpen] = useState<{
         category: boolean
-        brand: boolean
+        icon: boolean
         price: boolean
     }>({
         category: true,
-        brand: true,
+        icon: true,
         price: true,
     })
-    const [brandChecList, setBrandCheck] = useState<{ [key: string]: boolean }>({})
+    const [IconCheckList, setIconCheck] = useState<{ [key: string]: boolean }>({})
     const [categoryCheckList, setCategoryCheck] = useState<{ [key: string]: boolean }>({})
     useEffect(() => {
         if (!ignore.current) {
@@ -38,23 +40,27 @@ export default function MenuFilterOption({ handleFilterChange, param, queryParam
             ;(async () => {
                 try {
                     const categoryList = (await categoryApi.getAll()).data
+                    const icons = (await iconApi.getAll()).data
+                    setIcon(icons)
+                    setCategories(categoryList)
                     const categoryQs =
-                        (queryParam.category as { name: { in: string[] } })?.name.in || []
+                        (queryParam.category as { id: { in: string[] } })?.id.in || []
+                    const iconqs = (queryParam.icon as { id: { in: string[] } })?.id.in || []
                     setCategoryCheck(mapArrayTopObj(categoryList, categoryQs))
+                    setIconCheck(mapArrayTopObj(icons, iconqs))
                 } catch (error) {}
             })()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    const mapArrayTopObj = (paramList: Array<Category | Brand>, queryParam: string[]) => {
-        console.log(paramList)
-        const keyList = paramList.map((p) => p.name)
+    const mapArrayTopObj = (paramList: Array<Category | Icon>, queryParam: string[]) => {
+        const keyList = paramList.map((p) => p.id)
         const obj = keyList.reduce((accumulator, value) => {
-            return { ...accumulator, [value]: queryParam.includes(value) }
+            return { ...accumulator, [value]: queryParam.includes(value.toString()) }
         }, {})
         return obj
     }
-    const handleOpen = (option: "category" | "brand" | "price") => {
+    const handleOpen = (option: "category" | "icon" | "price") => {
         setOpen((prv) => {
             return {
                 ...prv,
@@ -63,41 +69,45 @@ export default function MenuFilterOption({ handleFilterChange, param, queryParam
         })
     }
 
-    const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleCategoryChange = (id: string | number, value: boolean) => {
         const categoryCheck = {
             ...categoryCheckList,
-            [event.target.name]: event.target.checked,
+            [id]: value,
         }
         setCategoryCheck(categoryCheck)
-        const categoryParam = Object.keys(categoryCheck).filter((x) => categoryCheck[x])
+        const categoryParam = Object.keys(categoryCheck)
+            .filter((x) => categoryCheck[x])
+            .map(Number)
         if (categoryParam.length < 1) {
             handleFilterChange({
                 ...param,
-                category: undefined,
+                categoryIds: undefined,
             })
         } else {
             handleFilterChange({
                 ...param,
-                category: { name: { in: categoryParam } },
+                categoryIds: categoryParam,
             })
         }
     }
-    const handlebrandChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const brandCheck = {
-            ...brandChecList,
-            [event.target.name]: event.target.checked,
+    const handlerIconChange = (id: string | number, value: boolean) => {
+        const iconCheck = {
+            ...IconCheckList,
+            [id]: value,
         }
-        setBrandCheck(brandCheck)
-        const brandParams = Object.keys(brandCheck).filter((x) => brandCheck[x])
-        if (brandParams.length < 1) {
+        setIconCheck(iconCheck)
+        const iconParams = Object.keys(iconCheck)
+            .filter((x) => iconCheck[x])
+            ?.map(Number)
+        if (iconParams.length < 1) {
             handleFilterChange({
                 ...param,
-                brand: undefined,
+                iconId: undefined,
             })
         } else {
             handleFilterChange({
                 ...param,
-                brand: { name: { in: brandParams } },
+                iconId: iconParams,
             })
         }
     }
@@ -116,9 +126,10 @@ export default function MenuFilterOption({ handleFilterChange, param, queryParam
                 overflow: "hidden",
             }}
         >
+            <Categories handleCategoryChange={handleCategoryChange} />
             <List sx={{ width: "100%", maxWidth: 360 }}>
                 <ListItemButton
-                    onClick={() => handleOpen("category")}
+                    onClick={() => handleOpen("icon")}
                     sx={{
                         "&:hover": {
                             bgcolor: "background.paper",
@@ -128,41 +139,19 @@ export default function MenuFilterOption({ handleFilterChange, param, queryParam
                     <ListItemText
                         primary={
                             <Typography variant="h6" fontWeight={500}>
-                                CATEGORIES
+                                ICONS
                             </Typography>
                         }
                     />
-                    {open.category ? <AddIcon /> : <RemoveIcon />}
+                    {open.icon ? <AddIcon /> : <RemoveIcon />}
                 </ListItemButton>
                 <Divider variant="fullWidth" />
-                <Collapse in={open.category} timeout="auto" unmountOnExit>
+                <Collapse in={open.icon} timeout="auto" unmountOnExit>
                     <CheckboxesForm
-                        filterState={categoryCheckList}
-                        handleChange={handleCategoryChange}
+                        icons={icons}
+                        filterState={IconCheckList}
+                        handleChange={handlerIconChange}
                     />
-                </Collapse>
-            </List>
-            <List sx={{ width: "100%", maxWidth: 360 }}>
-                <ListItemButton
-                    onClick={() => handleOpen("brand")}
-                    sx={{
-                        "&:hover": {
-                            bgcolor: "background.paper",
-                        },
-                    }}
-                >
-                    <ListItemText
-                        primary={
-                            <Typography variant="h6" fontWeight={500}>
-                                BRANDS
-                            </Typography>
-                        }
-                    />
-                    {open.brand ? <AddIcon /> : <RemoveIcon />}
-                </ListItemButton>
-                <Divider variant="fullWidth" />
-                <Collapse in={open.brand} timeout="auto" unmountOnExit>
-                    <CheckboxesForm filterState={brandChecList} handleChange={handlebrandChange} />
                 </Collapse>
             </List>
             <List sx={{ width: "100%", maxWidth: 360 }}>

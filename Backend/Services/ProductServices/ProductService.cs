@@ -3,6 +3,7 @@ using App.Dtos;
 using App.Models.ProductModel;
 using App.Repositories;
 using Microsoft.EntityFrameworkCore;
+using App.Models;
 
 namespace App.Services.ProductServices
 {
@@ -60,18 +61,77 @@ namespace App.Services.ProductServices
                   return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductDto>>(_unitOfWork.ProductRepository.Find(p => p.Name == name));
             }
 
-            public List<ProductDto> GetAllAsync()
+            public async Task<IEnumerable<ProductDto>> GetAllAsync(ProductQs param)
             {
-                  List<Product> products = _unitOfWork.ProductRepository
-                                                                  .All()
-                                                                  .Include(p => p.Brand)
-                                                                  .Include(p => p.ProductCategories)
-                                                                  .ThenInclude(pc => pc.Category)
-                                                                  .ToList();
-                  var productList = _mapper.Map<List<Product>, List<ProductDto>>(products);
+                  var productList = new List<ProductDto>();
+                  var products = _unitOfWork.ProductRepository
+                                                      .All()
+                                                      .Include(p => p.Icon)
+                                                      .Include(p => p.ProductCategories)
+                                                      .AsQueryable();
+                  if (param.CategoryIds?.Length > 0)
+                  {
+                        products = products.Where(p => p.ProductCategories.Select(pc => pc.CategoryId).Any(x => param.CategoryIds.Contains(x)));
+                  }
+                  if (param.IConId != null)
+                  {
+                        products = products.Where(p => param.IConId.Contains(p.IconId));
+                  }
+                  if (param.Name != null && param.Name != "")
+                  {
+                        products = products.Where(p => p.Name.Contains(param.Name));
+                  }
+                  if (param.MaxPrice != null)
+                  {
+                        products = products.Where(p => p.SalePrice < param.MaxPrice);
+                  }
+                  if (param.MinPrice != null)
+                  {
+                        products = products.Where(p => p.SalePrice > param.MinPrice);
+                  }
+                  if (param.OrderBy != null && param.OrderBy != "")
+                  {
+                        string[] orderByParts = param.OrderBy.Split(' ');
+                        if (orderByParts.Length == 2)
+                        {
+                              string fieldName = orderByParts[0];
+                              string sortOrder = orderByParts[1];
+                              if (sortOrder.ToLower() == "asc")
+                              {
+                                    products = ApplyOrderByAscending(products, fieldName);
+                              }
+                              else if (sortOrder.ToLower() == "desc")
+                              {
+                                    products = ApplyOrderByDescending(products, fieldName);
+                              }
+                        }
+                  }
+                  else
+                  {
 
+                        products = products.OrderBy(p => p.SalePrice);
+                  }
+
+                  if (param.PageSize > 0)
+                  {
+                        var skip = param.PageSize * (param.CurrentPage - 1);
+                        products = products.Skip(skip).Take(param.PageSize);
+                  }
+
+                  productList = _mapper.Map<List<Product>, List<ProductDto>>(await products.ToListAsync());
                   return productList;
             }
+            public List<ProductDto> GetAllAsync()
+            {
+                  var productList = new List<ProductDto>();
+                  List<Product> products = _unitOfWork.ProductRepository
+                                                      .All()
+                                                      .Include(p => p.ProductCategories)
+                                                      .ToList();
+                  productList = _mapper.Map<List<Product>, List<ProductDto>>(products);
+                  return productList;
+            }
+
 
             public ProductDto? GetById(int id)
             {
@@ -92,5 +152,33 @@ namespace App.Services.ProductServices
                   }
 
             }
+            private IQueryable<Product> ApplyOrderByAscending(IQueryable<Product> query, string fieldName)
+            {
+                  switch (fieldName.ToLower())
+                  {
+                        case "price":
+                              return query.OrderBy(p => p.Price);
+                        case "name":
+                              return query.OrderBy(p => p.Name);
+                        // Các trường khác
+                        default:
+                              return query;
+                  }
+            }
+            private IQueryable<Product> ApplyOrderByDescending(IQueryable<Product> query, string fieldName)
+            {
+                  switch (fieldName.ToLower())
+                  {
+                        case "price":
+                              return query.OrderByDescending(p => p.Price);
+                        case "name":
+                              return query.OrderByDescending(p => p.Name);
+                        // Các trường khác
+                        default:
+                              return query;
+                  }
+            }
       }
+
+
 }

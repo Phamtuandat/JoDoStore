@@ -16,12 +16,6 @@
                   <th>
                         @Html.DisplayNameFor(model => model.Price)
                   </th>
-
-                  <th>
-                        @Html.DisplayNameFor(model => model.Brand.Name)
-                  </th>
-
-
                   <th>
                         @Html.DisplayNameFor(model => model.SalePrice)
                   </th>
@@ -40,21 +34,20 @@
                               => item.Name)</a>
                               <br>
                               <small>
-                                    @if (item.ProductCategories?.Count > 0)
-                                    {
-                                          string.Join(", ", item.ProductCategories.Select(pc => pc.Category.Name));
-                                    }
+                                    string.Join(", ", item.Category.Name);
                               </small>
                         </td>
-                        <td>
-                              @Html.DisplayFor(modelItem => item.Brand.Name)
-                        </td>
+
                         <td>
                               @Html.DisplayFor(modelItem => item.Price)
 
                         </td>
                         <td>
                               @Html.DisplayFor(modelItem => item.SalePrice)
+
+                        </td>
+                        <td>
+                              @Html.DisplayFor(modelItem => item.Icon.Name)
 
                         </td>
                         <td>

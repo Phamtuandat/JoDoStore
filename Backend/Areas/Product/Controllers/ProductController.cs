@@ -24,14 +24,18 @@ namespace App.Areas.Products.Controllers
             [TempData]
             public string? Message { get; set; }
             private readonly ICategoryService _categoryService;
+            private readonly IIconService _iconService;
 
-            public ProductController(IProductService productService, ILogger<ProductController> logger, IMapper mapper, ICategoryService categoryService)
+            public ProductController(IProductService productService, ILogger<ProductController> logger, IMapper mapper, ICategoryService categoryService, IIconService iconService)
             {
                   _productService = productService;
                   _logger = logger;
                   _mapper = mapper;
                   _categoryService = categoryService;
+                  _iconService = iconService;
             }
+
+
             // GET: Product
             public ActionResult Index()
             {
@@ -48,11 +52,59 @@ namespace App.Areas.Products.Controllers
             // GET: Product/Create
             public async Task<ActionResult> Create()
             {
-                  var categories = await _categoryService.GetAll().ToListAsync();
-                  ViewData["MultiSelectList"] = new MultiSelectList(categories, "Id", "Name");
+                  var icons = _iconService.GetAll().ToList();
+                  var categoryList = await _categoryService.GetAll().Where(c => c.ParentCategory == null).ToListAsync();
+                  categoryList.Insert(0, new Category()
+                  {
+                        Name = "None",
+                        Id = -1,
+                  });
+                  var items = new List<CategorySelecItem>();
+                  var genders = typeof(Gender).GetFields().ToList();
+                  var genderItems = new List<string>();
+                  foreach (var gender in genders)
+                  {
+                        var item = gender.GetRawConstantValue() as string;
+                        if (item != null)
+                        {
+                              genderItems.Add(item);
+                        }
+                  }
+                  var technologies = typeof(Technologies).GetFields().ToList();
+                  var techList = new List<string>();
+                  foreach (var item in technologies)
+                  {
+                        var tech = item.GetRawConstantValue() as string;
+                        if (tech != null)
+                        {
+                              techList.Add(tech);
+                        }
+                  }
+                  ViewData["TechnologiesList"] = new SelectList(techList);
+                  ViewData["Genders"] = new SelectList(genderItems);
+                  CreateSelectItem(categoryList, items, 0);
+                  ViewData["SelectList"] = new MultiSelectList(items, "Id", "Name");
+                  ViewData["IconList"] = new SelectList(icons, "Id", "Name");
                   return View();
             }
+            private void CreateSelectItem(List<Category> source, List<CategorySelecItem> des, int level)
+            {
+                  foreach (Category category in source)
+                  {
+                        var prefix = string.Concat(Enumerable.Repeat("---", level));
+                        des.Add(new CategorySelecItem()
+                        {
+                              Id = category.Id,
+                              Name = prefix + " " + category.Name,
+                              level = level,
 
+                        });
+                        if (category.ChildCategories?.Count > 0)
+                        {
+                              CreateSelectItem(category.ChildCategories.ToList(), des, level + 1);
+                        }
+                  }
+            }
             // POST: Product/Create
             [HttpPost]
             [ValidateAntiForgeryToken]
@@ -65,20 +117,21 @@ namespace App.Areas.Products.Controllers
                   }
                   try
                   {
-                        var ProductCategories = new List<ProductCategory>();
-                        // TODO: Add insert logic here
                         var productAt = _mapper.Map<CreateProducViewModel, Product>(product);
-                        foreach (var id in product.CategoryIDs)
-                        {
-                              ProductCategories.Add(new ProductCategory()
-                              {
-                                    CategoryId = id,
-                                    Product = productAt
-                              });
-                        }
-                        productAt.ProductCategories = ProductCategories;
-                        await _productService.CreateAsync(productAt);
 
+                        var productCategories = new List<ProductCategory>();
+                        var cateIds = product.CategoryIDs;
+                        foreach (var cateId in cateIds)
+                        {
+                              var productCategory = new ProductCategory()
+                              {
+                                    Product = productAt,
+                                    CategoryId = cateId,
+                              };
+                              productCategories.Add(productCategory);
+                        }
+                        productAt.ProductCategories = productCategories;
+                        await _productService.CreateAsync(productAt);
                         return RedirectToAction(nameof(Index));
                   }
                   catch (Exception)
@@ -95,10 +148,28 @@ namespace App.Areas.Products.Controllers
                         .FirstOrDefault();
                   if (product == null) return NotFound();
                   ViewData["images"] = product.ImagePaths;
-                  var categories = await _categoryService.GetAll().ToListAsync();
+                  var technologies = typeof(Technologies).GetFields().ToList();
+                  var techList = new List<string>();
+                  foreach (var item in technologies)
+                  {
+                        var tech = item.GetRawConstantValue() as string;
+                        if (tech != null)
+                        {
+                              techList.Add(tech);
+                        }
+                  }
+                  ViewData["TechnologiesList"] = new SelectList(techList);
+                  var categories = await _categoryService.GetAll().Where(c => c.ParentCategory == null).ToListAsync();
+                  categories.Add(new Category()
+                  {
+                        Id = -1,
+                        Name = "None"
+                  });
                   var model = _mapper.Map<ProductDto, EditProductViewModel>(product);
-                  model.CategoryIDs = product.ProductCategories.Select(pc => pc.CategoryId).ToArray();
-                  ViewData["MultiSelectList"] = new MultiSelectList(categories, "Id", "Name", model.CategoryIDs);
+                  var selected = product.productCategories.Select(c => c.CategoryId).ToArray();
+                  var items = new List<CategorySelecItem>();
+                  CreateSelectItem(categories, items, 0);
+                  ViewData["SelectList"] = new MultiSelectList(items, "Id", "Name", selected);
                   return View(model);
             }
 

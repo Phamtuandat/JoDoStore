@@ -35,16 +35,16 @@ namespace App.Repositories
                   }
             }
 
-
-            private IRepository<Brand> brandRepository;
-            public IRepository<Brand> BrandRepository
+            private IRepository<Icon> iconRepository;
+            public IRepository<Icon> IconRepository
             {
                   get
                   {
-                        brandRepository ??= new BrandRepository(_context);
-                        return brandRepository;
+                        iconRepository ??= new IconRepository(_context);
+                        return iconRepository;
                   }
             }
+
 
             private IRepository<Address> addressRepository;
             public IRepository<Address> AddressRepository

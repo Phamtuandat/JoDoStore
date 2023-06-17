@@ -69,8 +69,7 @@ namespace App.Services.ProductServices
                   try
                   {
                         if (category.ParentCategoryId == -1) category.ParentCategoryId = null;
-                        Category newCategory = new() { Name = category.Name, Description = category.Description, Slug = category.Slug, ParentCategoryId = category.ParentCategoryId };
-                        var result = _unitOfWork.CategoryRepository.Add(newCategory);
+                        var result = _unitOfWork.CategoryRepository.Add(category);
                         await _unitOfWork.CompleteAsync();
                   }
                   catch (Exception)
@@ -90,18 +89,18 @@ namespace App.Services.ProductServices
 
                   try
                   {
-                        if (category.ParentCategoryId == -1) category.ParentCategory = null;
                         existedCategory.Name = category.Name;
                         existedCategory.Description = category.Description;
-                        existedCategory.ParentCategory = category.ParentCategory;
+                        existedCategory.ParentCategoryId = category.ParentCategoryId;
+                        existedCategory.Gender = category.Gender;
                         _unitOfWork.CategoryRepository.Update(existedCategory);
                         await _unitOfWork.CompleteAsync();
 
                   }
-                  catch (Exception ex)
+                  catch (Exception)
                   {
 
-                        throw new Exception($"Some thing went wrong, please try again!, /n ex: {ex.Message}");
+                        throw;
                   }
             }
 

@@ -6,6 +6,7 @@ using App.Services.ProductServices;
 using App.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using App.Data;
+using App.Enums;
 
 namespace App.Areas.Products.Controllers
 {
@@ -51,15 +52,27 @@ namespace App.Areas.Products.Controllers
             {
                   try
                   {
-                        var categoryList = _categoryService.GetAll().ToList();
+                        var categoryList = _categoryService.GetAll().Where(c => c.ParentCategory == null).ToList();
                         categoryList.Insert(0, new Category()
                         {
                               Name = "None",
                               Id = -1,
                         });
                         var items = new List<CategorySelecItem>();
+                        var genders = typeof(Gender).GetFields().ToList();
+                        var genderItems = new List<string>();
+                        foreach (var gender in genders)
+                        {
+                              var item = gender.GetRawConstantValue() as string;
+                              if (item != null)
+                              {
+                                    genderItems.Add(item);
+                              }
+                        }
+                        ViewData["Genders"] = new SelectList(genderItems);
                         CreateSelectItem(categoryList, items, 0);
                         ViewData["ParentCategoryId"] = new SelectList(items, "Id", "Name");
+
                         return View();
                   }
                   catch (System.Exception)
@@ -75,7 +88,7 @@ namespace App.Areas.Products.Controllers
             // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
             [HttpPost]
             [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Create([Bind("Name,Description,Slug,ParentCategoryId")] Category category)
+            public async Task<IActionResult> Create([Bind("Name,Description,Slug,ParentCategoryId,Gender")] Category category)
             {
                   if (category.Slug == null) category.Slug = AppUtilities.GenerateSlug(category.Name);
                   if (_categoryService.GetAll().Where(c => c.Slug == category.Slug) != null)
@@ -133,6 +146,17 @@ namespace App.Areas.Products.Controllers
 
                   });
                   var items = new List<CategorySelecItem>();
+                  var genders = typeof(Gender).GetFields().ToList();
+                  var genderItems = new List<string>();
+                  foreach (var gender in genders)
+                  {
+                        var item = gender.GetRawConstantValue() as string;
+                        if (item != null)
+                        {
+                              genderItems.Add(item);
+                        }
+                  }
+                  ViewData["Genders"] = new SelectList(genderItems);
                   CreateSelectItem(categoryList, items, 0);
                   if (category.ChildCategories?.Count > 0)
                   {
@@ -148,7 +172,7 @@ namespace App.Areas.Products.Controllers
             // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
             [HttpPost]
             [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Slug,ParentCategoryId")] Category category)
+            public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Slug,ParentCategoryId,Gender")] Category category)
             {
                   var editCategory = _categoryService.GetAll().FirstOrDefault(c => c.Id == id);
                   if (id != category.Id || editCategory == null)
@@ -165,12 +189,16 @@ namespace App.Areas.Products.Controllers
                   {
                         try
                         {
+                              if (category.ParentCategoryId == -1)
+                              {
+                                    category.ParentCategoryId = null;
+                              }
                               await _categoryService.UpdateCategoryAsync(category);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
 
-                              throw new InvalidOperationException(ex.Message);
+                              throw;
                         }
                         return RedirectToAction(nameof(Index));
                   }

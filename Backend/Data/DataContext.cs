@@ -38,6 +38,7 @@ namespace App.Data
                         .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.MultipleCollectionIncludeWarning))
                         // other configuration options
                         .UseNpgsql(connetionString);
+                  optionsBuilder.EnableSensitiveDataLogging();
             }
 
             protected override void OnModelCreating(ModelBuilder builder)
@@ -58,26 +59,25 @@ namespace App.Data
                   {
                         entity.HasIndex(c => c.Slug).IsUnique();
                   });
-                  builder.Entity<ProductCategory>(entity =>
-                  {
-                        entity.HasKey(c => new { c.CategoryId, c.ProductId });
-                  });
+
                   builder.Entity<Category>(entity =>
                   {
                         entity.HasIndex(c => c.Slug);
                   });
+                  builder.Entity<ProductCategory>(entity =>
+                  {
+                        entity.HasKey(c => new { c.CategoryId, c.ProductId });
+                  });
             }
+            public DbSet<ProductCategory> ProductCategory { get; set; }
             public DbSet<Cart> Carts { get; set; }
             public DbSet<CartItem> CartItems { get; set; }
             public DbSet<Product> Products { get; set; }
             public DbSet<Category> Categories { get; set; }
-            public DbSet<Brand> Brands { get; set; }
             public DbSet<Order> Orders { get; set; }
             public DbSet<OrderItem> OrderItems { get; set; }
-            public DbSet<ProductCategory> ProductsCategory { get; set; }
             public DbSet<Address> Address { get; set; }
             public DbSet<Contact> Contacts { get; set; }
-            public DbSet<Category> Category { get; set; } = default!;
-
+            public DbSet<Icon> Icons { get; internal set; }
       }
 }

@@ -3,7 +3,7 @@ import axiosClient from "./AxiosClient"
 
 export const productApi = {
     create(data: FormData) {
-        const url = "/Product"
+        const url = "/Products"
         return axiosClient.post(url, data, {
             headers: {
                 "Content-Type": "multipart/form-data; boundary=something",
@@ -11,7 +11,7 @@ export const productApi = {
         })
     },
     getList(params?: string): Promise<ListResponse<Product>> {
-        const url = `/Product${params || ""}`
+        const url = `/Products?${params || ""}`
         return axiosClient.get(url)
     },
     getById(id: number) {

@@ -8,11 +8,11 @@ namespace App.Repositories
       {
             IRepository<Product> ProductRepository { get; }
             IRepository<Category> CategoryRepository { get; }
-            IRepository<Brand> BrandRepository { get; }
             IRepository<Order> OrderRepository { get; }
             IRepository<OrderItem> OrderItemRepository { get; }
             IRepository<Cart> CartRepository { get; }
             IRepository<Address> AddressRepository { get; }
+            IRepository<Icon> IconRepository { get; }
 
             Task CompleteAsync();
       }

@@ -1,7 +1,9 @@
 @model CreateProducViewModel
 @{
       ViewData["Title"] = "Create";
-      var list = ViewData["MultiSelectList"] as MultiSelectList;
+      var list = ViewData["SelectList"] as MultiSelectList;
+      var icons = ViewData["IconList"] as SelectList;
+      var technologies = ViewData["TechnologiesList"] as SelectList;
 }
 <h1>Create Product</h1>
 
@@ -12,13 +14,23 @@
                   <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                   <div class="form-group">
                         <label asp-for="CategoryIDs" class="control-label"></label>
-                        <select asp-for="CategoryIDs" multiple="multiple" asp-items="list" class="w-100"></select>
+                        <select multiple asp-for="CategoryIDs" asp-items="list" class="w-100"></select>
                         <span asp-validation-for="CategoryIDs" class="text-danger"></span>
+                  </div>
+                  <div class="form-group">
+                        <label asp-for="IconId" class="control-label"></label>
+                        <select asp-for="IconId" asp-items="icons" class="w-100"></select>
+                        <span asp-validation-for="IconId" class="text-danger"></span>
                   </div>
                   <div class="form-group">
                         <label asp-for="Name" class="control-label"></label>
                         <input asp-for="Name" class="form-control" />
                         <span asp-validation-for="Name" class="text-danger"></span>
+                  </div>
+                  <div class="form-group">
+                        <label asp-for="Technology" class="control-label"></label>
+                        <select asp-for="Technology" asp-items="technologies" class="w-100"></select>
+                        <span asp-validation-for="Technology" class="text-danger"></span>
                   </div>
                   <div class="form-group">
                         <label asp-for="Thumbnail" class="control-label"></label>
@@ -66,7 +78,7 @@
                   </div>
                   <div class="form-group">
                         <label asp-for="Tags" class="control-label"></label>
-                        <input asp-for="Tags" class="form-control" />
+                        <input multiple asp-for="Tags" class="form-control" />
                         <span asp-validation-for="Tags" class="text-danger"></span>
                   </div>
                   <div class="form-group">

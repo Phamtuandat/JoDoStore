@@ -1,18 +1,11 @@
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace App.Models.ProductModel
 {
-      [Table("ProductCategory")]
       public class ProductCategory
       {
-            public int ProductId { get; set; }
-
             public int CategoryId { get; set; }
+            public int ProductId { get; set; }
+            public virtual Product Product { get; set; }
+            public virtual Category Category { get; set; }
 
-            [ForeignKey("CategoryId")]
-            public Category Category { get; set; }
-
-            [ForeignKey("ProductId")]
-            public Product Product { get; set; }
       }
 }

@@ -1,18 +1,11 @@
-import { Brand } from "./brand"
+import { Icon } from "./icon"
 import { Category } from "./category"
-
-export interface SavePhotoReq {
-    title: string
-    productId?: number
-    FormFile: File | null
-    collections: string
-}
 
 export interface Product {
     id: string | number
     name: string
     category: Category | null
-    brand: Brand | null
+    brand: Icon | null
     description: string | null
     price: number | null
     salePrice?: number | null
