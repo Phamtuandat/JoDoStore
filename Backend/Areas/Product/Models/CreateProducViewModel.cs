@@ -21,5 +21,6 @@ namespace App.Areas.Products.Models
             public string Thumbnail { set; get; }
             public int IconId { set; get; }
             public string Technology { set; get; }
+            public string? Detail { get; set; }
       }
 }

@@ -134,15 +134,17 @@ namespace App.Areas.Products.Controllers
                         await _productService.CreateAsync(productAt);
                         return RedirectToAction(nameof(Index));
                   }
-                  catch (Exception)
+                  catch (Exception ex)
                   {
-                        throw;
+                        Message = ex.Message;
+                        return RedirectToAction(nameof(Index));
                   }
             }
 
             // GET: Product/Edit/5
             public async Task<ActionResult> Edit(int id)
             {
+                  var icons = _iconService.GetAll().ToList();
                   var product = _productService.GetAllAsync()
                         .Where(p => p.Id == id)
                         .FirstOrDefault();
@@ -170,6 +172,7 @@ namespace App.Areas.Products.Controllers
                   var items = new List<CategorySelecItem>();
                   CreateSelectItem(categories, items, 0);
                   ViewData["SelectList"] = new MultiSelectList(items, "Id", "Name", selected);
+                  ViewData["IconList"] = new SelectList(icons, "Id", "Name");
                   return View(model);
             }
 
@@ -182,15 +185,14 @@ namespace App.Areas.Products.Controllers
                   try
                   {
                         // TODO: Add update logic here
-                        var product = _mapper.Map<EditProductViewModel, Product>(model);
-                        await _productService.UpdateAsync(product);
+                        await _productService.UpdateAsync(model);
                         Message = "updated product successfully";
                         return RedirectToAction(nameof(Index));
                   }
                   catch (Exception ex)
                   {
                         Message = $"something went wrong {ex.Message}";
-                        return View();
+                        return RedirectToAction(nameof(Index));
                   }
             }
 

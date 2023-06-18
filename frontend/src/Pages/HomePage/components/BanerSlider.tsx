@@ -1,6 +1,7 @@
 import EastIcon from "@mui/icons-material/East"
 import { Box, Hidden, Skeleton, Typography } from "@mui/material"
 import { styled } from "@mui/material/styles"
+import { bannerApi } from "ApiClients/ImageApi"
 import { useWidth } from "Hooks/width-hook"
 import { motion, useAnimationControls, useMotionValue } from "framer-motion"
 import buildQuery from "odata-query"
@@ -43,9 +44,9 @@ export const BanerSlider = () => {
     const btnStyles = {
         opacity: useMotionValue(1),
     }
-    const [images, setEmail] = useState<string[]>([
-        "https://static.diydevblog.com/Image/band.webp?_t=1686147469",
-        "https://static.diydevblog.com/Image/band2.webp?_t=1686393871",
+    const [images, setImage] = useState<string[]>([
+        "https://static.diydevblog.com/Image/Banner/slide1.jpg?_t=1687009639",
+        "https://static.diydevblog.com/Image/Banner/slide2.webp?_t=1687009689",
     ])
     const textCtrl = useAnimationControls()
     const btnCtrl = useAnimationControls()
@@ -76,13 +77,8 @@ export const BanerSlider = () => {
         if (!ignore.current) {
             ignore.current = true
             ;(async () => {
-                const param = buildQuery({
-                    filter: {
-                        imageCollections: {
-                            name: "hero",
-                        },
-                    },
-                })
+                const banners = await bannerApi.getAll()
+                setImage(banners)
             })()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

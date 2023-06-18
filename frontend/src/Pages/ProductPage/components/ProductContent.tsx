@@ -16,7 +16,6 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import handleNotify from "utils/Toast-notify"
-import ProductDesc from "./ProductDesc"
 type Props = {
     product: Product
 }
@@ -38,7 +37,7 @@ const ProductContent = ({ product }: Props) => {
             quantity: 0,
         },
     })
-
+    const [fullHeight, setFullHeight] = useState(false)
     const theme = useTheme()
     const [value, setStart] = useState<number | null>(4.5)
     const dispatch = useAppDispatch()
@@ -196,7 +195,51 @@ const ProductContent = ({ product }: Props) => {
                     ADD TO CART!
                 </CustomButton>
             </Box>
-            <ProductDesc desc={product.description} />
+            <Box mt={5}>
+                <Divider />
+                {product.detail && (
+                    <Box>
+                        <Box
+                            color="primary !important"
+                            sx={{
+                                "& p,ul,li,a,span": {
+                                    color: theme.palette.text.primary + "!important",
+                                },
+                                maxWidth: "100wv",
+                                height: !fullHeight ? "200px" : "100%",
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                            }}
+                            dangerouslySetInnerHTML={{
+                                __html: product.detail,
+                            }}
+                        />
+                        <Button
+                            color="secondary"
+                            size="small"
+                            fullWidth
+                            sx={{
+                                textDecoration: "underline",
+                            }}
+                            onClick={() => setFullHeight(!fullHeight)}
+                        >
+                            {!fullHeight ? "view product details" : "View Less"}
+                        </Button>
+                    </Box>
+                )}
+                <Typography variant="h6" mt={5}>
+                    Care & Maintenance:
+                </Typography>
+                <Typography
+                    component="p"
+                    mt={2}
+                    color={theme.palette.text.primary}
+                    sx={{ opacity: 0.7 }}
+                >
+                    Use warm water to describe us as a product team that creates amazing UI/UX
+                    experiences, by crafting top-notch user experience.
+                </Typography>
+            </Box>
         </Box>
     )
 }

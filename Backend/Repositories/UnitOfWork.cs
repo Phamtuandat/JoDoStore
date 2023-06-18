@@ -85,7 +85,15 @@ namespace App.Repositories
                         return cartRepository;
                   }
             }
-
+            private IRepository<ProductCategory> productCategoryRepository;
+            public IRepository<ProductCategory> ProductCategoryRepository
+            {
+                  get
+                  {
+                        productCategoryRepository ??= new ProductCategoryRepository(_context);
+                        return productCategoryRepository;
+                  }
+            }
             public async Task CompleteAsync()
             {
                   await _context.SaveChangesAsync();

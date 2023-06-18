@@ -36,7 +36,7 @@ const ProductMediaCard = ({ product }: Props) => {
                 mb: 6,
                 display: "flex",
                 flexDirection: "column",
-                position: { xs: "sticky", sm: "static" },
+                position: { md: "sticky", xs: "static" },
                 top: 40,
             }}
         >

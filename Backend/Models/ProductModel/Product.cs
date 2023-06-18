@@ -15,6 +15,7 @@ namespace App.Models.ProductModel
             public string[] Tags { get; set; }
             [Display(Name = "Url")]
             public string Slug { get; set; }
+            public string Detail { get; set; }
             public int Price { get; set; }
             public int SalePrice { get; set; }
             public DateTime CreateAt { get; set; }

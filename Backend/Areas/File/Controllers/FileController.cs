@@ -61,7 +61,7 @@ namespace App.Areas.File.Controllers
 
                   // https://localhost:5001/files/
                   string url = $"{uri.Scheme}://{uri.Authority}/{requestUrl}/";
-                  string urlthumb = $"{uri.Scheme}://{uri.Authority}/file-manager-thumb/";
+                  string urlthumb = $"{uri.Scheme}://{uri.Authority}/file-manager-thumb";
 
 
                   var root = new RootVolume(rootDirectory, url, urlthumb)

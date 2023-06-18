@@ -51,8 +51,13 @@
                         Choose
                   </button>
                   <div class="form-group">
+                        <label asp-for="Detail" class="control-label"></label>
+                        <textarea rows="7" asp-for="Detail" class="form-control"></textarea>
+                        <span asp-validation-for="Detail" class="text-danger"></span>
+                  </div>
+                  <div class="form-group">
                         <label asp-for="Description" class="control-label"></label>
-                        <textarea rows="7" asp-for="Description" class="form-control"></textarea>
+                        <textarea rows="12" asp-for="Description" class="form-control"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                   </div>
                   <div class="form-group">
@@ -95,6 +100,8 @@
 
 @{
       var summernote = new Summernote("#Description");
+      var detail = new Summernote("#Detail", false);
+
       var elfinderBtn = new Elfinder("#elfinderBtn", "#ImagePaths")
       {
             ImageListId = "#imagelist"
@@ -105,6 +112,8 @@
 }
 
 <partial name="_summernote" model="summernote" />
+<partial name="_summernote" model="detail" />
+
 
 <partial name="_ElfinderDialog" model="@elfinderBtn" />
 <partial name="_ElfinderDialog" model="@elfinderBtn2" />

@@ -4,6 +4,7 @@ using App.Models.ProductModel;
 using App.Repositories;
 using Microsoft.EntityFrameworkCore;
 using App.Models;
+using App.Areas.Products.Models;
 
 namespace App.Services.ProductServices
 {
@@ -138,11 +139,29 @@ namespace App.Services.ProductServices
                   return _mapper.Map<Product, ProductDto>(_unitOfWork.ProductRepository.Get(id));
             }
 
-            public async Task UpdateAsync(Product product)
+            public async Task UpdateAsync(EditProductViewModel model)
             {
                   try
                   {
+                        var product = _unitOfWork.ProductRepository.All().Include(p => p.ProductCategories).FirstOrDefault(p => p.Id == model.Id);
+                        if (product == null) throw new Exception("Product is not available");
+                        var removes = product.ProductCategories.Where(pc => !model.CategoryIDs.Contains(pc.CategoryId)).ToList();
+                        foreach (var remove in removes)
+                        {
+                              _unitOfWork.ProductCategoryRepository.Delete(remove);
+                        }
+                        var newpcids = model.CategoryIDs.Where(x => !product.ProductCategories.Select(pc => pc.CategoryId).Contains(x)).ToArray();
+                        foreach (var newpcid in newpcids)
+                        {
+                              var newPC = new ProductCategory()
+                              {
+                                    ProductId = product.Id,
+                                    CategoryId = newpcid
+                              };
+                              _unitOfWork.ProductCategoryRepository.Add(newPC);
+                        }
                         product.UpdateAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
+
                         _unitOfWork.ProductRepository.Update(product);
                         await _unitOfWork.CompleteAsync();
                   }

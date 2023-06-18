@@ -3,6 +3,8 @@
       ViewData["Title"] = "Edit";
       var list = ViewData["SelectList"] as MultiSelectList;
       var technologies = ViewData["TechnologiesList"] as SelectList;
+      var icons = ViewData["IconList"] as SelectList;
+
 
 }
 <h1>Edit Product</h1>
@@ -22,6 +24,11 @@
                         <label asp-for="Name" class="control-label"></label>
                         <input asp-for="Name" class="form-control" />
                         <span asp-validation-for="Name" class="text-danger"></span>
+                  </div>
+                  <div class="form-group">
+                        <label asp-for="IconId" class="control-label"></label>
+                        <select asp-for="IconId" asp-items="icons" class="w-100"></select>
+                        <span asp-validation-for="IconId" class="text-danger"></span>
                   </div>
                   <div class="form-group">
                         <label asp-for="Technology" class="control-label"></label>
@@ -46,6 +53,11 @@
                   <button type="button" id="elfinderBtn" class=" btn mt-1 btn-outline-primary">
                         Choose
                   </button>
+                  <div class="form-group">
+                        <label asp-for="Detail" class="control-label"></label>
+                        <textarea rows="7" asp-for="Detail" class="form-control"></textarea>
+                        <span asp-validation-for="Detail" class="text-danger"></span>
+                  </div>
                   <div class="form-group">
                         <label asp-for="Description" class="control-label"></label>
                         <textarea rows="7" asp-for="Description" class="form-control"></textarea>
@@ -91,6 +103,8 @@
 
 @{
       var summernote = new Summernote("#Description");
+      var detail = new Summernote("#Detail", false);
+
       var elfinderBtn = new Elfinder("#elfinderBtn", "#ImagePaths")
       {
             ImageListId = "#imagelist"
@@ -104,6 +118,8 @@
 <partial name="_ElfinderDialog" model="@elfinderBtn2" />
 
 <partial name="_summernote" model="summernote" />
+<partial name="_summernote" model="detail" />
+
 
 
 @section Sidebar {

@@ -32,25 +32,21 @@ const ProductDesc = ({ desc }: Props) => {
                         "& p,ul,li,a,span": {
                             color: theme.palette.text.primary + "!important",
                         },
+                        "& p": {
+                            fontSize: theme.typography.h6.fontSize + "!important",
+                        },
+                        "& div": {
+                            maxWidth: "100%",
+                        },
+                        "& img": {
+                            margin: "80px auto 0px !important",
+                        },
                     }}
                     dangerouslySetInnerHTML={{
                         __html: desc,
                     }}
                 />
             )}
-
-            <Typography variant="h6" mt={5}>
-                Care & Maintenance:
-            </Typography>
-            <Typography
-                component="p"
-                mt={2}
-                color={theme.palette.text.primary}
-                sx={{ opacity: 0.7 }}
-            >
-                Use warm water to describe us as a product team that creates amazing UI/UX
-                experiences, by crafting top-notch user experience.
-            </Typography>
         </Box>
     )
 }

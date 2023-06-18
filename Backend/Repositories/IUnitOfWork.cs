@@ -13,6 +13,7 @@ namespace App.Repositories
             IRepository<Cart> CartRepository { get; }
             IRepository<Address> AddressRepository { get; }
             IRepository<Icon> IconRepository { get; }
+            IRepository<ProductCategory> ProductCategoryRepository { get; }
 
             Task CompleteAsync();
       }

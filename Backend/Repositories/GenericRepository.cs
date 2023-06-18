@@ -28,6 +28,8 @@ namespace App.Repositories
                   return _context.Remove<T>(entity).Entity;
             }
 
+
+
             public virtual IEnumerable<T> Find(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
             {
                   return _context.Set<T>()

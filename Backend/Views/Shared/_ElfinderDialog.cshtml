@@ -85,8 +85,8 @@
                                           var imageUrl;
                                           if (`@_env.IsProduction()` === 'True') {
                                                 imageUrl = sanitizeUrl(files[i].url
-                                                      .replace("http://admin.diydevblog.com/contents", "https://static.diydevblog.com")
-                                                      .replace(""))
+                                                      .replace("http://admin.diydevblog.com/Contents", "https://static.diydevblog.com")
+                                                )
                                           } else {
                                                 imageUrl = sanitizeUrl(files[i].url)
                                           };
@@ -110,7 +110,7 @@
                                           parentImageItem.remove();
                                     });
                               } else {
-                                    var imageUrl = files.url.replace("http://admin.diydevblog.com/contents", "https://static.diydevblog.com")
+                                    var imageUrl = files.url.replace("http://admin.diydevblog.com/Contents", "https://static.diydevblog.com")
                                     $('@Model.InputId').val(sanitizeUrl(imageUrl))
                               }
                         },

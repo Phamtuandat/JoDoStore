@@ -17,6 +17,7 @@ namespace App.Dtos
             public string Thumbnail { get; set; }
             public string[] ImagePaths { get; set; }
             public string[] Tags { get; set; }
+            public string? Detail { get; set; }
             public IconDto Icon { get; set; }
       }
 }

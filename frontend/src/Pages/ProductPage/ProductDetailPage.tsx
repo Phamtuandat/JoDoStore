@@ -12,6 +12,7 @@ import { useEffect, useRef } from "react"
 import { useLoaderData, useParams, useRevalidator } from "react-router-dom"
 import ProductContent from "./components/ProductContent"
 import ProductMediaCard from "./components/ProductMediaCard"
+import ProductDesc from "./components/ProductDesc"
 
 type Props = {}
 
@@ -61,6 +62,7 @@ const ProductDetailPage = (props: Props) => {
                 </Box>
                 <Divider />
                 <Box mt={3}>
+                    <ProductDesc desc={product.description} />
                     <Box>
                         <Box
                             fontSize={"16px"}

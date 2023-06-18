@@ -12,6 +12,7 @@ export interface Product {
     imagePaths: string[]
     thumbnail: string
     tags?: string[]
+    detail?: string
 }
 
 export type CartItemReq = {
