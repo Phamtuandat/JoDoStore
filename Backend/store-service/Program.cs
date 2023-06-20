@@ -13,43 +13,59 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Logging.Configuration;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
+using Serilog;
+using StackExchange.Redis;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
+
 var builder = WebApplication.CreateBuilder(args);
+
+//Config the application logger provider
+builder.Host.UseSerilog((context, services, configuration) => configuration
+      .ReadFrom.Configuration(context.Configuration)
+      .ReadFrom.Services(services)
+      .Enrich.FromLogContext());
+builder.Logging.ClearProviders();
+
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers(options =>
 {
       options.EnableEndpointRouting = false;
 })
-    .AddJsonOptions(x =>
-                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
-        .AddOData(opt => opt.AddRouteComponents("odata", GetEdmModel())
-    .Count()
-    .Filter()
-    .OrderBy()
-    .Select()
-    .Expand()
-    .SetMaxTop(100));
+      .AddJsonOptions(x =>
+                  x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
+            .AddOData(opt => opt.AddRouteComponents("odata", GetEdmModel())
+      .Count()
+      .Filter()
+      .OrderBy()
+      .Select()
+      .Expand()
+      .SetMaxTop(100));
 static IEdmModel GetEdmModel()
 {
       var builder = new ODataConventionModelBuilder();
       return builder.GetEdmModel();
 }
-builder.Services.TryAddEnumerable(
-    ServiceDescriptor.Singleton<ILoggerProvider, ColorConsoleLoggerProvider>());
-LoggerProviderOptions.RegisterProviderOptions
-    <ColorConsoleLoggerConfiguration, ColorConsoleLoggerProvider>(builder.Services);
 // Add services to the container.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckles
 builder.Services.AddDbContext<DataContext>();
+builder.Services.AddSingleton<IConnectionMultiplexer>(x =>
+{
+      var configuration = ConfigurationOptions.Parse(builder.Configuration["Redis:ConnectionString"]);
+      return ConnectionMultiplexer.Connect(configuration);
+});
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+      options.Configuration = builder.Configuration["Redis:ConnectionString"];
+      options.InstanceName = "JodoRedis";
+});
+builder.Services.AddSignalR();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -87,15 +103,6 @@ builder.Services.ConfigureApplicationCookie(options =>
       options.SlidingExpiration = true;
 });
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.AddLogging(loggingBuilder =>
-    {
-          loggingBuilder.ClearProviders(); // Optional: Clear any default logging providers if needed
-
-          // Configure your desired logging provider(s) here
-          loggingBuilder.AddConsole(); // Example: Add the console logger
-          loggingBuilder.AddDebug(); // Example: Add the debug logger
-                                     // Add other logging providers as needed
-    });
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IOrderService, OrderService>();

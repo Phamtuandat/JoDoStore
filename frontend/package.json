@@ -8,6 +8,7 @@
     "@faker-js/faker": "^7.6.0",
     "@fontsource/roboto": "^4.5.8",
     "@hookform/resolvers": "^2.9.10",
+    "@microsoft/signalr": "^7.0.7",
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.11.13",
     "@mui/styled-engine-sc": "^5.11.11",

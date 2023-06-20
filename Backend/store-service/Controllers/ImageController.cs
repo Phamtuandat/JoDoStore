@@ -1,4 +1,6 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace App.Controllers
 {
@@ -8,15 +10,24 @@ namespace App.Controllers
       public class ImageController : ControllerBase
       {
             private readonly IHostEnvironment _env;
+            private readonly IDistributedCache _cache;
 
-            public ImageController(IHostEnvironment env)
+            public ImageController(IHostEnvironment env, IDistributedCache cache)
             {
                   _env = env;
+                  _cache = cache;
             }
 
             [HttpGet("/api/banner")]
-            public ActionResult GetBannerPath()
+            public async Task<ActionResult> GetBannerPath()
             {
+                  List<string> imageNamesList = new List<string>();
+                  var cachedData = await _cache.GetAsync("BannerPaths");
+                  if (cachedData != null)
+                  {
+                        imageNamesList = JsonSerializer.Deserialize<List<string>>(cachedData);
+                        return Ok(imageNamesList);
+                  }
                   string imageDirectoryPath = "Uploads/Image/Banner"; // Đường dẫn tới thư mục chứa các file ảnh
                   string[] imageExtensions = { ".jpg", ".png", ".gif", "webp" }; // Các định dạng file ảnh bạn muốn lấy
 
@@ -33,13 +44,17 @@ namespace App.Controllers
                   {
                         prefix = "https://static.diydevblog.com/Image/Banner/";
                   }
-                  List<string> imageNamesList = new List<string>();
                   foreach (string imagePath in imagePaths)
                   {
                         string imageName = Path.GetFileName(imagePath);
                         imageNamesList.Add(prefix + imageName);
                   }
-
+                  var cacheOptions = new DistributedCacheEntryOptions
+                  {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(10) // Set the cache expiration time
+                  };
+                  var serializedData = JsonSerializer.Serialize(imageNamesList);
+                  await _cache.SetStringAsync("BannerPaths", serializedData, cacheOptions);
                   return Ok(imageNamesList);
             }
       }

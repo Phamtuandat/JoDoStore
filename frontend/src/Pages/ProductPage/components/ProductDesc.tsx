@@ -9,10 +9,6 @@ const ProductDesc = ({ desc }: Props) => {
     const theme = useTheme()
     return (
         <Box mt={10}>
-            <Typography variant="h5" fontWeight={700} color={theme.palette.secondary.dark}>
-                Description
-            </Typography>
-
             {!desc ? (
                 <Typography
                     component="p"
@@ -26,26 +22,31 @@ const ProductDesc = ({ desc }: Props) => {
                     spare to negatives.
                 </Typography>
             ) : (
-                <Box
-                    color="primary !important"
-                    sx={{
-                        "& p,ul,li,a,span": {
-                            color: theme.palette.text.primary + "!important",
-                        },
-                        "& p": {
-                            fontSize: theme.typography.h6.fontSize + "!important",
-                        },
-                        "& div": {
-                            maxWidth: "100%",
-                        },
-                        "& img": {
-                            margin: "80px auto 0px !important",
-                        },
-                    }}
-                    dangerouslySetInnerHTML={{
-                        __html: desc,
-                    }}
-                />
+                <>
+                    <Typography variant="h5" fontWeight={700} color={theme.palette.secondary.dark}>
+                        Description
+                    </Typography>
+                    <Box
+                        color="primary !important"
+                        sx={{
+                            "& p,ul,li,a,span": {
+                                color: theme.palette.text.primary + "!important",
+                            },
+                            "& p": {
+                                fontSize: theme.typography.h6.fontSize + "!important",
+                            },
+                            "& div": {
+                                maxWidth: "100%",
+                            },
+                            "& img": {
+                                margin: "80px auto 0px !important",
+                            },
+                        }}
+                        dangerouslySetInnerHTML={{
+                            __html: desc,
+                        }}
+                    />
+                </>
             )}
         </Box>
     )

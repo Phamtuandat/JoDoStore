@@ -19,7 +19,6 @@ FROM nginx:alpine
 # Copy config nginx
 COPY --from=build /app/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/.nginx/admin.conf /etc/nginx/conf.d/admin.conf
-COPY --from=build /app/.nginx/account.conf /etc/nginx/conf.d/account.conf
 COPY --from=build /app/.nginx/static.conf /etc/nginx/conf.d/static.conf
 
 

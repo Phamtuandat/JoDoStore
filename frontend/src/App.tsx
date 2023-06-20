@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import authApi from "ApiClients/AuthApi"
 import ColorModeContext from "Context/ColorModeContext"
+import { UseSignalR } from "Hooks/UseSignalR"
 import router from "Routes/routers"
 import { useAppDispatch } from "app/hooks"
 import { AuthSliceAction } from "features/authenticate/authSlice"

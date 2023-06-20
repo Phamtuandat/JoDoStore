@@ -8,11 +8,12 @@ import { MainLayout } from "components/Layout/MainLayout"
 import { ProductSliceActions } from "features/ListProduct/listProductSlice"
 import { Product } from "models"
 import ListProductSale from "Pages/HomePage/components/ListProductSale"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, lazy, Suspense, useState } from "react"
 import { useLoaderData, useParams, useRevalidator } from "react-router-dom"
 import ProductContent from "./components/ProductContent"
 import ProductMediaCard from "./components/ProductMediaCard"
-import ProductDesc from "./components/ProductDesc"
+
+const DescptionComponent = lazy(() => import("./components/ProductDesc"))
 
 type Props = {}
 
@@ -62,14 +63,18 @@ const ProductDetailPage = (props: Props) => {
                 </Box>
                 <Divider />
                 <Box mt={3}>
-                    <ProductDesc desc={product.description} />
-                    <Box>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <DescptionComponent desc={product.description} />
+                    </Suspense>
+                    <Box mt={5}>
+                        <Divider />
                         <Box
                             fontSize={"16px"}
                             display="flex"
                             width="100px"
                             justifyContent="space-between"
                             alignContent="center"
+                            mt={3}
                         >
                             <Box
                                 component="span"

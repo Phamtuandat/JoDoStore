@@ -45,11 +45,16 @@ export default function BasicMenu({ isLoggedIn, handleLogout }: Props) {
                 }}
             >
                 <MenuItem onClick={handleClose}>
-                    <MuiLink
-                       href="https://account.diydevblog.com/index"
+                    <Typography
+                        component={Link}
+                        to="/user/account"
+                        sx={{
+                            textDecoration: "none",
+                            color: "text.primary",
+                        }}
                     >
                         My account
-                    </MuiLink>
+                    </Typography>
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
                     <Typography
