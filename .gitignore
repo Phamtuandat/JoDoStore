@@ -364,9 +364,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/Backend/certificate.pfx
 /docker-compose.override.yml
 /docker-compose.yml
 /frontend/.env.production
 /Backend/.dockerignore
-/Backend/gearshop_dotnetapp/appsettings.json
+Backend/appsettings.json
+/Backend/Identity/appsettings.json

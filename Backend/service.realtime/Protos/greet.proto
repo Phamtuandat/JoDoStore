@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "service.realtime";
+
+package greet;
+
+// The greeting service definition.
+service Greeter {
+  // Sends a greeting
+  rpc ValidateToken (ValidateRequest) returns (ValidateReply);
+}
+
+message ValidateRequest {
+  string token = 1;
+}
+
+// The response message containing the greetings.
+message ValidateReply {
+  string token = 1;
+  string userId = 2;
+  string email = 3;
+}
