@@ -13,12 +13,15 @@ import {
 import { Container } from "@mui/system"
 import { addressApi } from "ApiClients/AddressApi"
 import { orderApi } from "ApiClients/OrderApi"
+import { productApi } from "ApiClients/ProductApi"
 import { useAppDispatch, useAppSelector } from "app/hooks"
 import { MainLayout } from "components/Layout/MainLayout"
 import { cartTotalSelector } from "features/cart/cartSelector"
 import { cartProcessing, cartSelector, cartSliceAction } from "features/cart/cartSlice"
+import { CartItemReview } from "features/cart/components/MiniCart"
 import QuantityForm from "features/cart/components/QuantityForm"
-import { Address, Product } from "models"
+import { Address } from "models"
+import qs from "qs"
 import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import { toast } from "react-toastify"
@@ -35,7 +38,8 @@ const Msg = () => (
 const OrderPage = (props: Props) => {
     const ignore = useRef(false)
     const [addressList, setList] = useState<Address[]>([])
-    const carts = useAppSelector(cartSelector)
+    const cartItemSelectors = useAppSelector(cartSelector)
+    const [carts, setCarts] = useState<CartItemReview[]>([])
     const Subtotal = useAppSelector(cartTotalSelector)
     const dispatch = useAppDispatch()
     const [loading, setLoading] = useState(false)
@@ -48,6 +52,25 @@ const OrderPage = (props: Props) => {
         }
     }
     useEffect(() => {
+        ;(async () => {
+            const productIds = cartItemSelectors.map((item) => item.productId)
+            const param = qs.stringify({
+                ids: productIds,
+            })
+            const cartReview: CartItemReview[] = []
+            const productList = (await productApi.getList(param)).data
+            productList.forEach((product) => {
+                cartReview.push({
+                    product: product,
+                    quantity:
+                        cartItemSelectors.find((cart) => cart.productId === product.id)?.quantity ||
+                        0,
+                })
+            })
+            setCarts(cartReview)
+        })()
+    }, [cartItemSelectors])
+    useEffect(() => {
         if (!ignore.current) {
             ignore.current = true
             ;(async () => {
@@ -57,15 +80,14 @@ const OrderPage = (props: Props) => {
         }
     }, [])
 
-    const handleQuantityChange = (product: Product, quantity: number) => {
+    const handleQuantityChange = (productId: number, quantity: number) => {
         dispatch(
             cartSliceAction.addToCart({
-                product,
+                productId,
                 quantity,
             })
         )
         toast.dismiss()
-        console.log(product, quantity)
     }
     const handleRemoveCartItem = (id: number) => {
         dispatch(cartSliceAction.removeFromCart(id))
@@ -128,7 +150,7 @@ const OrderPage = (props: Props) => {
                                                             <CardMedia
                                                                 component="img"
                                                                 height="80px"
-                                                                
+                                                                image={cart.product.thumbnail}
                                                             />
                                                         </Box>
                                                     </Hidden>
@@ -149,6 +171,9 @@ const OrderPage = (props: Props) => {
                                                                         component="img"
                                                                         height="80px"
                                                                         width="80px"
+                                                                        image={
+                                                                            cart.product.thumbnail
+                                                                        }
                                                                     />
                                                                 </Box>
                                                             </Hidden>
@@ -220,7 +245,7 @@ const OrderPage = (props: Props) => {
                                                                             quantity: number
                                                                         ) =>
                                                                             handleQuantityChange(
-                                                                                cart.product,
+                                                                                +cart.product.id,
                                                                                 quantity
                                                                             )
                                                                         }
@@ -248,7 +273,6 @@ const OrderPage = (props: Props) => {
                                                             </Box>
                                                         </Box>
                                                     </Box>
-
                                                     <Divider />
                                                 </Box>
                                             ))}

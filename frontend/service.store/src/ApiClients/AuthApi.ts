@@ -20,7 +20,9 @@ const authApi = {
     },
     refreshCookie(token?: string): Promise<AuthResponse<AuthenticateInfo>> {
         const url = process.env.IDENTITY_URL + "/connect/userinfo"
-        return axiosClient.get(url, {})
+        return axiosClient.get(url, {
+            headers: { Authorization: "Bearer " + token },
+        })
     },
     adminValidate(): Promise<AuthResponse<AuthenticateInfo>> {
         const url = "User/Admin"

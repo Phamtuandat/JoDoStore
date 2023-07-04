@@ -71,7 +71,9 @@ export default function BasicSpeedDial({ label }: IProp) {
                     tooltipTitle={"Message"}
                 />
             </SpeedDial>
-            <Box sx={{ display: "flex", position: "absolute", bottom: 0, right: 80 }}>
+            <Box
+                sx={{ display: open ? "flex" : "none", position: "absolute", bottom: 0, right: 80 }}
+            >
                 <Grow
                     in={open}
                     style={{ transformOrigin: "100px 100px 100px" }}

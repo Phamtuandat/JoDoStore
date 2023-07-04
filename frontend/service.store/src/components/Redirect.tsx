@@ -5,7 +5,6 @@ import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import oidcConfig from "utils/OidcConfig"
 import Loading from "./common/Loading"
-import handleNotify from "utils/Toast-notify"
 type Props = {}
 
 const userManager = new UserManager(oidcConfig)
@@ -29,7 +28,6 @@ const Redirect = (props: Props) => {
                 )
                 navigate("/")
             } catch (error) {
-                handleNotify.error("Something went wrong")
                 navigate("/")
             }
         })()

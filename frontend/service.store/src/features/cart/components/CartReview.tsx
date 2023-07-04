@@ -9,9 +9,10 @@ import { useAppDispatch, useAppSelector } from "app/hooks"
 import { Product } from "models"
 import { NavLink, useNavigate } from "react-router-dom"
 import { cartTotalSelector } from "../cartSelector"
-import { CartItems, cartSliceAction } from "../cartSlice"
+import { cartSliceAction } from "../cartSlice"
+import { CartItemReview } from "./MiniCart"
 type Props = {
-    carts: CartItems[]
+    carts: CartItemReview[]
 }
 
 const CartReview = ({ carts }: Props) => {
@@ -112,6 +113,7 @@ const CartReview = ({ carts }: Props) => {
                                             borderRadius: "8px",
                                             mr: 1,
                                         }}
+                                        image={cart.product.thumbnail}
                                         onClick={(e) => {
                                             navigate(`/product/${cart.product.id}`)
                                         }}

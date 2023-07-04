@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { RootState } from "app/store"
-import { Product } from "models"
 import handleNotify from "utils/Toast-notify"
 
 export type CartItems = {
-    product: Product
+    productId: number
     quantity: number
+    salePrice?: number
 }
 
 export interface ICart {
@@ -30,7 +30,7 @@ const cartSlice = createSlice({
         addToCartSuccess(state, action: PayloadAction<CartItems>) {
             state.processing = false
             const newItem = action.payload
-            const index = state.cartItems.findIndex((x) => x.product.id === newItem.product.id)
+            const index = state.cartItems.findIndex((x) => x.productId === newItem.productId)
             if (index >= 0) {
                 state.cartItems[index].quantity += newItem.quantity
             } else {
@@ -54,9 +54,7 @@ const cartSlice = createSlice({
             handleNotify.error("Something went wrong, please try again later!")
         },
         setQuantity(state, action: PayloadAction<CartItems>) {
-            const index = state.cartItems.findIndex(
-                (x) => x.product.id === action.payload.product.id
-            )
+            const index = state.cartItems.findIndex((x) => x.productId === action.payload.productId)
             if (index >= 0) {
                 state.cartItems[index].quantity = action.payload.quantity
             }
@@ -66,7 +64,7 @@ const cartSlice = createSlice({
         },
         removeSuccess(state, action: PayloadAction<string | number>) {
             const idNeedRemove = action.payload
-            state.cartItems = state.cartItems.filter((x) => x.product.id !== idNeedRemove)
+            state.cartItems = state.cartItems.filter((x) => x.productId !== idNeedRemove)
         },
         removeAllCartItem(state) {
             state.cartItems = []

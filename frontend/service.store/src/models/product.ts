@@ -16,13 +16,11 @@ export interface Product {
 }
 
 export type CartItemReq = {
-    id: number
+    productId: number
     quantity: number
 }
 
 export type CartItem = {
-    id: number
-    product: Product
     quantity: number
     productId: number
 }

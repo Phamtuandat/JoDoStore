@@ -1,22 +1,26 @@
 import * as signalR from "@microsoft/signalr"
 import { Box } from "@mui/material"
 import { useAppSelector } from "app/hooks"
-import { selectCurrentUser } from "features/authenticate/authSlice"
-import { useEffect, useRef, useState } from "react"
+import { selectCurrentUser, selectToken } from "features/authenticate/authSlice"
+import { useEffect, useRef } from "react"
 
 type Props = {}
 
 const Chatbox = (props: Props) => {
     const isNegotiatingRef = useRef(true)
     const authSelector = useAppSelector(selectCurrentUser)
+    const token = useAppSelector(selectToken)
     const ignore = useRef(false)
     const isLoggedIn =
         localStorage.getItem("persist:root") &&
         JSON.parse(JSON.parse(localStorage.getItem("persist:root") as string)?.auth).isLoggedIn
     useEffect(() => {
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("http://localhost:5071/chatHub", {
+            .withUrl("https://localhost:5002/hubs/chat", {
                 withCredentials: true,
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
             })
             .configureLogging(signalR.LogLevel.Information)
             .build()

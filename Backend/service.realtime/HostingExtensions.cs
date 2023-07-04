@@ -56,7 +56,6 @@ internal static class HostingExtensions
                         Scope = "api"
                   });
             });
-           
             builder.Services.AddStackExchangeRedisCache(options =>
             {
                   if (builder.Environment.IsDevelopment())
@@ -72,15 +71,8 @@ internal static class HostingExtensions
             });
             builder.Services.AddSignalR();
 
-            builder.Services.AddAuthentication(options =>
-            {
-                  options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                  options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-            }).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-            {
-                  options.Cookie.Name = "aplication.identity";
-                  options.Cookie.SameSite = SameSiteMode.Lax;
-            }).Services.AddAuthentication("Bearer")
+            builder.Services
+            .AddAuthentication("Bearer")
             .AddJwtBearer("Bearer", options =>
             {
                   options.Authority = "https://localhost:5001";
@@ -89,40 +81,20 @@ internal static class HostingExtensions
                   {
                         ValidateAudience = false
                   };
-            })
-            .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
-            {
-                  options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                  options.SignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                  options.Authority = "https://localhost:5001";
-                  options.ClientId = "interactive";
-                  options.ClientSecret = "49C1A7E1-0C79-4A89-A3D6-A37998FB86B0";
-                  options.ResponseType = "code";
-                  options.ResponseMode = "query";
-                  options.Scope.Clear();
-                  options.Scope.Add("scope2");
-                  options.Scope.Add("openid"); 
-                  options.Scope.Add("profile");
-                  options.MapInboundClaims = false;
-                  options.GetClaimsFromUserInfoEndpoint = true;
-                  options.SaveTokens = true;
-                  options.UseTokenLifetime = false; 
-                  options.SaveTokens = true;
             });
-            builder.Services.AddAuthorization(options =>
+                  builder.Services.AddAuthorization(options =>
             {
                   options.AddPolicy("ApiScope", policy =>
-              {
-                    policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", "scope2");
-              });
+                  {
+                        policy.RequireAuthenticatedUser();
+                        policy.RequireClaim("scope2", "openid", "store-api");
+                  });
             });
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
                   // Cookie settings
                   options.Cookie.HttpOnly = true;
-                  options.Cookie.Name = "application.identity";
                   if (builder.Environment.IsProduction())
                   {
                         options.Cookie.SameSite = SameSiteMode.Lax;
@@ -155,9 +127,7 @@ internal static class HostingExtensions
                   {
                         if (builder.Environment.IsDevelopment())
                         {
-                              policy.WithOrigins("http://localhost:3000",
-
-                                          "http://localhost:3000").AllowCredentials().AllowAnyMethod().AllowAnyHeader().AllowCredentials().WithExposedHeaders("X-Pagination");
+                              policy.WithOrigins("http://localhost:3000","http://localhost:3000").AllowCredentials().AllowAnyMethod().AllowAnyHeader().AllowCredentials().WithExposedHeaders("X-Pagination");
                         }
                   });
             });
@@ -186,7 +156,7 @@ internal static class HostingExtensions
 
             app.MapControllers();
 
-            app.MapHub<ChatHub>("/chatHub");
+            app.MapHub<ChatHub>("/hubs/chat");
             return app;
       }
 }

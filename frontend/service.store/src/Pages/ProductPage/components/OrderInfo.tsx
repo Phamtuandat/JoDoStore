@@ -17,13 +17,14 @@ import {
     Typography,
 } from "@mui/material"
 import { useTheme } from "@mui/material/styles"
-import { CartItems } from "features/cart/cartSlice"
+import { CartItemReview } from "features/cart/components/MiniCart"
 import { Address } from "models"
 import { ChangeEvent, useState } from "react"
+import { Link, Navigate, useNavigate } from "react-router-dom"
 type Props = {
     handleCreateOrder: () => void
     addressList: Address[]
-    carts: CartItems[]
+    carts: CartItemReview[]
     Subtotal: number
     loading: boolean
     handleAddresChange: (value: number) => void
@@ -41,6 +42,7 @@ const OrderInfo = ({
 }: Props) => {
     const theme = useTheme()
     const [open, setOpen] = useState(false)
+    const navigate = useNavigate()
     function onChange(event: ChangeEvent<HTMLInputElement>, value: string): void {
         handleAddresChange(+value)
     }
@@ -61,7 +63,7 @@ const OrderInfo = ({
                                 {!open ? "Change" : "Done"}
                             </ButtonBase>
                         </Stack>
-                        {address && (
+                        {address ? (
                             <Box display="flex" py={2}>
                                 <FmdGoodOutlinedIcon
                                     sx={{
@@ -80,65 +82,86 @@ const OrderInfo = ({
                                     <Typography component="span">{address.province}</Typography>
                                 </Box>
                             </Box>
+                        ) : (
+                            <Link to={{ pathname: "/user/account/address" }}>
+                                Go to Address Page
+                            </Link>
                         )}
-                        <FormControl>
-                            <RadioGroup onChange={onChange}>
-                                <Collapse in={open} timeout="auto" unmountOnExit>
-                                    <List
-                                        component="div"
-                                        disablePadding
-                                        sx={{
-                                            borderTop: "1px solid #ccc",
-                                        }}
-                                    >
-                                        {addressList.map((add) => (
-                                            <ListItem key={add.id} disableGutters>
-                                                <Box display="flex" alignItems="center">
-                                                    <Radio value={add.id} />
-                                                    <Box>
-                                                        <Box>
-                                                            <Typography component="span">
-                                                                {`${add.name ? add.name + ", " : ""}
+                        {addressList.length > 0 && (
+                            <FormControl>
+                                <RadioGroup onChange={onChange}>
+                                    {addressList.length > 0 ? (
+                                        <Collapse in={open} timeout="auto" unmountOnExit>
+                                            <List
+                                                component="div"
+                                                disablePadding
+                                                sx={{
+                                                    borderTop: "1px solid #ccc",
+                                                }}
+                                            >
+                                                {addressList.map((add) => (
+                                                    <ListItem key={add.id} disableGutters>
+                                                        <Box display="flex" alignItems="center">
+                                                            <Radio value={add.id} />
+                                                            <Box>
+                                                                <Box>
+                                                                    <Typography component="span">
+                                                                        {`${
+                                                                            add.name
+                                                                                ? add.name + ", "
+                                                                                : ""
+                                                                        }
                                                                 `}
-                                                            </Typography>
-                                                            <Typography component="span">
-                                                                {`${
-                                                                    add.phoneNumber
-                                                                        ? add.phoneNumber + ", "
-                                                                        : ""
-                                                                }
+                                                                    </Typography>
+                                                                    <Typography component="span">
+                                                                        {`${
+                                                                            add.phoneNumber
+                                                                                ? add.phoneNumber +
+                                                                                  ", "
+                                                                                : ""
+                                                                        }
                                                                 `}
-                                                            </Typography>
+                                                                    </Typography>
+                                                                </Box>
+                                                                <Typography component="span">
+                                                                    {`${
+                                                                        add.address
+                                                                            ? add.address + ", "
+                                                                            : ""
+                                                                    }
+                                                                `}
+                                                                </Typography>
+                                                                <Typography component="span">
+                                                                    {`${
+                                                                        add.ward
+                                                                            ? add.ward + ", "
+                                                                            : ""
+                                                                    }`}
+                                                                </Typography>
+                                                                <Typography component="span">
+                                                                    {`${
+                                                                        add.district
+                                                                            ? add.district + ", "
+                                                                            : ""
+                                                                    }`}
+                                                                </Typography>
+                                                                <Typography component="span">
+                                                                    {`${add.province}`}
+                                                                </Typography>
+                                                            </Box>
                                                         </Box>
-                                                        <Typography component="span">
-                                                            {`${
-                                                                add.address
-                                                                    ? add.address + ", "
-                                                                    : ""
-                                                            }
-                                                                `}
-                                                        </Typography>
-                                                        <Typography component="span">
-                                                            {`${add.ward ? add.ward + ", " : ""}`}
-                                                        </Typography>
-                                                        <Typography component="span">
-                                                            {`${
-                                                                add.district
-                                                                    ? add.district + ", "
-                                                                    : ""
-                                                            }`}
-                                                        </Typography>
-                                                        <Typography component="span">
-                                                            {`${add.province}`}
-                                                        </Typography>
-                                                    </Box>
-                                                </Box>
-                                            </ListItem>
-                                        ))}
-                                    </List>
-                                </Collapse>
-                            </RadioGroup>
-                        </FormControl>
+                                                    </ListItem>
+                                                ))}
+                                            </List>
+                                        </Collapse>
+                                    ) : (
+                                        <Box>
+                                            <Link to="">Add a new addressboox</Link>
+                                        </Box>
+                                    )}
+                                </RadioGroup>
+                            </FormControl>
+                        )}
                     </Box>
                 </Paper>
                 <Divider />

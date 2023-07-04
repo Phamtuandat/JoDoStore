@@ -1,10 +1,11 @@
 import Box from "@mui/material/Box"
 import Tab from "@mui/material/Tab"
 import Tabs from "@mui/material/Tabs"
-import * as React from "react"
 import ManagerProfile from "./Components/ManagerProfile"
 import AddressBook from "./Components/AddressBook"
 import { Hidden } from "@mui/material"
+import { useLocation, useNavigate } from "react-router-dom"
+import { SyntheticEvent, useEffect, useState } from "react"
 
 type Props = {}
 interface TabPanelProps {
@@ -36,10 +37,15 @@ function a11yProps(index: number) {
     }
 }
 const AccountPage = (props: Props) => {
-    const [value, setValue] = React.useState(0)
+    const tabstrings = ["profile", "address", "payment"]
+    const [value, setValue] = useState(0)
+    const navigate = useNavigate()
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleChange = (event: SyntheticEvent, newValue: number) => {
         setValue(newValue)
+        navigate({
+            pathname: tabstrings[newValue],
+        })
     }
 
     return (
@@ -78,3 +84,6 @@ const AccountPage = (props: Props) => {
 }
 
 export default AccountPage
+function useEffects(arg0: () => void) {
+    throw new Error("Function not implemented.")
+}

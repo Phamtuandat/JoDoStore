@@ -40,7 +40,15 @@ export const MainLayout = (props: IProps) => {
             />
             <Box flexDirection="column" display="flex" color="text.primary">
                 <Header />
-                <Box>{!isLoading ? props.children : <Loading />}</Box>
+                <Box
+                    sx={{
+                        opacity: isLoading ? "0" : "1",
+                        transition: "all 1",
+                    }}
+                >
+                    {props.children}
+                </Box>
+                <Box>{isLoading && <Loading />}</Box>
                 <Box sx={{ position: "fixed", bottom: 0, left: 0, right: 15, zIndex: 100 }}>
                     <BasicSpeedDial label="Actions" />
                 </Box>

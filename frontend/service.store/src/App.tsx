@@ -1,33 +1,53 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import authApi from "ApiClients/AuthApi"
 import ColorModeContext from "Context/ColorModeContext"
 import router from "Routes/routers"
-import { useAppDispatch } from "app/hooks"
+import { useAppDispatch, useAppSelector } from "app/hooks"
 import axios from "axios"
-import { AuthSliceAction } from "features/authenticate/authSlice"
+import { AuthSliceAction, selectToken } from "features/authenticate/authSlice"
 import { cartSliceAction } from "features/cart/cartSlice"
-import { UserManager } from "oidc-client"
+import { User, UserManager } from "oidc-client"
 import { useEffect, useRef } from "react"
 import { RouterProvider } from "react-router-dom"
 import "react-toastify/dist/ReactToastify.css"
 import oidcConfig from "utils/OidcConfig"
 import handleNotify from "utils/Toast-notify"
 
-const userManager = new UserManager(oidcConfig)
+const userMgr = new UserManager(oidcConfig)
 function App() {
     const ignore = useRef(false)
     const dispatch = useAppDispatch()
-    const cookie = document.cookie.includes("idsrv.session")
+    const token = useAppSelector(selectToken)
     useEffect(() => {
         if (!ignore.current) {
-            if (!!cookie) {
+            if (!!token) {
                 ignore.current = true
-                dispatch(cartSliceAction.getCart())
                 ;(async () => {
                     try {
-                        // userManager.signinRedirect()
+                        dispatch(cartSliceAction.getCart())
+                        const user = (
+                            await axios.get(
+                                (process.env.REACT_APP_IDENTITY_URL || "https://localhost:5001") +
+                                    "/connect/userinfo",
+                                {
+                                    headers: {
+                                        Authorization: "Bearer " + token,
+                                    },
+                                }
+                            )
+                        ).data as User
+                        dispatch(
+                            AuthSliceAction.success({
+                                access_Token: user.access_token,
+                                email: user.profile.email || user.profile.name || "",
+                                firstName: user.profile.family_name || "",
+                                lastName: user.profile.given_name || "",
+                                id: user.profile.id,
+                                emailConfirmed: true,
+                                address: null,
+                            })
+                        )
                     } catch (error) {
-                        dispatch(AuthSliceAction.logout())
+                        userMgr.signoutPopupCallback()
                         dispatch(cartSliceAction.removeAllCartItem)
                         handleNotify.error(error as string)
                     }

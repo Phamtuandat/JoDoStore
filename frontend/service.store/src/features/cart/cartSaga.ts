@@ -7,14 +7,12 @@ import { CartItems, cartSliceAction } from "./cartSlice"
 
 function* getCart() {
     try {
+        const token = JSON.parse(
+            JSON.parse(localStorage.getItem("persist:root") as string).auth
+        ).token
         yield take(cartSliceAction.getCart.type)
-        const response: AxiosResponse<CartRes> = yield call(cartApi.getCart)
-        const data = response.data
-        const action: CartItems[] = data.items.map((x) => ({
-            quantity: x.quantity,
-            product: x.product,
-        }))
-        yield put(cartSliceAction.getCartSuccess(action))
+        const response: AxiosResponse<CartRes> = yield call(cartApi.getCart, token)
+        yield put(cartSliceAction.getCartSuccess(response.data.items))
     } catch (error) {
         yield put(cartSliceAction.handleReqFailure)
     }
@@ -25,10 +23,13 @@ function* addFlow() {
         const action: PayloadAction<CartItems> = yield take(cartSliceAction.addToCart.type)
         try {
             const param: CartItemReq = {
-                id: +action.payload.product.id,
+                productId: +action.payload.productId,
                 quantity: action.payload.quantity,
             }
-            yield call(cartApi.addItem, param)
+            const token = JSON.parse(
+                JSON.parse(localStorage.getItem("persist:root") as string).auth
+            ).token
+            yield call(cartApi.addItem, param, token)
             yield put(cartSliceAction.addToCartSuccess(action.payload))
         } catch (error) {
             yield put(cartSliceAction.handleReqFailure(error as string))
@@ -40,8 +41,11 @@ function* removeItem() {
         const action: PayloadAction<string | number> = yield take(
             cartSliceAction.removeFromCart.type
         )
+        const token = JSON.parse(
+            JSON.parse(localStorage.getItem("persist:root") as string).auth
+        ).token
         try {
-            yield call(cartApi.removeItem, +action.payload)
+            yield call(cartApi.removeItem, +action.payload, token)
             yield put(cartSliceAction.removeSuccess(action.payload))
         } catch (error) {
             yield put(cartSliceAction.handleReqFailure(error as string))

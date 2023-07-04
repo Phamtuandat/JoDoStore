@@ -3,16 +3,28 @@ import { CartItemReq } from "models"
 import axiosClient from "./AxiosClient"
 
 export const cartApi = {
-    getCart: () => {
+    getCart: (token: string) => {
         const url = "/cart"
-        return axiosClient.get(url)
+        return axiosClient.get(url, {
+            headers: {
+                Authorization: "Bearer " + token,
+            },
+        })
     },
-    addItem: (param: CartItemReq): Promise<AxiosResponse<void>> => {
+    addItem: (param: CartItemReq, token: string): Promise<AxiosResponse<void>> => {
         const url = "/cart"
-        return axiosClient.post(url, param)
+        return axiosClient.post(url, param, {
+            headers: {
+                Authorization: "Bearer " + token,
+            },
+        })
     },
-    removeItem: (id: number) => {
+    removeItem: (id: number, token: string) => {
         const url = `/cart/${id}`
-        return axiosClient.delete(url)
+        return axiosClient.delete(url, {
+            headers: {
+                Authorization: "Bearer " + token,
+            },
+        })
     },
 }

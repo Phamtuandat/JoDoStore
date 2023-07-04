@@ -15,7 +15,7 @@ const UserPage = () => {
             navigate("/auth")
         }
         if (location.pathname === "/user") {
-            // navigate("/user/account")
+            navigate("/user/account")
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

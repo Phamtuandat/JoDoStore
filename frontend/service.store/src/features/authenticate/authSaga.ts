@@ -19,10 +19,13 @@ function* handleLogin(action: PayloadAction<LoginRequest>): any {
         yield put(AuthSliceAction.success(response.data))
         yield call(handleNotify.success, "Login is successfully!")
         try {
-            const result: AxiosResponse<CartRes> = yield call(cartApi.getCart)
+            const token = JSON.parse(
+                JSON.parse(localStorage.getItem("persist:root") as string).auth
+            ).token
+            const result: AxiosResponse<CartRes> = yield call(cartApi.getCart, token)
             const carts: CartItems[] = result.data.items.map((x) => ({
                 quantity: x.quantity,
-                product: x.product,
+                productId: x.productId,
             }))
             yield put(cartSliceAction.getCartSuccess(carts))
         } catch (error) {
@@ -44,10 +47,13 @@ function* handleRegister(action: PayloadAction<RegisterRequest>): any {
             result: call(authApi.register, action.payload),
         })
         try {
-            const result: AxiosResponse<CartRes> = yield call(cartApi.getCart)
+            const token = JSON.parse(
+                JSON.parse(localStorage.getItem("persist:root") as string).auth
+            ).token
+            const result: AxiosResponse<CartRes> = yield call(cartApi.getCart, token)
             const carts: CartItems[] = result.data.items.map((x) => ({
                 quantity: x.quantity,
-                product: x.product,
+                productId: x.productId,
             }))
             yield put(cartSliceAction.getCartSuccess(carts))
         } catch (error) {

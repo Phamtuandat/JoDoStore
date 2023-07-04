@@ -53,7 +53,7 @@ const ProductContent = ({ product }: Props) => {
         if (value.quantity > 0) {
             dispatch(
                 cartSliceAction.addToCart({
-                    product: product,
+                    productId: +product.id,
                     quantity: value.quantity,
                 })
             )

@@ -61,6 +61,7 @@ export const AuthSliceAction = AuthSlice.actions
 export const selectLogin = (state: RootState) => state.auth.isLoggedIn
 export const selectIsLogging = (state: RootState) => state.auth.processing
 export const selectCurrentUser = (state: RootState) => state.auth.currentUser
+export const selectToken = (state: RootState) => state.auth.token
 
 //export reducer
 const AuthReducer = AuthSlice.reducer

@@ -1,4 +1,6 @@
 ﻿using Duende.IdentityServer.Models;
+using IdentityModel;
+
 namespace Identity;
 
 public static class Config
@@ -8,6 +10,7 @@ public static class Config
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
+            new IdentityResources.Email(),
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
@@ -16,7 +19,16 @@ public static class Config
             new ApiScope("scope1"),
             new ApiScope("scope2"),
         };
-    
+    public static IEnumerable<ApiResource> GetApiResources()
+    {
+        return new List<ApiResource>
+        {
+            new ApiResource("store-api", "Store API resources")
+            {
+                UserClaims = { JwtClaimTypes.Subject, JwtClaimTypes.Name, JwtClaimTypes.Email },
+            }
+        };
+    }
     public static IEnumerable<Client> Clients =>
         new Client[]
         {
@@ -55,7 +67,7 @@ public static class Config
                 PostLogoutRedirectUris =  { "https://diydevblog.com/redirect" },
                 RequireClientSecret = false,
                 AllowOfflineAccess = true,
-                AllowedScopes = { "openid", "profile", "scope2" },
+                AllowedScopes = { "openid", "profile", "scope2", "email" },
                 
             },
             new Client
@@ -68,7 +80,19 @@ public static class Config
                 PostLogoutRedirectUris =  { "http://localhost:3000/redirect" },
                 RequireClientSecret = false,
                 AllowOfflineAccess = true,
-                AllowedScopes = { "openid", "profile", "scope2" },
+                AllowedScopes = { "openid", "profile", "scope2","store - api" },
+            },
+            new Client
+            {
+                ClientId = "store-api",
+                ClientSecrets = { new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB8645".Sha256()) },
+                AllowedGrantTypes = GrantTypes.Code,
+                RedirectUris = { "https://localhost:7243/signin-oidc" },
+                FrontChannelLogoutUri = "https://localhost:7243/signout-oidc",
+                PostLogoutRedirectUris = { "https://localhost:7243/signout-callback-oidc" },
+                AllowedCorsOrigins = { "https://localhost:7243" },
+                AllowOfflineAccess = true,
+                AllowedScopes = { "openid", "profile", "scope2", "store-api" }
             },
         };
 }

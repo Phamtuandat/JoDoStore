@@ -5,6 +5,8 @@ import OrderPage from "Pages/ProductPage/OrderPage"
 import ProductDetailPage from "Pages/ProductPage/ProductDetailPage"
 import ProductShopPage from "Pages/ProductPage/ProductShopPage"
 import AccountPage from "Pages/UserPage/AccountPage"
+import AddressBook from "Pages/UserPage/Components/AddressBook"
+import ManagerProfile from "Pages/UserPage/Components/ManagerProfile"
 import CustomerPage from "Pages/UserPage/CustomerPage"
 import UserPage from "Pages/UserPage/Index"
 import Redirect from "components/Redirect"
@@ -53,14 +55,7 @@ const router = createBrowserRouter([
     {
         path: "/user",
         element: <UserPage />,
-        loader: async () => {
-            try {
-                await authApi.refreshCookie()
-                return null
-            } catch (error) {
-                return redirect("/auth")
-            }
-        },
+
         children: [
             {
                 path: "/user/customer",
@@ -69,6 +64,19 @@ const router = createBrowserRouter([
             {
                 path: "/user/account",
                 element: <AccountPage />,
+                children: [
+                    {
+                        path: "/user/account/profile",
+                        element: <ManagerProfile />,
+                    },
+                    {
+                        path: "/user/account/address",
+                        element: <AddressBook />,
+                    },
+                    {
+                        path: "/user/account/payment",
+                    },
+                ],
             },
         ],
     },
