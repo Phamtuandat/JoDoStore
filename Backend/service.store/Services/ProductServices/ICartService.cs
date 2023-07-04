@@ -5,8 +5,8 @@ namespace App.Services.ProductServices
 {
       public interface ICartService
       {
-            Task AddItemAsync(int productId, int quantity, User user);
-            Task RemoveItemAsync(int id, User user);
-            Task<CartDto> GetCart(User user);
+            Task AddItemAsync(int productId, int quantity, string userId);
+            Task RemoveItemAsync(int productId,string userId);
+            Task<CartDto> GetCart(string userId);
       }
 }

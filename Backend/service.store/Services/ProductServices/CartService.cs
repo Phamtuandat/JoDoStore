@@ -1,81 +1,85 @@
 ﻿using AutoMapper;
-using App.Exceptions;
-using App.Models.Identity;
-using App.Models.ProductModel;
-using App.Repositories;
 using App.Dtos;
 using App.Services.ProductServices;
+using StackExchange.Redis;
+using Newtonsoft.Json;
+using App.Repositories;
 
 namespace App
 {
       public class CartService : ICartService
       {
-            private readonly IUnitOfWork _uniOfWork;
             private readonly IMapper _mapper;
-            public CartService(IUnitOfWork unitOfWork, IMapper mapper)
+            private readonly IDatabase _db;
+            private readonly IUnitOfWork _unitOfWork;
+            public CartService( IConnectionMultiplexer muxer, IMapper mapper, IUnitOfWork unitOfWork)
             {
                   _mapper = mapper;
-                  _uniOfWork = unitOfWork;
+                  _db = muxer.GetDatabase();
+                  _unitOfWork = unitOfWork;
             }
-            public async Task AddItemAsync(int productId, int quantity, User user)
+            public async Task AddItemAsync(int productId, int quantity, string userId)
             {
                   try
                   {
-                        var cart = _uniOfWork.CartRepository.All().FirstOrDefault(x => x.UserId == user.Id);
-                        if (cart == null) throw new ProductNotFoundException("not found!");
-                        var item = cart.Items.FirstOrDefault(x => x.Product?.Id == productId);
-                        var product = _uniOfWork.ProductRepository.Get(productId);
-                        if (product == null) throw new ProductNotFoundException("not found!");
-                        if (item == null)
-                        {
-                              var newItem = new CartItem()
-                              {
-                                    Product = product,
-                                    Quantity = quantity,
+                        var product = _unitOfWork.ProductRepository.Find(x => x.Id == productId)?.FirstOrDefault();
+                        if(product == null) throw new ArgumentException("Product not found");
+                        var key = $"Cart:{userId}";
+                        var cart = await _db.StringGetAsync(key);
+                        if (cart.IsNullOrEmpty){
+                              var newCart = new CartDto(){
+                                    Items = new List<CartItemResource>(){
+                                          new CartItemResource(){
+                                                ProductId = productId,
+                                                Quantity = quantity,
+                                                SubPrice = quantity * product.SalePrice
+                                          }
+                                    }
+                                    
                               };
-                              cart.Items.Add(newItem);
-
+                              var cartJson = JsonConvert.SerializeObject(newCart);
+                              _db.StringSet(key,cartJson);
+                              return;
                         }
-                        else
-                        {
-                              item.Quantity += quantity;
+                        var result = JsonConvert.DeserializeObject<CartDto>(cart);
+                        var item = result.Items.FirstOrDefault(x => x.ProductId == productId);
+                        if (item == null) {
+                              result.Items.Add(new CartItemResource() { ProductId = productId, Quantity = quantity, SubPrice = quantity * product.SalePrice });
+                              await _db.StringSetAsync(key,JsonConvert.SerializeObject(result));
+                              return;
                         }
-                        await _uniOfWork.CompleteAsync();
+                        item.Quantity = item.Quantity + quantity;
+                        item.SubPrice = item.Quantity * product.SalePrice;
+                        var jsonCart = JsonConvert.SerializeObject(result);
+                        await _db.StringSetAsync(key, jsonCart);
+                        return;
                   }
-                  catch (Exception ex)
+                  catch (Exception)
                   {
-
-                        throw new BaseException(ex.Message);
+                        throw;
                   }
-
             }
 
-            public async Task<CartDto> GetCart(User user)
+            public async Task<CartDto> GetCart(string userId)
             {
-                  var cart = _uniOfWork.CartRepository.All().FirstOrDefault(x => x.UserId == user.Id);
-                  if (cart == null)
-                  {
-                        cart = new Cart()
-                        {
-                              Items = new List<CartItem>(),
-                              User = user,
-                              UserId = user.Id,
-                        };
-                        _uniOfWork.CartRepository.Add(cart);
-                        await _uniOfWork.CompleteAsync();
-                  }
-                  var cartResource = _mapper.Map<Cart, CartDto>(cart);
-                  return cartResource;
+                  var cart = new CartDto();
+                  var key = $"Cart:{userId}";
+                  var result = _db.StringGet(key);
+                  if(result.IsNullOrEmpty) return new CartDto();
+                  CartDto cartFromRedis = JsonConvert.DeserializeObject<CartDto>(result);
+                  return cartFromRedis;
             }
 
-            public async Task RemoveItemAsync(int id, User user)
+            public async Task RemoveItemAsync(int productId, string userId)
             {
-                  var cart = _uniOfWork.CartRepository.All().FirstOrDefault(x => x.UserId == user.Id);
-                  if (cart == null) throw new ProductNotFoundException("Not Found!");
-                  var item = cart.Items.FirstOrDefault(x => x.ProductId == id);
-                  if (item == null) throw new ProductNotFoundException("Not Found!");
-                  cart.Items.Remove(item);
-                  await _uniOfWork.CompleteAsync();
+                  var key = $"Cart:{userId}";
+                  var result =await _db.StringGetAsync(key);
+                  if (result.IsNullOrEmpty) return;
+                  var cart = JsonConvert.DeserializeObject<CartDto>(result);
+                  var cartItem = cart.Items.FirstOrDefault(x => x.ProductId == productId);
+                  if(cartItem != null) cart.Items.Remove(cartItem);
+                  await _db.StringSetAsync(key,JsonConvert.SerializeObject(cart));
+                  return;
             }
       }
 }

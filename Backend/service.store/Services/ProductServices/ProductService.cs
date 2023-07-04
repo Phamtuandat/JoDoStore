@@ -90,6 +90,9 @@ namespace App.Services.ProductServices
                   {
                         products = products.Where(p => p.SalePrice > param.MinPrice);
                   }
+                  if(param.ProductIds?.Length > 0){
+                        products = products.Where(p => param.ProductIds.Contains(p.Id));
+                  }
                   if (param.OrderBy != null && param.OrderBy != "")
                   {
                         string[] orderByParts = param.OrderBy.Split(' ');
@@ -161,7 +164,16 @@ namespace App.Services.ProductServices
                               _unitOfWork.ProductCategoryRepository.Add(newPC);
                         }
                         product.UpdateAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
-
+                        product.IconId = model.IconId;
+                        product.Name = model.Name;
+                        product.Description = model.Description;
+                        product.Detail = model.Detail;
+                        product.ImagePaths = model.ImagePaths;
+                        product.Thumbnail = model.Thumbnail;
+                        product.Technology = model.Technology;
+                        product.SalePrice = model.SalePrice;
+                        product.Tags = model.Tags;
+                        product.Slug = model.Slug;
                         _unitOfWork.ProductRepository.Update(product);
                         await _unitOfWork.CompleteAsync();
                   }

@@ -2,6 +2,7 @@ namespace App.Models
 {
       public class ProductQs
       {
+            public int[]? ProductIds { get; set;}
             public string? Name { get; set; }
             public decimal? MinPrice { get; set; }
             public decimal? MaxPrice { get; set; }

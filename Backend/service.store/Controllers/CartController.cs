@@ -1,55 +1,55 @@
 ﻿using App.Dtos;
-using App.Models.Identity;
+using App.Services;
 using App.Services.ProductServices;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 
 namespace App.Controllers
 {
       [Route("api/[controller]")]
       [ApiController]
+      [Authorize]
       public class CartController : ControllerBase
       {
             private readonly ICartService _cartService;
-            private readonly UserManager<User> _userManager;
-
-            public CartController(ICartService cartService, UserManager<User> userManager)
+            private readonly IDatabase _redis;
+            private readonly IAuthService _authSevice;
+            public CartController(ICartService cartService, IConnectionMultiplexer muxer, IAuthService authSevice)
             {
                   _cartService = cartService;
-                  _userManager = userManager;
+                  _redis = muxer.GetDatabase();
+                  _authSevice = authSevice;
             }
             [HttpGet]
             public async Task<ActionResult> Get()
             {
-                  var user = await _userManager.GetUserAsync(this.User);
-                  if (user == null)
-                  {
-                        return Unauthorized();
-                  }
-                  var result = await _cartService.GetCart(user);
+                  var accessToken = await HttpContext.GetTokenAsync("access_token");
+                  
+                  var userinfo = await _authSevice.GetUserInfoAsync(accessToken);
+                  var userId = userinfo.Sub;
+                  var result = await _cartService.GetCart(userId);
                   return Ok(result);
             }
             [HttpDelete("{id:int}")]
             public async Task<ActionResult> DeleteAsync(int id)
             {
-                  var user = await _userManager.GetUserAsync(this.User);
-                  if (user == null)
-                  {
-                        return Unauthorized();
-                  }
-                  await _cartService.RemoveItemAsync(id, user);
+
+                  var accessToken = await HttpContext.GetTokenAsync("access_token");
+                  var userinfo = await _authSevice.GetUserInfoAsync(accessToken);
+                  var userId = userinfo.Sub;
+                  await _cartService.RemoveItemAsync(id, userId);
                   return Ok();
             }
 
             [HttpPost]
-            public async Task<ActionResult> AddAsync([FromBody] CartItemReq req)
+            public async Task<ActionResult> AddAsync([FromBody] CartItemResource req)
             {
-                  var user = await _userManager.GetUserAsync(this.User);
-                  if (user == null)
-                  {
-                        return Unauthorized();
-                  }
-                  await _cartService.AddItemAsync(req.Id, req.Quantity, user);
+                  var accessToken = await HttpContext.GetTokenAsync("access_token");
+                  var userinfo = await _authSevice.GetUserInfoAsync(accessToken);
+                  var userId = userinfo.Sub;
+                  await _cartService.AddItemAsync(req.ProductId, req.Quantity, userId);
                   return Ok();
             }
       }

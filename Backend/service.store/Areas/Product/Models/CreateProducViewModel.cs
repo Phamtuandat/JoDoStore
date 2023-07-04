@@ -12,7 +12,7 @@ namespace App.Areas.Products.Models
             [StringLength(160, MinimumLength = 5)]
             [RegularExpression(@"^[a-z0-9-]*$")]
             public string? Slug { set; get; }
-            public string Description { set; get; }
+            public string? Description { set; get; }
             public int SalePrice { get; set; }
             public int Price { get; set; }
             public string[] Tags { set; get; }

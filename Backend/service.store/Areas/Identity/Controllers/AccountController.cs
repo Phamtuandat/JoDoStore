@@ -31,10 +31,10 @@ namespace App.Areas.Identity.Controllers
             private readonly RoleManager<IdentityRole> _roleManager;
 
             public AccountController(
-                UserManager<User> userManager,
-                SignInManager<User> signInManager,
-                IEmailService emailSender,
-                ILogger<AccountController> logger, RoleManager<IdentityRole> roleManager)
+                  UserManager<User> userManager,
+                  SignInManager<User> signInManager,
+                  IEmailService emailSender,
+                  ILogger<AccountController> logger, RoleManager<IdentityRole> roleManager)
             {
                   _userManager = userManager;
                   _signInManager = signInManager;

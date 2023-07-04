@@ -24,7 +24,7 @@ namespace App.Data
                   string? connetionString;
                   if (_env.IsDevelopment())
                   {
-                        connetionString = "Server=localhost;Port=1501;database=JodoDb;username=phamtuandat1a0;password=admin;Pooling=true;";
+                        connetionString = "Server=localhost;Port=1501;database=JodoDb;username=postgres;password=admin;Pooling=true;";
                   }
                   else
                   {
