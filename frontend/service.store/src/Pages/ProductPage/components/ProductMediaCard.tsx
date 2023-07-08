@@ -4,7 +4,8 @@ import { useTheme } from "@mui/material/styles"
 import { AnimatePresence, motion } from "framer-motion"
 import { useWidth } from "Hooks/width-hook"
 import { Product } from "models"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useLocation } from "react-router-dom"
 import "swiper/css"
 import "swiper/css/pagination"
 import { Swiper, SwiperSlide } from "swiper/react"
@@ -25,9 +26,14 @@ const ProductMediaCard = ({ product }: Props) => {
     const width = useWidth()
     const [imgPath, setImg] = useState<number>(0)
     const theme = useTheme()
+    const location = useLocation()
     const handleChangeImage = (value: number) => {
         setImg(value)
     }
+
+    useEffect(() => {
+        setImg(0)
+    }, [location.pathname])
 
     return (
         <Box
@@ -44,7 +50,7 @@ const ProductMediaCard = ({ product }: Props) => {
                 sx={{
                     display: "flex",
                     width: { lg: 480, md: 400, sm: 600 },
-                    height: { lg: 480, md: 400, sm: 600 },
+                    height: { lg: 560, md: 480, sm: 720 },
                     overflow: "hidden",
                     mx: "auto",
                 }}

@@ -34,6 +34,7 @@
     "@types/react-swipeable-views": "^0.13.1",
     "@types/recharts": "^1.8.24",
     "axios": "^1.1.2",
+    "babel-polyfill": "^6.26.0",
     "chart.js": "^4.0.1",
     "connected-react-router": "^6.9.3",
     "dompurify": "^2.4.1",
@@ -64,6 +65,7 @@
     "recharts": "^2.1.16",
     "redux-persist": "^6.0.0",
     "redux-saga": "^1.2.1",
+    "regenerator-runtime": "^0.13.11",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.9",
     "swiper": "^8.4.4",
@@ -80,8 +82,7 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "react-app"
     ]
   },
   "browserslist": {

@@ -87,7 +87,6 @@ const ProductContent = ({ product }: Props) => {
                     <Typography variant="h5" fontWeight={700} component="span">
                         {" - "}
                     </Typography>
-
                     <Typography
                         variant="h5"
                         fontWeight={700}

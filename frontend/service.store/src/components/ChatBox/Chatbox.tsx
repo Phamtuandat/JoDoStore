@@ -15,37 +15,37 @@ const Chatbox = (props: Props) => {
         localStorage.getItem("persist:root") &&
         JSON.parse(JSON.parse(localStorage.getItem("persist:root") as string)?.auth).isLoggedIn
     useEffect(() => {
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("https://localhost:5002/hubs/chat", {
-                withCredentials: true,
-                headers: {
-                    Authorization: "Bearer " + token,
-                },
-            })
-            .configureLogging(signalR.LogLevel.Information)
-            .build()
-        if (!ignore.current) {
-            ignore.current = true
-            if (isLoggedIn) {
-                ;(async () => {
-                    try {
-                        await connection.start()
-                        isNegotiatingRef.current = false
-                        connection.invoke("OnConnect", authSelector?.id)
-                    } catch (error) {
-                        console.log(error)
-                    }
-                })()
-                connection.on("ReceiveMessage", (msg) => console.log(msg))
-                console.log("ReceiveMessage")
-            }
-        }
-        return () => {
-            if (!isNegotiatingRef.current) {
-                connection.stop()
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // const connection = new signalR.HubConnectionBuilder()
+        //     .withUrl("https://localhost:5002/hubs/chat", {
+        //         withCredentials: true,
+        //         headers: {
+        //             Authorization: "Bearer " + token,
+        //         },
+        //     })
+        //     .configureLogging(signalR.LogLevel.Information)
+        //     .build()
+        // if (!ignore.current) {
+        //     ignore.current = true
+        //     if (isLoggedIn) {
+        //         ;(async () => {
+        //             try {
+        //                 await connection.start()
+        //                 isNegotiatingRef.current = false
+        //                 connection.invoke("OnConnect", authSelector?.id)
+        //             } catch (error) {
+        //                 console.log(error)
+        //             }
+        //         })()
+        //         connection.on("ReceiveMessage", (msg) => console.log(msg))
+        //         console.log("ReceiveMessage")
+        //     }
+        // }
+        // return () => {
+        //     if (!isNegotiatingRef.current) {
+        //         connection.stop()
+        //     }
+        // }
+        // // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return <Box p={1}>Chatbox</Box>

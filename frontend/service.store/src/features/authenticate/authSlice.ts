@@ -47,6 +47,7 @@ const AuthSlice = createSlice({
             state.isLoggedIn = false
             state.currentUser = null
             state.processing = false
+            state.token = null
         },
         cancel(state) {
             state.processing = false

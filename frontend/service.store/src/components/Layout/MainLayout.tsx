@@ -18,7 +18,6 @@ export const MainLayout = (props: IProps) => {
         const timeout = setTimeout(() => {
             setLoading(false)
         }, 2000)
-
         return () => {
             clearTimeout(timeout)
         }

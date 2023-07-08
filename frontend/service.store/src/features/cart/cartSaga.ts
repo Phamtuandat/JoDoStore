@@ -7,11 +7,8 @@ import { CartItems, cartSliceAction } from "./cartSlice"
 
 function* getCart() {
     try {
-        const token = JSON.parse(
-            JSON.parse(localStorage.getItem("persist:root") as string).auth
-        ).token
-        yield take(cartSliceAction.getCart.type)
-        const response: AxiosResponse<CartRes> = yield call(cartApi.getCart, token)
+        const action: PayloadAction<string> = yield take(cartSliceAction.getCart.type)
+        const response: AxiosResponse<CartRes> = yield call(cartApi.getCart, action.payload)
         yield put(cartSliceAction.getCartSuccess(response.data.items))
     } catch (error) {
         yield put(cartSliceAction.handleReqFailure)
@@ -56,5 +53,5 @@ function* removeItem() {
 export function* cartSaga() {
     yield fork(addFlow)
     yield fork(removeItem)
-    yield fork(getCart)
+    yield call(getCart)
 }

@@ -36,7 +36,7 @@ const FlashDeal = (props: Props) => {
         <Box
             sx={{
                 backgroundSize: "cover",
-                mt: width === "xs" ? 5 : 25,
+                mt: width === "xs" ? 2 : 5,
                 backgroundImage: {
                     md: "url(https://static.nike.com/a/images/f_auto/dpr_1.3,cs_srgb/w_1406,c_limit/8127cdb2-6a27-4d27-96a4-dfc7cf5e6cdb/nike-just-do-it.jpg)",
                     xs: "url(https://static.nike.com/a/images/f_auto/dpr_1.3,cs_srgb/h_713,c_limit/a1cc9ddb-92d7-47b2-973f-1a17bbd17ff2/nike-just-do-it.jpg)",

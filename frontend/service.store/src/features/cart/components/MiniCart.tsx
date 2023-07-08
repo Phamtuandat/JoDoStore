@@ -32,7 +32,7 @@ function MiniCart() {
             const param = qs.stringify({
                 ids: productIds,
             })
-            if (productIds.length > 0) {
+            if (!!productIds && productIds.length > 0) {
                 const cartReview: CartItemReview[] = []
                 const productList = (await productApi.getList(param)).data
                 productList.forEach((product) => {

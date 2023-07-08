@@ -14,7 +14,7 @@ const Redirect = (props: Props) => {
     useEffect(() => {
         ;(async () => {
             try {
-                const user = await userManager.signinRedirectCallback(window.location.href)
+                const user = await userManager.signinRedirectCallback()
                 dispatch(
                     AuthSliceAction.success({
                         access_Token: user.access_token,
@@ -26,8 +26,10 @@ const Redirect = (props: Props) => {
                         address: null,
                     })
                 )
+                
                 navigate("/")
             } catch (error) {
+                console.log(error)
                 navigate("/")
             }
         })()

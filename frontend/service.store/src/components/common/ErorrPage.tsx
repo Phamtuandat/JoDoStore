@@ -6,7 +6,6 @@ import { useNavigate, useRouteError } from "react-router-dom"
 export default function ErrorPage() {
     const error: any = useRouteError()
     const naviagte = useNavigate()
-    console.log(error)
     return (
         <MainLayout>
             <Stack
@@ -38,9 +37,16 @@ export default function ErrorPage() {
                         <Typography component="span" variant="h3">
                             Oops!
                         </Typography>
-                        <Typography component="span" variant="h3" fontWeight={700}>
-                            {error.status === 404 ? "Page Not Found" : error.data}
-                        </Typography>
+                        {error ? (
+                            <Typography component="span" variant="h3" fontWeight={700}>
+                                {error?.status === 404 ? "Page Not Found" : error.data}
+                            </Typography>
+                        ) : (
+                            <Typography component="span" variant="h3" fontWeight={700}>
+                                500 Someting went wrong
+                            </Typography>
+                        )}
+
                         <Box>
                             <Button variant="contained" onClick={() => naviagte(-1)}>
                                 Go Back

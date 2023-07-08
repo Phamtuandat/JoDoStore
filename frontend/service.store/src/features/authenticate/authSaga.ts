@@ -76,9 +76,9 @@ function* handleLogout() {
         JSON.parse(localStorage.getItem("persist:root") as string)?.auth
     ).isLoggedIn
     if (isLoggedIn) {
-        yield call(authApi.logout)
+        // yield call(authApi.logout)
+        yield put(AuthSliceAction.logout)
     }
-    yield put(AuthSliceAction.logout)
 }
 function* watchLogingFlow() {
     while (true) {

@@ -9,7 +9,7 @@ const ProductDesc = ({ desc }: Props) => {
     const theme = useTheme()
     return (
         <Box mt={10}>
-            {!desc ? (
+            {!desc || desc === "" ? (
                 <Typography
                     component="p"
                     mt={2}
@@ -22,8 +22,13 @@ const ProductDesc = ({ desc }: Props) => {
                     spare to negatives.
                 </Typography>
             ) : (
-                <>
-                    <Typography variant="h5" fontWeight={700} color={theme.palette.secondary.dark}>
+                <Box>
+                    <Typography
+                        variant="h5"
+                        textAlign="center"
+                        fontWeight={700}
+                        color={theme.palette.secondary.dark}
+                    >
                         Description
                     </Typography>
                     <Box
@@ -46,7 +51,7 @@ const ProductDesc = ({ desc }: Props) => {
                             __html: desc,
                         }}
                     />
-                </>
+                </Box>
             )}
         </Box>
     )
